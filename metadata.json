@@ -1,0 +1,6 @@
+{
+  "name": "ITIS",
+  "description": "ITIS Production Packaging & Release Engineering (Prompt 064 - RC2 Distribution Platform), System Certification (Prompt 063), Enterprise Design System (Prompt 062), End-to-End Platform Integration (Prompt 061) with signed AAB/APK bundles, multi-stage Dockerfiles, Helm manifests, App Store submission packages, and RC2 distribution bundles.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
