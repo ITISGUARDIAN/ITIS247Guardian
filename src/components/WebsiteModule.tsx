@@ -44,7 +44,11 @@ import {
   CRITICAL_WEBSITE_RULES
 } from '../data/websiteData';
 
-export const WebsiteModule: React.FC = () => {
+interface WebsiteModuleProps {
+  onNavigateTab?: (tab: string) => void;
+}
+
+export const WebsiteModule: React.FC<WebsiteModuleProps> = ({ onNavigateTab }) => {
   // Navigation Sub-tabs
   const [activeNav, setActiveNav] = useState<
     'home' | 'about' | 'features' | 'solutions' | 'contact' | 'downloads' | 'legal' | 'seo'
@@ -243,6 +247,17 @@ export const WebsiteModule: React.FC = () => {
           >
             {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-slate-300" />}
           </button>
+
+          {/* Enterprise Login Portal Button */}
+          {onNavigateTab && (
+            <button
+              onClick={() => onNavigateTab('auth')}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all border border-indigo-400/30"
+            >
+              <Lock className="w-3.5 h-3.5 text-indigo-200" />
+              <span>Portal Login</span>
+            </button>
+          )}
 
           {/* Main CTA */}
           <button

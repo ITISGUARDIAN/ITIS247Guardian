@@ -151,6 +151,17 @@ export function TechnicianProvisioningModule() {
     setActiveWorkOrder(updatedWorkOrder);
     setWorkOrders((prev) => prev.map((w) => (w.id === updatedWorkOrder.id ? updatedWorkOrder : w)));
 
+    // Post newly provisioned device to backend API
+    fetch('/api/v1/devices/provision', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        serialNumber: updatedWorkOrder.newDeviceSerial,
+        imei: '864209041284901',
+        learnerName: updatedWorkOrder.learnerName || 'Learner Assigned',
+      }),
+    }).catch(console.warn);
+
     if (isOffline) {
       setSqliteQueueCount((prev) => prev + 1);
     }

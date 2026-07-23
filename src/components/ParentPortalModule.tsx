@@ -122,6 +122,25 @@ export const ParentPortalModule: React.FC = () => {
     biometricLogin: true,
   });
 
+  // Fetch live learner & attendance data from NestJS backend
+  const [apiLearners, setApiLearners] = useState<any[]>([]);
+  const [liveAttendanceStatus, setLiveAttendanceStatus] = useState<string>('PRESENT');
+
+  useEffect(() => {
+    const fetchLiveParentData = async () => {
+      try {
+        const res = await fetch('/api/v1/learners');
+        const data = await res.json();
+        if (data.status === 'SUCCESS' && Array.isArray(data.data)) {
+          setApiLearners(data.data);
+        }
+      } catch (e) {
+        console.warn('Backend connection falling back to client cache');
+      }
+    };
+    fetchLiveParentData();
+  }, []);
+
   // Simulated WebSockets Telemetry Ping
   useEffect(() => {
     const interval = setInterval(() => {
@@ -132,7 +151,7 @@ export const ParentPortalModule: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // SOS Countdown Handler
+  // SOS Countdown Handler & Live Backend SOS Incident Creation
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (isSosModalOpen && sosCountdown > 0) {
@@ -141,9 +160,19 @@ export const ParentPortalModule: React.FC = () => {
       }, 1000);
     } else if (sosCountdown === 0 && isSosModalOpen) {
       setIsSosActive(true);
+      // Trigger live backend emergency dispatch API
+      fetch('/api/v1/incidents/trigger-sos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          learnerId: selectedChild.id,
+          lat: selectedChild.lat,
+          lng: selectedChild.lng,
+        }),
+      }).catch(console.error);
     }
     return () => clearInterval(timer);
-  }, [isSosModalOpen, sosCountdown]);
+  }, [isSosModalOpen, sosCountdown, selectedChild]);
 
   const handleSimulateTelemetryPing = () => {
     const now = new Date();

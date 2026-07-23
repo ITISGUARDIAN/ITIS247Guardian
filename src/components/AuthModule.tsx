@@ -38,6 +38,7 @@ import {
   ExternalLink,
   Info
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import {
   UserRole,
   AuthScreenRoute,
@@ -124,27 +125,33 @@ export const AuthModule: React.FC = () => {
 
   const passwordScore = calculatePasswordStrength(resetPasswordNew);
 
+  const { login } = useAuth();
+
   // HANDLERS
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setAuthErrorMsg(null);
     setAuthSuccessMsg(null);
 
-    setTimeout(() => {
+    if (failedAttemptsCount >= 3) {
       setIsLoading(false);
-      if (failedAttemptsCount >= 3) {
-        setIsAccountLocked(true);
-        setAuthErrorMsg('ACCOUNT LOCKED: 3 consecutive invalid authentication failures detected. Security policy enforced.');
-        return;
-      }
+      setIsAccountLocked(true);
+      setAuthErrorMsg('ACCOUNT LOCKED: 3 consecutive invalid authentication failures detected. Security policy enforced.');
+      return;
+    }
 
-      // Simulate successful login -> redirect to MFA or tenant select or role target
-      setAuthSuccessMsg(`AUTHENTICATION SUCCESSFUL: Verified identity for ${loginEmail}. Redirecting to ${USER_ROLE_REDIRECTS[selectedRole].targetPortal}...`);
+    const res = await login(loginEmail, loginPassword);
+    setIsLoading(false);
+
+    if (res.success) {
+      setAuthSuccessMsg(`AUTHENTICATION SUCCESSFUL: Verified identity for ${loginEmail}. Redirecting to portal...`);
       setTimeout(() => {
         setActiveRoute('mfa');
-      }, 1200);
-    }, 1000);
+      }, 1000);
+    } else {
+      setAuthErrorMsg('AUTHENTICATION FAILED: Invalid credentials provided.');
+    }
   };
 
   const handleSimulateFailedLogin = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CAPABILITY_DOMAINS } from './data/capabilities';
 import { Level1Domain, Level2Capability, Level3Service } from './types/capability';
 import { Header } from './components/Header';
@@ -60,6 +60,9 @@ import { PlatformIntegrationModule } from './components/PlatformIntegrationModul
 import { EnterpriseDesignSystemModule } from './components/EnterpriseDesignSystemModule';
 import { SystemValidationModule } from './components/SystemValidationModule';
 import { ReleaseEngineeringModule } from './components/ReleaseEngineeringModule';
+import { ProductionDeploymentModule } from './components/ProductionDeploymentModule';
+import { AuthProvider } from './context/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import {
   School,
   ShieldCheck,
@@ -101,12 +104,71 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   Lock: <Lock className="w-5 h-5 text-red-400" />
 };
 
+const PATH_TO_TAB_MAP: Record<string, string> = {
+  '/': 'website',
+  '/login': 'auth',
+  '/auth': 'auth',
+  '/parent': 'parentportal',
+  '/school': 'schoolportal',
+  '/command': 'c3command',
+  '/c3': 'c3command',
+  '/responder': 'responderapp',
+  '/technician': 'fieldtech',
+  '/fieldtech': 'fieldtech',
+  '/government': 'natgov',
+  '/natgov': 'natgov',
+  '/executive': 'execcabinet',
+  '/execcabinet': 'execcabinet',
+  '/deployment': 'production_deployment',
+  '/admin/deployment': 'production_deployment',
+};
+
+const TAB_TO_PATH_MAP: Record<string, string> = {
+  website: '/',
+  auth: '/login',
+  parentportal: '/parent',
+  schoolportal: '/school',
+  c3command: '/command',
+  responderapp: '/responder',
+  fieldtech: '/technician',
+  natgov: '/government',
+  execcabinet: '/executive',
+  production_deployment: '/deployment',
+};
+
+const getInitialTabFromPath = (): string => {
+  if (typeof window === 'undefined') return 'website';
+  const path = window.location.pathname.toLowerCase();
+  return PATH_TO_TAB_MAP[path] || 'website';
+};
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'release_engineering' | 'system_validation' | 'design_system' | 'platform_integration' | 'execcabinet' | 'natgov' | 'fieldtech' | 'responderapp' | 'c3command' | 'schoolportal' | 'parentportal' | 'auth' | 'website' | 'workspace' | 'academy' | 'digitaltwin' | 'mebim' | 'ebocgcip' | 'commprocure' | 'hwcert' | 'aicipilot' | 'nrpeos' | 'npdoapm' | 'eqavcpr' | 'edcndp' | 'ecztdp' | 'namgp' | 'ftdpa' | 'erma' | 'sap' | 'pma' | 'bserme' | 'epore' | 'earnsip' | 'eiepg' | 'dfcce' | 'apcpe' | 'c3' | 'psnce' | 'ercde' | 'eioe' | 'csde' | 'geofence' | 'telemetry' | 'pairing' | 'device' | 'learner' | 'parent' | 'school' | 'iam' | 'nestjs' | 'decision' | 'sprint1' | 'db_sprint1' | 'pipeline' | 'capabilities' | 'matrix' | 'vision' | 'srs'>('release_engineering');
+  const [activeTab, setActiveTab] = useState<string>(getInitialTabFromPath);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<Level1Domain | null>(CAPABILITY_DOMAINS[0]);
   const [selectedService, setSelectedService] = useState<Level3Service | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
+
+  // Handle URL route changes on tab switch
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    const targetPath = TAB_TO_PATH_MAP[tab] || `/${tab}`;
+    if (typeof window !== 'undefined' && window.location.pathname !== targetPath) {
+      window.history.pushState({ tab }, '', targetPath);
+    }
+  };
+
+  // Sync tab with browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      const matchedTab = PATH_TO_TAB_MAP[path] || 'website';
+      setActiveTab(matchedTab);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Filter domains based on search & category
   const filteredDomains = useMemo(() => {
@@ -132,56 +194,92 @@ export default function App() {
     });
   }, [searchTerm, categoryFilter]);
 
+  const handleTabRedirect = (tab: string) => {
+    handleTabChange(tab);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased flex flex-col">
-      {/* Navigation Header */}
-      <Header
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-      />
+    <AuthProvider onTabRedirect={handleTabRedirect}>
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased flex flex-col">
+        {/* Navigation Header */}
+        <Header
+          activeTab={activeTab}
+          setActiveTab={handleTabChange}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
 
-      {/* Main Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* TAB 0: PROMPT 064 PRODUCTION PACKAGING, RELEASE ENGINEERING & DISTRIBUTION PLATFORM */}
-        {activeTab === 'release_engineering' && <ReleaseEngineeringModule />}
+        {/* Main Container */}
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* TAB 0: PROMPT 065 PRODUCTION DEPLOYMENT, NATIONAL GO-LIVE & HYPERCARE PLATFORM */}
+          {activeTab === 'production_deployment' && <ProductionDeploymentModule />}
 
-        {/* TAB 0.1: PROMPT 063 SYSTEM CERTIFICATION & E2E INTEGRATION TESTS */}
-        {activeTab === 'system_validation' && <SystemValidationModule />}
+          {/* TAB 0.1: PROMPT 064 PRODUCTION PACKAGING, RELEASE ENGINEERING & DISTRIBUTION PLATFORM */}
+          {activeTab === 'release_engineering' && <ReleaseEngineeringModule />}
 
-        {/* TAB 0.1: PROMPT 062 ENTERPRISE DESIGN SYSTEM, UI/UX POLISH & ACCESSIBILITY */}
-        {activeTab === 'design_system' && <EnterpriseDesignSystemModule />}
+          {/* TAB 0.1: PROMPT 063 SYSTEM CERTIFICATION & E2E INTEGRATION TESTS */}
+          {activeTab === 'system_validation' && <SystemValidationModule />}
 
-        {/* TAB 0.1: PROMPT 061 END-TO-END PLATFORM INTEGRATION & LIVE API CONNECTION */}
-        {activeTab === 'platform_integration' && <PlatformIntegrationModule />}
+          {/* TAB 0.1: PROMPT 062 ENTERPRISE DESIGN SYSTEM, UI/UX POLISH & ACCESSIBILITY */}
+          {activeTab === 'design_system' && <EnterpriseDesignSystemModule />}
 
-        {/* TAB 0.1: PROMPT 060 EXECUTIVE INTELLIGENCE, BUSINESS INTELLIGENCE & CABINET DASHBOARD */}
-        {activeTab === 'execcabinet' && <ExecutiveCabinetModule />}
+          {/* TAB 0.1: PROMPT 061 END-TO-END PLATFORM INTEGRATION & LIVE API CONNECTION */}
+          {activeTab === 'platform_integration' && <PlatformIntegrationModule />}
 
-        {/* TAB 0.1: PROMPT 059 NATIONAL ADMINISTRATION, GOVERNMENT GOVERNANCE & MULTI-TENANT PORTAL */}
-        {activeTab === 'natgov' && <NationalGovernanceModule />}
+          {/* TAB 0.1: PROMPT 060 EXECUTIVE INTELLIGENCE, BUSINESS INTELLIGENCE & CABINET DASHBOARD */}
+          {activeTab === 'execcabinet' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'NATIONAL_ADMIN', 'READONLY_AUDITOR']} onNavigateTab={handleTabRedirect}>
+              <ExecutiveCabinetModule />
+            </ProtectedRoute>
+          )}
 
-        {/* TAB 0.1: PROMPT 058 FIELD TECHNICIAN & DEVICE PROVISIONING APPLICATION */}
-        {activeTab === 'fieldtech' && <TechnicianProvisioningModule />}
+          {/* TAB 0.1: PROMPT 059 NATIONAL ADMINISTRATION, GOVERNMENT GOVERNANCE & MULTI-TENANT PORTAL */}
+          {activeTab === 'natgov' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'NATIONAL_ADMIN', 'PROVINCIAL_ADMIN']} onNavigateTab={handleTabRedirect}>
+              <NationalGovernanceModule />
+            </ProtectedRoute>
+          )}
 
-        {/* TAB 0.1: PROMPT 057 EMERGENCY RESPONDER MOBILE APPLICATION */}
-        {activeTab === 'responderapp' && <ResponderMobileModule />}
+          {/* TAB 0.1: PROMPT 058 FIELD TECHNICIAN & DEVICE PROVISIONING APPLICATION */}
+          {activeTab === 'fieldtech' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'DEVICE_TECHNICIAN']} onNavigateTab={handleTabRedirect}>
+              <TechnicianProvisioningModule />
+            </ProtectedRoute>
+          )}
 
-        {/* TAB 0.1: PROMPT 056 NATIONAL C3 COMMAND CENTRE WEB APPLICATION */}
-        {activeTab === 'c3command' && <C3CommandCentreModule />}
+          {/* TAB 0.1: PROMPT 057 EMERGENCY RESPONDER MOBILE APPLICATION */}
+          {activeTab === 'responderapp' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'EMERGENCY_PARTNER', 'COMMAND_OPERATOR']} onNavigateTab={handleTabRedirect}>
+              <ResponderMobileModule />
+            </ProtectedRoute>
+          )}
 
-        {/* TAB 0.1: PROMPT 055 PRODUCTION SCHOOL ADMINISTRATION PORTAL */}
-        {activeTab === 'schoolportal' && <SchoolPortalModule />}
+          {/* TAB 0.1: PROMPT 056 NATIONAL C3 COMMAND CENTRE WEB APPLICATION */}
+          {activeTab === 'c3command' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'COMMAND_OPERATOR', 'NATIONAL_ADMIN', 'PROVINCIAL_ADMIN']} onNavigateTab={handleTabRedirect}>
+              <C3CommandCentreModule />
+            </ProtectedRoute>
+          )}
 
-        {/* TAB 0.1: PROMPT 054 PARENT PORTAL */}
-        {activeTab === 'parentportal' && <ParentPortalModule />}
+          {/* TAB 0.1: PROMPT 055 PRODUCTION SCHOOL ADMINISTRATION PORTAL */}
+          {activeTab === 'schoolportal' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'SCHOOL_ADMIN', 'TEACHER']} onNavigateTab={handleTabRedirect}>
+              <SchoolPortalModule />
+            </ProtectedRoute>
+          )}
+
+          {/* TAB 0.1: PROMPT 054 PARENT PORTAL */}
+          {activeTab === 'parentportal' && (
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN', 'PARENT']} onNavigateTab={handleTabRedirect}>
+              <ParentPortalModule />
+            </ProtectedRoute>
+          )}
 
         {/* TAB 0.1: PROMPT 053 ENTERPRISE AUTHENTICATION & IDENTITY PORTAL */}
         {activeTab === 'auth' && <AuthModule />}
 
         {/* TAB 0.1: PHASE 2 ITIS CORPORATE WEBSITE FOUNDATION */}
-        {activeTab === 'website' && <WebsiteModule />}
+        {activeTab === 'website' && <WebsiteModule onNavigateTab={handleTabRedirect} />}
 
         {/* TAB 0.1: PHASE 2 PRODUCTION IMPLEMENTATION WORKSPACE FOUNDATION */}
         {activeTab === 'workspace' && <WorkspaceModule />}
@@ -566,5 +664,6 @@ export default function App() {
         <p>© 2026 Elite Engineering Company. All Rights Reserved. Confidential Government Contract Deliverable.</p>
       </footer>
     </div>
+    </AuthProvider>
   );
 }

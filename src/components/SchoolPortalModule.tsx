@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   School,
   Building2,
@@ -151,29 +152,59 @@ export const SchoolPortalModule: React.FC = () => {
     darkTheme: true
   });
 
-  // Simulated WebSockets Telemetry Ping
+  // WebSockets Telemetry Ping & Live SSE Subscriptions
   useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      setLastWsPacketTime(now.toTimeString().split(' ')[0] + ' AM');
-    }, 3000);
-    return () => clearInterval(interval);
+    const unsubscribe = itisWebSocketHub.subscribe('attendance', (msg: any) => {
+      if (msg.event === 'NFC_CHECKIN_SUCCESS') {
+        const payload = msg.payload;
+        const newScan: NfcScanLog = {
+          id: payload.id || `SCAN-${Math.floor(1000 + Math.random() * 9000)}`,
+          learnerId: payload.learnerId || 'LNR-001',
+          learnerName: payload.learnerName || 'Bulumko Mkhize',
+          grade: 'Grade 6B',
+          timestamp: payload.nfcTime || new Date().toLocaleTimeString(),
+          gateLocation: 'Main Entrance Gate A',
+          readerSerial: 'RDR-NFC-01',
+          scanStatus: 'VALID_ENTRY'
+        };
+        setAttendanceLogs((prev) => [newScan, ...prev]);
+        setLastWsPacketTime(new Date().toLocaleTimeString());
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const handleSimulateGateScan = () => {
+  const handleSimulateGateScan = async () => {
     const now = new Date();
-    const timeStr = now.toTimeString().split(' ')[0] + ' AM';
-    const newScan: NfcScanLog = {
-      id: `SCAN-${Math.floor(1000 + Math.random() * 9000)}`,
-      learnerId: 'LNR-001',
-      learnerName: 'Bulumko Mkhize',
-      grade: 'Grade 6B',
-      timestamp: timeStr,
-      gateLocation: 'Main Entrance Gate A',
-      readerSerial: 'RDR-NFC-01',
-      scanStatus: 'VALID_ENTRY'
-    };
-    setAttendanceLogs([newScan, ...attendanceLogs]);
+    const timeStr = now.toLocaleTimeString();
+
+    try {
+      await fetch('/api/v1/attendance/nfc-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          learnerId: 'LNR-001',
+          learnerName: 'Bulumko Mkhize',
+          wearableSerial: 'RDR-NFC-01',
+          schoolEmisCode: selectedCampus.emisCode,
+          schoolName: selectedCampus.name,
+        }),
+      });
+    } catch (err) {
+      console.warn('Fallback offline scan');
+      const newScan: NfcScanLog = {
+        id: `SCAN-${Math.floor(1000 + Math.random() * 9000)}`,
+        learnerId: 'LNR-001',
+        learnerName: 'Bulumko Mkhize',
+        grade: 'Grade 6B',
+        timestamp: timeStr,
+        gateLocation: 'Main Entrance Gate A',
+        readerSerial: 'RDR-NFC-01',
+        scanStatus: 'VALID_ENTRY'
+      };
+      setAttendanceLogs([newScan, ...attendanceLogs]);
+    }
     setLastWsPacketTime(timeStr);
   };
 

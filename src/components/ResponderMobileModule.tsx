@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   Shield,
   Siren,
@@ -110,6 +111,61 @@ export function ResponderMobileModule() {
   // Voice Navigation Prompt simulation
   const [voicePromptText, setVoicePromptText] = useState<string>('In 300 meters, turn right onto Vilakazi Street. School corridor ahead.');
 
+  // Subscribe to WebSocket SOS events
+  useEffect(() => {
+    const unsubscribe = itisWebSocketHub.subscribe('incidents', (msg: any) => {
+      if (msg.event === 'SOS_TRIGGERED') {
+        const payload = msg.payload;
+        if (payload) {
+          const newMission: DispatchMission = {
+            id: payload.id || `MSN-${Date.now()}`,
+            cadTicketNumber: payload.incidentNumber || 'SOS-2026-LIVE',
+            timestamp: new Date().toLocaleTimeString(),
+            severity: 'CRITICAL',
+            category: 'SOS_PANIC',
+            learnerId: payload.learnerId || 'lrn-901',
+            learnerName: payload.learnerName || 'Sipho Mokoena',
+            learnerPhoto: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=150',
+            learnerAge: 11,
+            learnerGrade: 'Grade 6B',
+            schoolName: payload.schoolName || 'Diepkloof Primary School',
+            incidentAddress: 'Live GPS Coordinates Pinpoint',
+            latitude: payload.latitude || -26.2483,
+            longitude: payload.longitude || 27.9322,
+            distanceKm: 2.1,
+            estimatedEtaMinutes: 4,
+            operatorAssigned: 'C3 Dispatch #142',
+            guardianName: 'Thabo Mokoena',
+            guardianMobile: '+27 82 555 0192',
+            riskScore: 98,
+            aiExplanation: 'SOS panic button activated on wearable device. Immediate responder dispatch required.',
+            medicalInfo: {
+              bloodGroup: 'O+',
+              allergies: ['Penicillin'],
+              medications: ['Salbutamol Inhaler'],
+              medicalConditions: ['Asthma'],
+              preferredHospital: 'Chris Hani Baragwanath Academic Hospital',
+              medicalAidNumber: 'DISCOVERY-9042810'
+            },
+            missionState: 'DISPATCH_RECEIVED',
+            timeline: [
+              {
+                time: new Date().toLocaleTimeString(),
+                event: 'SOS Alert received by Responder Unit via SITA Telemetry Stream',
+                actor: 'SYSTEM_C3',
+              },
+            ],
+            evidenceCaptured: []
+          };
+          setMissions((prev) => [newMission, ...prev]);
+          setActiveMission(newMission);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [officerName, unitCallsign]);
+
   // Handle Mission State Machine Progress
   const handleAdvanceMissionState = () => {
     const stateFlow: DispatchMission['missionState'][] = [
@@ -145,6 +201,17 @@ export function ResponderMobileModule() {
 
       setActiveMission(updatedMission);
       setMissions((prev) => prev.map((m) => (m.id === updatedMission.id ? updatedMission : m)));
+
+      // Send dispatch update to backend API
+      fetch(`/api/v1/incidents/${activeMission.id}/dispatch`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: nextState,
+          dispatchedUnit: unitCallsign,
+          etaMinutes: Math.max(0, activeMission.estimatedEtaMinutes - 1),
+        }),
+      }).catch(console.warn);
 
       if (isOfflineMode) {
         setSqliteQueueCount((prev) => prev + 1);

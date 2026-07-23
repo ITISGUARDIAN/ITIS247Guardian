@@ -1,9 +1,9 @@
 import React from 'react';
-import { Shield, Globe, Layers, Search, Compass, FileCheck2, ShieldAlert, Brain, Flame, Siren, Bell, FileCode, Database, Server, KeyRound, School, Users, Smartphone, Cpu, Link2, Radio, Activity, MapPin, BarChart3, CreditCard, Building2, Cloud, Award, GraduationCap, Box, Heart, Wrench, Zap, Palette, ShieldCheck, Package } from 'lucide-react';
+import { Shield, Globe, Layers, Search, Compass, FileCheck2, ShieldAlert, Brain, Flame, Siren, Bell, FileCode, Database, Server, KeyRound, School, Users, Smartphone, Cpu, Link2, Radio, Activity, MapPin, BarChart3, CreditCard, Building2, Cloud, Award, GraduationCap, Box, Heart, Wrench, Zap, Palette, ShieldCheck, Package, Rocket } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'release_engineering' | 'system_validation' | 'design_system' | 'platform_integration' | 'execcabinet' | 'natgov' | 'fieldtech' | 'responderapp' | 'c3command' | 'schoolportal' | 'parentportal' | 'auth' | 'website' | 'workspace' | 'academy' | 'digitaltwin' | 'mebim' | 'ebocgcip' | 'commprocure' | 'hwcert' | 'aicipilot' | 'nrpeos' | 'npdoapm' | 'eqavcpr' | 'edcndp' | 'ecztdp' | 'namgp' | 'ftdpa' | 'erma' | 'sap' | 'pma' | 'bserme' | 'epore' | 'earnsip' | 'eiepg' | 'dfcce' | 'apcpe' | 'c3' | 'psnce' | 'ercde' | 'eioe' | 'csde' | 'geofence' | 'telemetry' | 'pairing' | 'device' | 'learner' | 'parent' | 'school' | 'iam' | 'nestjs' | 'decision' | 'sprint1' | 'db_sprint1' | 'pipeline' | 'capabilities' | 'matrix' | 'vision' | 'srs';
-  setActiveTab: (tab: 'release_engineering' | 'system_validation' | 'design_system' | 'platform_integration' | 'execcabinet' | 'natgov' | 'fieldtech' | 'responderapp' | 'c3command' | 'schoolportal' | 'parentportal' | 'auth' | 'website' | 'workspace' | 'academy' | 'digitaltwin' | 'mebim' | 'ebocgcip' | 'commprocure' | 'hwcert' | 'aicipilot' | 'nrpeos' | 'npdoapm' | 'eqavcpr' | 'edcndp' | 'ecztdp' | 'namgp' | 'ftdpa' | 'erma' | 'sap' | 'pma' | 'bserme' | 'epore' | 'earnsip' | 'eiepg' | 'dfcce' | 'apcpe' | 'c3' | 'psnce' | 'ercde' | 'eioe' | 'csde' | 'geofence' | 'telemetry' | 'pairing' | 'device' | 'learner' | 'parent' | 'school' | 'iam' | 'nestjs' | 'decision' | 'sprint1' | 'db_sprint1' | 'pipeline' | 'capabilities' | 'matrix' | 'vision' | 'srs') => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
@@ -40,126 +40,33 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Navigation Links */}
           <nav className="hidden lg:flex space-x-1 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60 overflow-x-auto">
+            {/* 1. ITIS CORPORATE WEBSITE (PRIMARY / DEFAULT ROUTE) */}
             <button
-              onClick={() => setActiveTab('release_engineering')}
+              onClick={() => setActiveTab('website')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'release_engineering'
+                activeTab === 'website'
                   ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
             >
-              <Package className="w-3.5 h-3.5 text-amber-400" />
-              <span>Release Engineering & Packaging (Prompt 064)</span>
+              <Globe className="w-3.5 h-3.5 text-amber-400" />
+              <span>ITIS Corporate Website (/)</span>
             </button>
 
+            {/* 2. ENTERPRISE AUTH / LOGIN */}
             <button
-              onClick={() => setActiveTab('system_validation')}
+              onClick={() => setActiveTab('auth')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'system_validation'
-                  ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/40 ring-1 ring-emerald-300'
+                activeTab === 'auth'
+                  ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-600/40 ring-1 ring-indigo-300'
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>System Certification & E2E Tests (Prompt 063)</span>
+              <KeyRound className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Enterprise Login (/login)</span>
             </button>
 
-            <button
-              onClick={() => setActiveTab('design_system')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'design_system'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Palette className="w-3.5 h-3.5 text-amber-400" />
-              <span>Design System & UI Polish (Prompt 062)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('platform_integration')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'platform_integration'
-                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/40 ring-1 ring-blue-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Zap className="w-3.5 h-3.5 text-blue-400" />
-              <span>Platform Integration & API Live (Prompt 061)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('execcabinet')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'execcabinet'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Award className="w-3.5 h-3.5 text-amber-400" />
-              <span>Exec Cabinet Dashboard (Prompt 060)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('natgov')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'natgov'
-                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/40 ring-1 ring-blue-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Building2 className="w-3.5 h-3.5 text-blue-400" />
-              <span>National Gov Portal (Prompt 059)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('fieldtech')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'fieldtech'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Wrench className="w-3.5 h-3.5 text-amber-400" />
-              <span>Field Tech App (Prompt 058)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('responderapp')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'responderapp'
-                  ? 'bg-red-600 text-white font-bold shadow-md shadow-red-600/40 ring-1 ring-red-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5 text-amber-400" />
-              <span>Responder Mobile App (Prompt 057)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('c3command')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'c3command'
-                  ? 'bg-red-600 text-white font-bold shadow-md shadow-red-600/40 ring-1 ring-red-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <Siren className="w-3.5 h-3.5 text-red-400 animate-pulse" />
-              <span>National C3 Command Centre (Prompt 056)</span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('schoolportal')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'schoolportal'
-                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30 ring-1 ring-blue-300'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
-              }`}
-            >
-              <School className="w-3.5 h-3.5 text-blue-400" />
-              <span>School Admin Portal (Prompt 055)</span>
-            </button>
-
+            {/* 3. PARENT PORTAL */}
             <button
               onClick={() => setActiveTab('parentportal')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
@@ -169,31 +76,98 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Heart className="w-3.5 h-3.5 text-amber-400" />
-              <span>Parent Portal (Prompt 054)</span>
+              <span>Parent Portal (/parent)</span>
             </button>
 
+            {/* 4. SCHOOL ADMIN PORTAL */}
             <button
-              onClick={() => setActiveTab('auth')}
+              onClick={() => setActiveTab('schoolportal')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'auth'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30 ring-1 ring-amber-300'
+                activeTab === 'schoolportal'
+                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30 ring-1 ring-blue-300'
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
             >
-              <KeyRound className="w-3.5 h-3.5 text-amber-400" />
-              <span>Enterprise Auth Portal (Prompt 053)</span>
+              <School className="w-3.5 h-3.5 text-blue-400" />
+              <span>School Admin Portal (/school)</span>
             </button>
 
+            {/* 5. NATIONAL C3 COMMAND CENTRE */}
             <button
-              onClick={() => setActiveTab('website')}
+              onClick={() => setActiveTab('c3command')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                activeTab === 'website'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30 ring-1 ring-amber-300'
+                activeTab === 'c3command'
+                  ? 'bg-red-600 text-white font-bold shadow-md shadow-red-600/40 ring-1 ring-red-300'
                   : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
               }`}
             >
-              <Globe className="w-3.5 h-3.5 text-amber-400" />
-              <span>ITIS Corporate Website (Phase 2 Website)</span>
+              <Siren className="w-3.5 h-3.5 text-red-400 animate-pulse" />
+              <span>C3 Command Centre (/command)</span>
+            </button>
+
+            {/* 6. EMERGENCY RESPONDER MOBILE */}
+            <button
+              onClick={() => setActiveTab('responderapp')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'responderapp'
+                  ? 'bg-red-600 text-white font-bold shadow-md shadow-red-600/40 ring-1 ring-red-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Smartphone className="w-3.5 h-3.5 text-amber-400" />
+              <span>Responder Mobile (/responder)</span>
+            </button>
+
+            {/* 7. FIELD TECH APP */}
+            <button
+              onClick={() => setActiveTab('fieldtech')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'fieldtech'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Wrench className="w-3.5 h-3.5 text-amber-400" />
+              <span>Field Tech App (/technician)</span>
+            </button>
+
+            {/* 8. NATIONAL GOV PORTAL */}
+            <button
+              onClick={() => setActiveTab('natgov')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'natgov'
+                  ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/40 ring-1 ring-blue-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5 text-blue-400" />
+              <span>National Gov Portal (/government)</span>
+            </button>
+
+            {/* 9. EXECUTIVE CABINET DASHBOARD */}
+            <button
+              onClick={() => setActiveTab('execcabinet')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'execcabinet'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Award className="w-3.5 h-3.5 text-amber-400" />
+              <span>Exec Cabinet (/executive)</span>
+            </button>
+
+            {/* 10. NATIONAL GO-LIVE & DEPLOYMENT PLATFORM */}
+            <button
+              onClick={() => setActiveTab('production_deployment')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'production_deployment'
+                  ? 'bg-emerald-500 text-slate-950 font-bold shadow-md shadow-emerald-500/40 ring-1 ring-emerald-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Rocket className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Go-Live & Deployment (/deployment)</span>
             </button>
 
             <button

@@ -1,6 +1,6 @@
 import { getCurrentEnv } from './env-config';
 
-export type WsChannel = 'telemetry' | 'incidents' | 'attendance' | 'notifications' | 'dispatch' | 'ai_predictions';
+export type WsChannel = 'telemetry' | 'incidents' | 'attendance' | 'notifications' | 'dispatch' | 'ai_predictions' | 'devices';
 
 export interface WsMessage<T = unknown> {
   channel: WsChannel;
@@ -13,10 +13,9 @@ export interface WsMessage<T = unknown> {
 export type WsListener<T = unknown> = (message: WsMessage<T>) => void;
 
 class ITISWebSocketHub {
-  private socket: WebSocket | null = null;
+  private eventSource: EventSource | null = null;
   private isConnected: boolean = false;
   private listeners: Map<WsChannel, Set<WsListener>> = new Map();
-  private reconnectInterval: number = 3000;
   private activeStreamsCount: number = 0;
   private simulatedInterval: NodeJS.Timeout | null = null;
 
@@ -25,17 +24,47 @@ class ITISWebSocketHub {
   }
 
   private initChannels() {
-    const channels: WsChannel[] = ['telemetry', 'incidents', 'attendance', 'notifications', 'dispatch', 'ai_predictions'];
+    const channels: WsChannel[] = ['telemetry', 'incidents', 'attendance', 'notifications', 'dispatch', 'ai_predictions', 'devices'];
     channels.forEach((ch) => this.listeners.set(ch, new Set()));
   }
 
   public connect() {
+    if (this.isConnected) return;
     const env = getCurrentEnv();
-    console.log(`[ITIS WebSocket Hub] Connecting to ${env.wsUrl}...`);
+    console.log(`[ITIS WebSocket Hub] Connecting live stream to /api/v1/events/stream...`);
 
-    // In browser environment or offline simulation mode, we provide high-fidelity live event broadcasting
+    if (typeof window !== 'undefined' && 'EventSource' in window) {
+      try {
+        this.eventSource = new EventSource('/api/v1/events/stream');
+        
+        const channels: WsChannel[] = ['telemetry', 'incidents', 'attendance', 'notifications', 'dispatch', 'ai_predictions', 'devices'];
+        channels.forEach((ch) => {
+          this.eventSource?.addEventListener(ch, (e: MessageEvent) => {
+            try {
+              const data = JSON.parse(e.data);
+              this.broadcast(ch, data.event, data.payload, 'LIVE_BACKEND');
+            } catch (err) {
+              // Ignore parse errors
+            }
+          });
+        });
+
+        this.eventSource.onopen = () => {
+          this.isConnected = true;
+          console.log('[ITIS EventStream] Connected to live backend stream.');
+        };
+
+        this.eventSource.onerror = () => {
+          this.startSimulatedBroadcasts();
+        };
+      } catch (e) {
+        this.startSimulatedBroadcasts();
+      }
+    } else {
+      this.startSimulatedBroadcasts();
+    }
+
     this.isConnected = true;
-    this.startSimulatedBroadcasts();
   }
 
   public subscribe<T = unknown>(channel: WsChannel, listener: WsListener<T>): () => void {
@@ -50,7 +79,6 @@ class ITISWebSocketHub {
       this.connect();
     }
 
-    // Return unsubscribe function
     return () => {
       set.delete(listener as WsListener);
       this.activeStreamsCount = Math.max(0, this.activeStreamsCount - 1);
@@ -81,13 +109,10 @@ class ITISWebSocketHub {
     };
   }
 
-  // Simulated live event ticks for real-time reactivity across components when dev server is offline
   private startSimulatedBroadcasts() {
     if (this.simulatedInterval) return;
 
     this.simulatedInterval = setInterval(() => {
-      if (!this.isConnected) return;
-
       // Telemetry Ping
       const latOffset = (Math.random() - 0.5) * 0.002;
       const lngOffset = (Math.random() - 0.5) * 0.002;
@@ -106,24 +131,7 @@ class ITISWebSocketHub {
         },
         'WEARABLE_IOT_GATEWAY'
       );
-
-      // Random Attendance Scan
-      if (Math.random() > 0.6) {
-        this.broadcast(
-          'attendance',
-          'NFC_TAP_EVENT',
-          {
-            learnerId: `LNR-2026-${Math.floor(1000 + Math.random() * 9000)}`,
-            learnerName: ['Amahle Dlamini', 'Kagiso Molefe', 'Zoe Williams', 'Lethabo Sithole'][Math.floor(Math.random() * 4)],
-            schoolName: 'Orlando East Secondary',
-            gateId: 'GATE-01-MAIN',
-            scanType: 'ENTRY',
-            timestamp: new Date().toLocaleTimeString(),
-          },
-          'SCHOOL_GATE_CONTROLLER'
-        );
-      }
-    }, 2500);
+    }, 3000);
   }
 }
 

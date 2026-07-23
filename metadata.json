@@ -1,6 +1,6 @@
 {
   "name": "ITIS",
-  "description": "ITIS Production Packaging & Release Engineering (Prompt 064 - RC2 Distribution Platform), System Certification (Prompt 063), Enterprise Design System (Prompt 062), End-to-End Platform Integration (Prompt 061) with signed AAB/APK bundles, multi-stage Dockerfiles, Helm manifests, App Store submission packages, and RC2 distribution bundles.",
+  "description": "ITIS Production Go-Live & National Deployment Platform (Prompt 065 - Final Operational Package v1.0.0), Production Packaging & Release Engineering (Prompt 064), System Certification (Prompt 063), Enterprise Design System (Prompt 062) with SITA Cloud Enclave infrastructure, minute-by-minute runbook, 90-day hypercare SLA matrix, and national pilot launch certification.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

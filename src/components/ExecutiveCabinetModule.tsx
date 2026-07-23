@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   Building2,
   ShieldCheck,
@@ -67,6 +68,20 @@ export function ExecutiveCabinetModule() {
   const [selectedProvince, setSelectedProvince] = useState<ProvincialInsight>(
     PROVINCIAL_INTELLIGENCE_DATA[0]
   );
+
+  // Live Telemetry Event Tally
+  const [activeNationalIncidentsCount, setActiveNationalIncidentsCount] = useState<number>(3);
+  const [lastEventTime, setLastEventTime] = useState<string>('08:14 AM');
+
+  useEffect(() => {
+    const unsubscribe = itisWebSocketHub.subscribe('incidents', (msg: any) => {
+      if (msg.event === 'SOS_TRIGGERED') {
+        setActiveNationalIncidentsCount((prev) => prev + 1);
+        setLastEventTime(new Date().toLocaleTimeString());
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Language Selector
   const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
