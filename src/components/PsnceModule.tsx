@@ -137,7 +137,7 @@ export const PsnceModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/50 text-blue-300 text-xs font-semibold">
               <Bell className="w-3.5 h-3.5 animate-pulse text-blue-400" />
-              <span>PROMPT 028 — PARENT, SCHOOL & STAKEHOLDER NOTIFICATION ENGINE (PSNCE)</span>
+              <span>— PARENT, SCHOOL & STAKEHOLDER NOTIFICATION ENGINE (PSNCE)</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -432,7 +432,7 @@ export const PsnceModule: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4">
             <h3 className="text-base font-bold text-white flex items-center space-x-2">
               <ShieldCheck className="w-5 h-5 text-blue-400" />
-              <span>10 Mandatory PSNCE Notification Business Rules</span>
+              <span>Enterprise Directives & Compliance Standards</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

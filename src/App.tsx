@@ -61,6 +61,7 @@ import { EnterpriseDesignSystemModule } from './components/EnterpriseDesignSyste
 import { SystemValidationModule } from './components/SystemValidationModule';
 import { ReleaseEngineeringModule } from './components/ReleaseEngineeringModule';
 import { ProductionDeploymentModule } from './components/ProductionDeploymentModule';
+import { SetupWizardModule } from './components/SetupWizardModule';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import {
@@ -108,6 +109,8 @@ const PATH_TO_TAB_MAP: Record<string, string> = {
   '/': 'website',
   '/login': 'auth',
   '/auth': 'auth',
+  '/setup': 'setup',
+  '/admin/setup': 'setup',
   '/parent': 'parentportal',
   '/school': 'schoolportal',
   '/command': 'c3command',
@@ -126,6 +129,7 @@ const PATH_TO_TAB_MAP: Record<string, string> = {
 const TAB_TO_PATH_MAP: Record<string, string> = {
   website: '/',
   auth: '/login',
+  setup: '/setup',
   parentportal: '/parent',
   schoolportal: '/school',
   c3command: '/command',
@@ -211,6 +215,9 @@ export default function App() {
 
         {/* Main Container */}
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* TAB 0: PROMPT 068 ENTERPRISE INSTALLATION WIZARD & FIRST-TIME SETUP */}
+          {activeTab === 'setup' && <SetupWizardModule onNavigateTab={handleTabRedirect} />}
+
           {/* TAB 0: PROMPT 065 PRODUCTION DEPLOYMENT, NATIONAL GO-LIVE & HYPERCARE PLATFORM */}
           {activeTab === 'production_deployment' && <ProductionDeploymentModule />}
 

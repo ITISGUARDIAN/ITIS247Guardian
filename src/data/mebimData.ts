@@ -1,5 +1,5 @@
 export interface ModuleSummaryRecord {
-  promptCode: string; // e.g. PROMPT 017, PROMPT 047
+  promptCode?: string;
   title: string;
   purpose: string;
   dependencies: string[];
@@ -41,7 +41,7 @@ export interface MebimCodeSpec {
 // SAMPLE CONSOLIDATED MODULES INDEX (P017 - P049)
 export const CONSOLIDATED_MODULES_INDEX: ModuleSummaryRecord[] = [
   {
-    promptCode: 'PROMPT 017',
+    promptCode: '',
     title: 'Identity & Access Management (IAM) & School Hierarchy',
     purpose: 'Zero-trust RBAC for DBE, SAPS, SITA, teachers, parents, and emergency response teams.',
     dependencies: ['SITA Sovereign Cloud', 'Firebase Auth'],
@@ -50,7 +50,7 @@ export const CONSOLIDATED_MODULES_INDEX: ModuleSummaryRecord[] = [
     nationalKpis: '100% SSA cleared role grants across 24,000 schools',
   },
   {
-    promptCode: 'PROMPT 024',
+    promptCode: '',
     title: 'Autonomous Real-Time GPS Wearable Telemetry & Geofencing Engine',
     purpose: 'Sub-900ms child location streaming, safe corridor boundary verification, and optical tamper alert routing.',
     dependencies: ['Nordic nRF9160 LTE-M', 'u-blox MAX-M10S GNSS'],
@@ -59,7 +59,7 @@ export const CONSOLIDATED_MODULES_INDEX: ModuleSummaryRecord[] = [
     nationalKpis: '99.999% GPS corridor breach detection under 250ms',
   },
   {
-    promptCode: 'PROMPT 032',
+    promptCode: '',
     title: 'SAPS CAD Multi-Agency Automated Dispatch Gateway',
     purpose: 'Direct API bridge to 10111 Flying Squad patrol vehicles, Metro Police, and armed private security units.',
     dependencies: ['SAPS C3 Gateway', 'SITA Government Bus'],
@@ -68,7 +68,7 @@ export const CONSOLIDATED_MODULES_INDEX: ModuleSummaryRecord[] = [
     nationalKpis: 'Sub-900ms SAPS vehicle CAD ticket generation',
   },
   {
-    promptCode: 'PROMPT 047',
+    promptCode: '',
     title: 'Hardware Wearable Engineering & ICASA / NRCS Certification',
     purpose: '38x34x11.2mm IP68 child safety tracker with 48h battery, UN38.3 compliance, and ICASA Type Approval.',
     dependencies: ['Bosch BMA400', 'STSAFE-A110', 'nRF9160'],
@@ -77,7 +77,7 @@ export const CONSOLIDATED_MODULES_INDEX: ModuleSummaryRecord[] = [
     nationalKpis: '100k+ batch yield rate > 99.8% in Gauteng/Durban plants',
   },
   {
-    promptCode: 'PROMPT 048',
+    promptCode: '',
     title: 'Commercial Launch & Government Procurement Package',
     purpose: 'R14.50 monthly tariff structure, DBE/SITA tender dossiers, and PFMA/MFMA Treasury approval models.',
     dependencies: ['National Treasury Safety Web', 'DBE SITA Bus'],
@@ -86,7 +86,7 @@ export const CONSOLIDATED_MODULES_INDEX: ModuleSummaryRecord[] = [
     nationalKpis: '100% PFMA compliance with Level 1 BBBEE contributorship',
   },
   {
-    promptCode: 'PROMPT 049',
+    promptCode: '',
     title: 'Enterprise Business Operations & King IV Corporate Governance',
     purpose: 'Decadal enterprise operating model, King IV board committees, ERM risk heatmaps, CIPC patents, and ESG.',
     dependencies: ['CIPC Patent Registry', 'State Security Agency'],

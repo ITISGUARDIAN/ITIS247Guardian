@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Footer } from './Footer';
 import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   School,
@@ -292,7 +293,7 @@ export const SchoolPortalModule: React.FC = () => {
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/40 text-blue-300 text-xs font-bold">
               <Building2 className="w-4 h-4 text-blue-400 animate-pulse" />
-              <span>PROMPT 055 — PRODUCTION SCHOOL ADMINISTRATION PORTAL</span>
+              <span>— PRODUCTION SCHOOL ADMINISTRATION PORTAL</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -1370,6 +1371,9 @@ export const SchoolPortalModule: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 };

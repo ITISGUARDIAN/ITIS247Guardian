@@ -149,8 +149,7 @@ export default function () {
                 RC1 CERTIFIED
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 063
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               End-to-End Test Suite, k6 Load Simulator, Security Certification & Release Readiness Package

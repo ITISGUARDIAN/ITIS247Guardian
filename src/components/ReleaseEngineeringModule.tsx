@@ -118,8 +118,7 @@ storeFile=/opt/sita/keystores/itis_mobile_production.jks`;
                 RC2 RELEASE BUNDLE
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 064
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               Multi-platform APK/AAB Builds, Docker Multi-stage Specs, K8s Manifests & App Store Submission Package

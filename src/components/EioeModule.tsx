@@ -198,8 +198,7 @@ export function EioeModule() {
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <span className="px-3 py-1 bg-red-500/20 text-red-300 text-xs font-semibold rounded-full border border-red-500/30 flex items-center gap-1.5">
-                <Flame className="w-3.5 h-3.5" /> PROMPT 026
-              </span>
+                <Flame className="w-3.5 h-3.5" /> </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-full border border-emerald-500/30 flex items-center gap-1.5">
                 <ShieldAlert className="w-3.5 h-3.5" /> Emergency Incident Orchestration Engine (EIOE)
               </span>

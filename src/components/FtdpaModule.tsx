@@ -129,7 +129,7 @@ export const FtdpaModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-900/60 border border-amber-700/50 text-amber-300 text-xs font-semibold">
               <Wrench className="w-3.5 h-3.5 animate-pulse text-amber-400" />
-              <span>PROMPT 039 — FIELD TECHNICIAN & DEVICE PROVISIONING APP (FTDPA)</span>
+              <span>— FIELD TECHNICIAN & DEVICE PROVISIONING APP (FTDPA)</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -689,7 +689,7 @@ export const FtdpaModule: React.FC = () => {
         <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
           <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
             <ShieldCheck className="w-5 h-5 text-teal-400" />
-            <span>10 Mandatory FTDPA Field Technician Rules & SLAs</span>
+            <span>Enterprise Directives & Compliance Standards & SLAs</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

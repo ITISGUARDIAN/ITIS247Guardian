@@ -1,0 +1,82 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Total API Requests / sec",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total[1m]))",
+          "legendFormat": "Req/sec"
+        }
+      ]
+    },
+    {
+      "title": "API Response Latency (P95 & P99)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p95 latency (s)"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99 latency (s)"
+        }
+      ]
+    },
+    {
+      "title": "SAPS Emergency CAD Dispatch Gateway Latency",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "saps_adapter_response_time_ms",
+          "legendFormat": "Latency (ms)"
+        }
+      ]
+    },
+    {
+      "title": "SITA GovCloud Connection SLA Status",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 8 },
+      "targets": [
+        {
+          "expr": "sita_govcloud_uptime_percentage",
+          "legendFormat": "SLA %"
+        }
+      ]
+    },
+    {
+      "title": "Active Vehicle Telematics Streams",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 8 },
+      "targets": [
+        {
+          "expr": "itis_telematics_active_vehicles_count",
+          "legendFormat": "Active Vehicles"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["itis", "production", "sita", "telematics"],
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "title": "ITIS Production Infrastructure & SLA Dashboard",
+  "uid": "itis-prod-sla-dashboard"
+}

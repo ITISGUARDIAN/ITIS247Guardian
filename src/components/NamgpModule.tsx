@@ -137,7 +137,7 @@ export const NamgpModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-900/60 border border-blue-700/50 text-blue-300 text-xs font-semibold">
               <Building2 className="w-3.5 h-3.5 animate-pulse text-blue-400" />
-              <span>PROMPT 040 — NATIONAL ADMINISTRATION & MULTI-TENANCY PLATFORM (NAMGP)</span>
+              <span>— NATIONAL ADMINISTRATION & MULTI-TENANCY PLATFORM (NAMGP)</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -579,7 +579,7 @@ export const NamgpModule: React.FC = () => {
         <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
           <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
             <Lock className="w-5 h-5 text-teal-400" />
-            <span>10 Mandatory Government Governance Rules & SLAs</span>
+            <span>Enterprise Directives & Compliance Standards & SLAs</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

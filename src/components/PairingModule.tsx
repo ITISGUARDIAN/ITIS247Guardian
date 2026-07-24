@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { itisApiClient } from '../lib/api-client';
 import {
   Link2,
   ShieldCheck,
@@ -208,6 +209,14 @@ export function PairingModule() {
       setHistoryRecords([newHist, ...historyRecords]);
     }
 
+    // Connect to backend IoT activation API
+    itisApiClient.request('/iot/activate', 'POST', {
+      imei: selectedPairing.imei,
+      learnerId: selectedPairing.learnerId,
+      learnerName: selectedPairing.learnerName,
+      schoolName: selectedPairing.schoolName
+    }).catch(err => console.warn('Pairing activate backend error:', err));
+
     showToast(`Pairing Activated! Protection Status transitioned to PROTECTED for learner ${selectedPairing.learnerName}.`);
   };
 
@@ -297,8 +306,7 @@ export function PairingModule() {
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <span className="px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs font-semibold rounded-full border border-indigo-500/30 flex items-center gap-1.5">
-                <Link2 className="w-3.5 h-3.5" /> PROMPT 022
-              </span>
+                <Link2 className="w-3.5 h-3.5" /> </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-full border border-emerald-500/30 flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" /> 1:1 Learner-Device Binding & mTLS
               </span>

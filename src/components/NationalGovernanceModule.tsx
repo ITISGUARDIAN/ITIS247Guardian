@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Footer } from './Footer';
 import {
   Building2,
   ShieldCheck,
@@ -106,8 +107,7 @@ export function NationalGovernanceModule() {
                 SITA / DBE / TREASURY
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 059
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               Multi-Tenant Hierarchy, POPIA Compliance Engine, EMIS Sync, National Fleet Governance & Audit Ledger
@@ -614,6 +614,9 @@ export function NationalGovernanceModule() {
           </div>
         )}
       </div>
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 }

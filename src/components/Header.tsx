@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Navigation Links */}
           <nav className="hidden lg:flex space-x-1 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60 overflow-x-auto">
-            {/* 1. ITIS CORPORATE WEBSITE (PRIMARY / DEFAULT ROUTE) */}
+            {/* 1. ITIS CORPORATE WEBSITE */}
             <button
               onClick={() => setActiveTab('website')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Globe className="w-3.5 h-3.5 text-amber-400" />
-              <span>ITIS Corporate Website (/)</span>
+              <span>Corporate Website</span>
             </button>
 
             {/* 2. ENTERPRISE AUTH / LOGIN */}
@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <KeyRound className="w-3.5 h-3.5 text-indigo-300" />
-              <span>Enterprise Login (/login)</span>
+              <span>Enterprise Login</span>
             </button>
 
             {/* 3. PARENT PORTAL */}
@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Heart className="w-3.5 h-3.5 text-amber-400" />
-              <span>Parent Portal (/parent)</span>
+              <span>Parent Portal</span>
             </button>
 
             {/* 4. SCHOOL ADMIN PORTAL */}
@@ -89,7 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <School className="w-3.5 h-3.5 text-blue-400" />
-              <span>School Admin Portal (/school)</span>
+              <span>School Admin Portal</span>
             </button>
 
             {/* 5. NATIONAL C3 COMMAND CENTRE */}
@@ -102,7 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Siren className="w-3.5 h-3.5 text-red-400 animate-pulse" />
-              <span>C3 Command Centre (/command)</span>
+              <span>C3 Command Centre</span>
             </button>
 
             {/* 6. EMERGENCY RESPONDER MOBILE */}
@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Smartphone className="w-3.5 h-3.5 text-amber-400" />
-              <span>Responder Mobile (/responder)</span>
+              <span>Responder Mobile</span>
             </button>
 
             {/* 7. FIELD TECH APP */}
@@ -128,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Wrench className="w-3.5 h-3.5 text-amber-400" />
-              <span>Field Tech App (/technician)</span>
+              <span>Field Tech App</span>
             </button>
 
             {/* 8. NATIONAL GOV PORTAL */}
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Building2 className="w-3.5 h-3.5 text-blue-400" />
-              <span>National Gov Portal (/government)</span>
+              <span>National Gov Portal</span>
             </button>
 
             {/* 9. EXECUTIVE CABINET DASHBOARD */}
@@ -154,7 +154,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Award className="w-3.5 h-3.5 text-amber-400" />
-              <span>Exec Cabinet (/executive)</span>
+              <span>Exec Cabinet</span>
             </button>
 
             {/* 10. NATIONAL GO-LIVE & DEPLOYMENT PLATFORM */}
@@ -167,7 +167,20 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Rocket className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Go-Live & Deployment (/deployment)</span>
+              <span>Go-Live & Deployment</span>
+            </button>
+
+            {/* 11. PROMPT 068 ENTERPRISE SETUP WIZARD */}
+            <button
+              onClick={() => setActiveTab('setup')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'setup'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Wrench className="w-3.5 h-3.5 text-amber-400" />
+              <span>Setup Wizard</span>
             </button>
 
             <button
@@ -179,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Box className="w-3.5 h-3.5 text-amber-400" />
-              <span>Production Workspace Foundation (Phase 2)</span>
+              <span>Production Workspace Foundation</span>
             </button>
 
             <button
@@ -191,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <GraduationCap className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Academy & LMS (Prompt 054)</span>
+              <span>Academy & LMS</span>
             </button>
 
             <button
@@ -203,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Digital Twin & Simulation Platform (Prompt 051)</span>
+              <span>Digital Twin & Simulation Platform</span>
             </button>
 
             <button
@@ -215,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Award className="w-3.5 h-3.5 text-amber-400" />
-              <span>Master Enterprise Blueprint & Plan (Prompt 050)</span>
+              <span>Master Enterprise Blueprint & Plan</span>
             </button>
 
             <button
@@ -227,7 +240,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Award className="w-3.5 h-3.5 text-purple-400" />
-              <span>Enterprise Governance & Operations (Prompt 049)</span>
+              <span>Enterprise Governance & Operations</span>
             </button>
 
             <button
@@ -239,7 +252,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Building2 className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Commercial Launch & Procurement (Prompt 048)</span>
+              <span>Commercial Launch & Procurement</span>
             </button>
 
             <button
@@ -251,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Cpu className="w-3.5 h-3.5 text-teal-400" />
-              <span>Hardware Wearable Engineering (Prompt 047)</span>
+              <span>Hardware Wearable Engineering</span>
             </button>
 
             <button
@@ -263,7 +276,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Brain className="w-3.5 h-3.5 text-cyan-400" />
-              <span>AI Operations Copilot (Prompt 046)</span>
+              <span>AI Operations Copilot</span>
             </button>
 
             <button
@@ -275,7 +288,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Globe className="w-3.5 h-3.5 text-cyan-400" />
-              <span>National Expansion NRPEOS (Prompt 045)</span>
+              <span>National Expansion NRPEOS</span>
             </button>
 
             <button
@@ -287,7 +300,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Compass className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Pilot Rollout NPDOAPM (Prompt 044)</span>
+              <span>Pilot Rollout NPDOAPM</span>
             </button>
 
             <button
@@ -299,7 +312,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Award className="w-3.5 h-3.5 text-emerald-400" />
-              <span>QA & Certification EQAVCPR (Prompt 043)</span>
+              <span>QA & Certification EQAVCPR</span>
             </button>
 
             <button
@@ -311,7 +324,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Cloud className="w-3.5 h-3.5 text-cyan-400" />
-              <span>DevSecOps & Cloud EDCNDP (Prompt 042)</span>
+              <span>DevSecOps & Cloud EDCNDP</span>
             </button>
 
             <button
@@ -323,7 +336,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
-              <span>Cybersecurity ECZTDP (Prompt 041)</span>
+              <span>Cybersecurity ECZTDP</span>
             </button>
 
             <button
@@ -335,7 +348,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Building2 className="w-3.5 h-3.5 text-blue-400" />
-              <span>National Govt Platform NAMGP (Prompt 040)</span>
+              <span>National Govt Platform NAMGP</span>
             </button>
 
             <button
@@ -347,7 +360,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Cpu className="w-3.5 h-3.5 text-amber-400" />
-              <span>Field Tech Provisioning App FTDPA (Prompt 039)</span>
+              <span>Field Tech Provisioning App FTDPA</span>
             </button>
 
             <button
@@ -359,7 +372,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Siren className="w-3.5 h-3.5 text-rose-400" />
-              <span>Emergency Responder App ERMA (Prompt 038)</span>
+              <span>Emergency Responder App ERMA</span>
             </button>
 
             <button
@@ -371,7 +384,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <School className="w-3.5 h-3.5 text-cyan-400" />
-              <span>School Admin Portal SAP (Prompt 037)</span>
+              <span>School Admin Portal SAP</span>
             </button>
 
             <button
@@ -383,7 +396,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Smartphone className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Parent Mobile App PMA (Prompt 036)</span>
+              <span>Parent Mobile App PMA</span>
             </button>
 
             <button
@@ -395,7 +408,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Revenue Engine BSERME (Prompt 035)</span>
+              <span>Revenue Engine BSERME</span>
             </button>
 
             <button
@@ -407,7 +420,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Server className="w-3.5 h-3.5 text-cyan-400" />
-              <span>SRE Platform Operations EPORE (Prompt 034)</span>
+              <span>SRE Platform Operations EPORE</span>
             </button>
 
             <button
@@ -419,7 +432,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <BarChart3 className="w-3.5 h-3.5 text-teal-400" />
-              <span>National Intelligence EARNSIP (Prompt 033)</span>
+              <span>National Intelligence EARNSIP</span>
             </button>
 
             <button
@@ -431,7 +444,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Server className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-              <span>External Gateway EIEPG (Prompt 032)</span>
+              <span>External Gateway EIEPG</span>
             </button>
 
             <button
@@ -443,7 +456,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <FileCheck2 className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
-              <span>Digital Forensics DFCCE (Prompt 031)</span>
+              <span>Digital Forensics DFCCE</span>
             </button>
 
             <button
@@ -455,7 +468,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Brain className="w-3.5 h-3.5 text-purple-400 animate-pulse" />
-              <span>AI Predictive Protection APCPE (Prompt 030)</span>
+              <span>AI Predictive Protection APCPE</span>
             </button>
 
             <button
@@ -467,7 +480,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <ShieldAlert className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
-              <span>Command Centre C3 (Prompt 029)</span>
+              <span>Command Centre C3</span>
             </button>
 
             <button
@@ -479,7 +492,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Bell className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
-              <span>Notifications PSNCE (Prompt 028)</span>
+              <span>Notifications PSNCE</span>
             </button>
 
             <button
@@ -491,7 +504,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Siren className="w-3.5 h-3.5 text-red-400 animate-pulse" />
-              <span>Dispatch Engine ERCDE (Prompt 027)</span>
+              <span>Dispatch Engine ERCDE</span>
             </button>
 
             <button
@@ -503,7 +516,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Flame className="w-3.5 h-3.5 text-red-400 animate-pulse" />
-              <span>Incident Engine EIOE (Prompt 026)</span>
+              <span>Incident Engine EIOE</span>
             </button>
 
             <button
@@ -515,7 +528,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Brain className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Decision Engine CSDE (Prompt 025)</span>
+              <span>Decision Engine CSDE</span>
             </button>
 
             <button
@@ -527,7 +540,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Spatial Geofencing (Prompt 024)</span>
+              <span>Spatial Geofencing</span>
             </button>
 
             <button
@@ -539,7 +552,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Activity className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Real-Time Telemetry (Prompt 023)</span>
+              <span>Real-Time Telemetry</span>
             </button>
 
             <button
@@ -551,7 +564,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Link2 className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Device Pairing (Prompt 022)</span>
+              <span>Device Pairing</span>
             </button>
 
             <button
@@ -563,7 +576,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Devices & IoT (Prompt 021)</span>
+              <span>Devices & IoT</span>
             </button>
 
             <button
@@ -575,7 +588,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Shield className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Learners (Prompt 020)</span>
+              <span>Learners</span>
             </button>
 
             <button
@@ -587,7 +600,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <Users className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Parents & Guardians (Prompt 019)</span>
+              <span>Parents & Guardians</span>
             </button>
 
             <button
@@ -599,7 +612,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <School className="w-3.5 h-3.5 text-cyan-400" />
-              <span>School Management (Prompt 018)</span>
+              <span>School Management</span>
             </button>
 
             <button
@@ -611,7 +624,7 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               <KeyRound className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Identity & Auth (Prompt 017)</span>
+              <span>Identity & Auth</span>
             </button>
 
             <button

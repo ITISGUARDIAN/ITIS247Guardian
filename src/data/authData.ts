@@ -162,7 +162,7 @@ export const SAMPLE_REGISTERED_DEVICES: RegisteredDeviceSpec[] = [
 
 // MANDATORY ENTERPRISE SECURITY RULES
 export const CRITICAL_AUTH_RULES = [
-  { id: 1, title: 'Prompt 017 IAM Contract Alignment', ruleText: 'Auth interfaces map directly to Prompt 017 NestJS OAuth2/OIDC JWT bearer token verification schemas.', badge: 'PROMPT 017 IAM' },
+  { id: 1, title: 'IAM Contract Alignment', ruleText: 'Auth interfaces map directly to NestJS OAuth2/OIDC JWT bearer token verification schemas.', badge: 'IAM' },
   { id: 2, title: 'Role-Based Automatic Redirection', ruleText: 'Post-login routing dynamically dispatches users to their designated portal based on strict RBAC matrix permissions.', badge: 'DYNAMIC RBAC' },
   { id: 3, title: 'POPIA & SITA Consent Compliance', ruleText: 'Self-registration requires explicit POPIA data handling consent and RSA identification validation.', badge: 'POPIA COMPLIANT' },
   { id: 4, title: 'Hardware MFA & 6-Digit PIN Verification', ruleText: 'Supports TOTP authenticator apps, SMS OTP fallbacks, and 8-character emergency backup code recovery.', badge: 'MFA REQUIRED' },

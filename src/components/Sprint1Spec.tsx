@@ -61,7 +61,7 @@ export const Sprint1Spec: React.FC = () => {
             <FileCode className="w-5 h-5" />
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-indigo-400">
-            Prompt 014 Engineering Blueprint Contract
+            Engineering Blueprint Contract
           </span>
         </div>
 

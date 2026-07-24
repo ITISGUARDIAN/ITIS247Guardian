@@ -151,7 +151,7 @@ export const ErcdeModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-900/60 border border-red-700/50 text-red-300 text-xs font-semibold">
               <Siren className="w-3.5 h-3.5 animate-pulse text-red-400" />
-              <span>PROMPT 027 — EMERGENCY RESPONSE COORDINATION & DISPATCH ENGINE (ERCDE)</span>
+              <span>— EMERGENCY RESPONSE COORDINATION & DISPATCH ENGINE (ERCDE)</span>
             </div>
             
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -431,7 +431,7 @@ export const ErcdeModule: React.FC = () => {
           <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4">
             <h3 className="text-base font-bold text-white flex items-center space-x-2">
               <ShieldCheck className="w-5 h-5 text-red-400" />
-              <span>10 Mandatory Dispatch Architecture Business Rules</span>
+              <span>Enterprise Directives & Compliance Standards</span>
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

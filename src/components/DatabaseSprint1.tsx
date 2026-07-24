@@ -54,7 +54,7 @@ export const DatabaseSprint1: React.FC = () => {
             <Database className="w-5 h-5" />
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-emerald-400">
-            Prompt 015 Production Database Layer (Refined Architecture)
+            Production Database Layer (Refined Architecture)
           </span>
         </div>
 

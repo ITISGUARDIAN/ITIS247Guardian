@@ -108,8 +108,7 @@ export function EnterpriseDesignSystemModule() {
                 @itis/shared-ui
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 062
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               WCAG 2.2 AA Accessibility, Command Palette (CTRL+K), Figma Token Spec & Shared Component Engine
@@ -519,7 +518,7 @@ export function EnterpriseDesignSystemModule() {
                 className="w-full text-left bg-slate-950 hover:bg-slate-800 p-2 rounded-lg text-slate-200 flex items-center justify-between"
               >
                 <span>Navigate to C3 National Command Centre</span>
-                <span className="text-[10px] text-amber-400">PROMPT 056</span>
+                <span className="text-[10px] text-amber-400"></span>
               </button>
 
               <button
@@ -527,7 +526,7 @@ export function EnterpriseDesignSystemModule() {
                 className="w-full text-left bg-slate-950 hover:bg-slate-800 p-2 rounded-lg text-slate-200 flex items-center justify-between"
               >
                 <span>Open Emergency Responder Mobile App</span>
-                <span className="text-[10px] text-amber-400">PROMPT 057</span>
+                <span className="text-[10px] text-amber-400"></span>
               </button>
 
               <button
@@ -535,7 +534,7 @@ export function EnterpriseDesignSystemModule() {
                 className="w-full text-left bg-slate-950 hover:bg-slate-800 p-2 rounded-lg text-slate-200 flex items-center justify-between"
               >
                 <span>Launch Field Technician Provisioning App</span>
-                <span className="text-[10px] text-amber-400">PROMPT 058</span>
+                <span className="text-[10px] text-amber-400"></span>
               </button>
             </div>
           </div>

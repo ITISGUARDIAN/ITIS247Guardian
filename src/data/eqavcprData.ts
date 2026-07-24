@@ -52,7 +52,7 @@ export interface EqavcprCodeSpec {
 export const SAMPLE_TEST_CASES: TestCaseRecord[] = [
   {
     id: 'TC-C3-DISPATCH-001',
-    moduleName: 'Command Centre C3 (Prompt 028)',
+    moduleName: 'Command Centre C3',
     testType: 'E2E_PLAYWRIGHT',
     title: 'Panic SOS Trigger to Multi-Agency Tactical Dispatch Generation',
     expectedSla: '< 1000 ms',
@@ -62,7 +62,7 @@ export const SAMPLE_TEST_CASES: TestCaseRecord[] = [
   },
   {
     id: 'TC-TELEMETRY-INGEST-002',
-    moduleName: 'GPS Device Telemetry (Prompt 023)',
+    moduleName: 'GPS Device Telemetry',
     testType: 'PERFORMANCE_K6',
     title: '1M Telemetry Pings/Min Concurrent Ingestion Burst Load',
     expectedSla: '< 10 ms',
@@ -72,7 +72,7 @@ export const SAMPLE_TEST_CASES: TestCaseRecord[] = [
   },
   {
     id: 'TC-AI-PREDICT-003',
-    moduleName: 'AI Risk Prediction (Prompt 029)',
+    moduleName: 'AI Risk Prediction',
     testType: 'UNIT',
     title: 'Anomalous Geofence Boundary Breach & AI Danger Score Calculation',
     expectedSla: '< 150 ms',
@@ -82,7 +82,7 @@ export const SAMPLE_TEST_CASES: TestCaseRecord[] = [
   },
   {
     id: 'TC-MLES-PII-004',
-    moduleName: 'Cybersecurity ECZTDP (Prompt 041)',
+    moduleName: 'Cybersecurity ECZTDP',
     testType: 'SECURITY_OWASP',
     title: 'OWASP SQLi & XSS WAF Interception on Learner Search Route',
     expectedSla: 'HTTP 403 < 5ms',
@@ -92,7 +92,7 @@ export const SAMPLE_TEST_CASES: TestCaseRecord[] = [
   },
   {
     id: 'TC-UAT-PARENT-005',
-    moduleName: 'Parent Mobile App PMA (Prompt 034)',
+    moduleName: 'Parent Mobile App PMA',
     testType: 'UAT',
     title: 'Real-time Live Learner Tracking & Safe Zone Alert Verification',
     expectedSla: '< 250 ms WS',

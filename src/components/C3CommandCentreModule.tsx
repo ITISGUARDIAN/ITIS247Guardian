@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Footer } from './Footer';
 import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   Shield,
@@ -570,8 +571,7 @@ export function C3CommandCentreModule() {
                   C3
                 </span>
                 <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                  PROMPT 056
-                </span>
+                  </span>
               </div>
               <p className="text-xs text-slate-400">Integrated School Transport & Learner Safety Dispatch Command</p>
             </div>
@@ -1785,6 +1785,9 @@ export function C3CommandCentreModule() {
             </div>
           </div>
         )}
+
+        {/* ENTERPRISE FOOTER */}
+        <Footer />
       </main>
     </div>
   );

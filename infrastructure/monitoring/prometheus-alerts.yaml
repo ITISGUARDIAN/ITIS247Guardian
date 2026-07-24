@@ -1,0 +1,40 @@
+# Prometheus Alerting Rules for ITIS Production Operations
+
+groups:
+  - name: itis_production_alerts
+    rules:
+      - alert: ITISApiHighLatency
+        expr: histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 1.5
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ITIS API 99th percentile latency > 1.5s"
+          description: "API response latency has exceeded 1500ms for 2 consecutive minutes."
+
+      - alert: ITISHighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ITIS 5xx Error Rate > 5%"
+          description: "Over 5% of HTTP requests returned 5xx Internal Server Errors."
+
+      - alert: SapsAdapterGatewayOffline
+        expr: sita_saps_gateway_online_status == 0
+        for: 30s
+        labels:
+          severity: emergency
+        annotations:
+          summary: "SAPS Emergency Gateway Disconnected"
+          description: "SAPS 10111 CAD integration adapter is OFFLINE."
+
+      - alert: DatabaseStorageFillingUp
+        expr: (node_filesystem_avail_bytes{mountpoint="/var/lib/postgresql/data"} / node_filesystem_size_bytes) < 0.15
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PostgreSQL Disk Space < 15%"
+          description: "Primary database storage volume has less than 15% available space remaining."

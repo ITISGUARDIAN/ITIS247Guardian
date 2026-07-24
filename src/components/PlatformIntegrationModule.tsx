@@ -164,8 +164,7 @@ export function PlatformIntegrationModule() {
                 SDK @itis/api-client
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 061
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               End-to-End Connectivity Across All 10 Operational Portals, WebSocket /ws Hub & Multi-Environment SDK

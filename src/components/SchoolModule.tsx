@@ -205,7 +205,7 @@ export const SchoolModule: React.FC = () => {
             <School className="w-5 h-5" />
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-cyan-400">
-            Prompt 018 School Management Module
+            School Management Module
           </span>
         </div>
 
@@ -307,7 +307,7 @@ export const SchoolModule: React.FC = () => {
             }`}
           >
             <ListCheck className="w-4 h-4" />
-            <span>Prompt 018 Checklist</span>
+            <span>Compliance Matrix</span>
           </button>
         </div>
       </div>
@@ -917,13 +917,13 @@ export const SchoolModule: React.FC = () => {
         </div>
       )}
 
-      {/* VIEW 6: PROMPT 018 CHECKLIST */}
+      {/* VIEW 6: CHECKLIST */}
       {activeView === 'checklist' && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
           <div className="border-b border-slate-800 pb-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <ListCheck className="w-5 h-5 text-emerald-400" />
-              Prompt 018 Requirements Verification (10/10)
+              Requirements Verification (10/10)
             </h3>
             <p className="text-xs text-slate-400 mt-1">
               Verification checklist confirming full production compliance with zero unrequested modules built.
@@ -1021,7 +1021,7 @@ export const SchoolModule: React.FC = () => {
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 <School className="w-5 h-5 text-cyan-400" />
-                Create New School Entry (Prompt 018)
+                Create New School Entry
               </h3>
               <button
                 onClick={() => setShowCreateModal(false)}

@@ -94,7 +94,7 @@ export const MebimModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-900/60 border border-amber-700/50 text-amber-300 text-xs font-semibold">
               <Award className="w-3.5 h-3.5 animate-pulse text-amber-400" />
-              <span>PROMPT 050 — CAPSTONE MASTER ENTERPRISE BLUEPRINT & NATIONAL IMPLEMENTATION PLAN</span>
+              <span>— CAPSTONE MASTER ENTERPRISE BLUEPRINT & NATIONAL IMPLEMENTATION PLAN</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -313,16 +313,16 @@ export const MebimModule: React.FC = () => {
         <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-6 shadow-xl">
           <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-4">
             <Layers className="w-5 h-5 text-cyan-400" />
-            <span>Consolidated 33-Module System Architecture (Prompts 017 through 049)</span>
+            <span>Consolidated Enterprise System Architecture</span>
           </h3>
 
           <div className="space-y-4 font-mono text-xs">
             {modules.map((m) => (
-              <div key={m.promptCode} className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
+              <div key={m.title} className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2">
                   <div>
-                    <span className="text-amber-400 font-bold">{m.promptCode}</span>
-                    <h4 className="text-white font-bold">{m.title}</h4>
+                    {m.promptCode && <span className="text-amber-400 font-bold mr-2">{m.promptCode}</span>}
+                    <h4 className="text-white font-bold inline">{m.title}</h4>
                   </div>
                   <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">
                     KPI: {m.nationalKpis}
@@ -602,7 +602,7 @@ export const MebimModule: React.FC = () => {
       <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
         <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
           <Lock className="w-5 h-5 text-amber-400" />
-          <span>10 Mandatory Capstone Blueprint & National Master Plan Rules</span>
+          <span>Enterprise Directives & Compliance Standards</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

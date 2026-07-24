@@ -169,8 +169,7 @@ export function GeofenceModule() {
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <span className="px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs font-semibold rounded-full border border-indigo-500/30 flex items-center gap-1.5">
-                <Compass className="w-3.5 h-3.5" /> PROMPT 024
-              </span>
+                <Compass className="w-3.5 h-3.5" /> </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-full border border-emerald-500/30 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5" /> Spatial Tracking, Geofencing & Safe Corridor Engine
               </span>

@@ -395,7 +395,7 @@ export const WorkspaceModule: React.FC = () => {
       <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
         <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
           <Lock className="w-5 h-5 text-amber-400" />
-          <span>10 Mandatory Production Implementation Workspace Rules</span>
+          <span>Enterprise Directives & Compliance Standards</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

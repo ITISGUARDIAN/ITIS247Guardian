@@ -159,7 +159,7 @@ export const PmaModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-900/60 border border-cyan-700/50 text-cyan-300 text-xs font-semibold">
               <Smartphone className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
-              <span>PROMPT 036 — PARENT MOBILE APPLICATION (PMA)</span>
+              <span>— PARENT MOBILE APPLICATION (PMA)</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -246,7 +246,7 @@ export const PmaModule: React.FC = () => {
             }`}
           >
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>5. PMA Mandatory Rules & SLAs</span>
+            <span>5. PMA Directives & Compliance Standards</span>
           </button>
         </div>
       </div>
@@ -779,7 +779,7 @@ export const PmaModule: React.FC = () => {
         <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
           <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            <span>10 Mandatory PMA Parent Mobile App Rules & SLAs</span>
+            <span>Enterprise Directives & Compliance Standards & SLAs</span>
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

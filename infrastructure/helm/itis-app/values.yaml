@@ -1,0 +1,57 @@
+# Helm Values for Production Deployment of ITIS
+
+replicaCount: 3
+
+image:
+  repository: registry.govcloud.sita.co.za/itis/itis-backend
+  pullPolicy: IfNotPresent
+  tag: "2.6.0"
+
+cloudProvider: "sita_govcloud" # Options: aws, azure, gcp, sita_govcloud
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: itis.gov.za
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: api.itis.gov.za
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: itis-tls-cert
+      hosts:
+        - itis.gov.za
+        - api.itis.gov.za
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+env:
+  NODE_ENV: "production"
+  SAPS_SANDBOX_MODE: "false"
+  SITA_SANDBOX_MODE: "false"
+  SITA_POPIA_COMPLIANCE_MODE: "STRICT_SOVEREIGN"

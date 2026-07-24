@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { itisApiClient } from '../lib/api-client';
 import {
   Activity,
   Radio,
@@ -97,6 +98,21 @@ export function TelemetryModule() {
     setToastMsg(msg);
     setTimeout(() => setToastMsg(null), 4000);
   };
+
+  // Fetch Live Telemetry and Device Health from Backend API on mount
+  useEffect(() => {
+    itisApiClient.request('/iot/telemetry/live', 'GET').then((res: any) => {
+      if (res.success && res.data?.telemetry) {
+        console.log('Loaded live TimescaleDB telemetry records:', res.data.telemetry.length);
+      }
+    }).catch(err => console.warn('Live telemetry fetch warning:', err));
+
+    itisApiClient.request('/iot/device-health', 'GET').then((res: any) => {
+      if (res.success && res.data?.healthSummary) {
+        console.log('Loaded live IoT device health summary:', res.data.healthSummary);
+      }
+    }).catch(err => console.warn('Device health fetch warning:', err));
+  }, []);
 
   const handleCopyCode = (id: number, code: string) => {
     navigator.clipboard.writeText(code);
@@ -225,6 +241,19 @@ export function TelemetryModule() {
         setEnrichedEvents([newEnriched, ...enrichedEvents]);
         setSelectedEvent(newEnriched);
         setInputSeq((prev) => prev + 1);
+
+        // Async dispatch to Backend IoT Engine
+        itisApiClient.request('/iot/simulate', 'POST', {
+          scenario: packet.sosStatus ? 'SOS_EVENT' : packet.tamperStatus ? 'TAMPER_ALERT' : packet.batteryPercentage < 15 ? 'LOW_BATTERY' : packet.speedKmh > 20 ? 'BUS_ROUTE' : 'SCHOOL_COMMUTE',
+          imei: packet.imei,
+          latitude: packet.latitude,
+          longitude: packet.longitude,
+          speed: packet.speedKmh,
+          batteryPercent: packet.batteryPercentage
+        }).then(() => {
+          console.log('Backend TimescaleDB telemetry record created.');
+        }).catch(err => console.warn('Telemetry backend sync:', err));
+
         showToast(`Telemetry Packet Ingested & Enriched Successfully (38ms pipeline latency)`);
       }
     }, 250);
@@ -263,8 +292,7 @@ export function TelemetryModule() {
           <div className="space-y-2">
             <div className="flex items-center space-x-3">
               <span className="px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs font-semibold rounded-full border border-indigo-500/30 flex items-center gap-1.5">
-                <Radio className="w-3.5 h-3.5" /> PROMPT 023
-              </span>
+                <Radio className="w-3.5 h-3.5" /> </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-xs font-semibold rounded-full border border-emerald-500/30 flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5" /> Real-Time Telemetry Ingestion & Stream Processing
               </span>
@@ -273,7 +301,7 @@ export function TelemetryModule() {
               Telemetry Ingestion Engine & TimescaleDB Stream Processor
             </h1>
             <p className="text-slate-300 max-w-3xl text-sm leading-relaxed">
-              The heartbeat of ITIS. Ingests, validates, enriches, and streams GPS telemetry at 50,000 msg/sec via a 10-stage pipeline (mTLS, replay defense, sequence counters, Prompt 022 learner resolution, TimescaleDB hypertables, and WebSocket event bus).
+              The heartbeat of ITIS. Ingests, validates, enriches, and streams GPS telemetry at 50,000 msg/sec via a 10-stage pipeline (mTLS, replay defense, sequence counters, learner resolution, TimescaleDB hypertables, and WebSocket event bus).
             </p>
           </div>
 
@@ -443,8 +471,7 @@ export function TelemetryModule() {
               </div>
 
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                PROMPT 023
-              </span>
+                </span>
             </div>
 
             {/* Quick Scenario Presets */}

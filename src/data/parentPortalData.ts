@@ -201,7 +201,7 @@ export const PARENT_NOTIFICATIONS: ParentNotification[] = [
 // MANDATORY PARENT PORTAL RULES
 export const CRITICAL_PARENT_PORTAL_RULES = [
   { id: 1, title: 'Real-Time WebSockets Telemetry Bridge', ruleText: 'Consumes real-time device battery, GPS coordinates, and speed telemetry with sub-250ms update latency.', badge: 'LIVE WEBSOCKET' },
-  { id: 2, title: 'No Duplicate Backend Business Logic', ruleText: 'Consumes backend APIs strictly designed in Prompts 019–028 and 036.', badge: 'PROMPT 019-036 CONSUMER' },
+  { id: 2, title: 'No Duplicate Backend Business Logic', ruleText: 'Consumes backend APIs strictly designed in Prompts 019–028 and 036.', badge: '-036 CONSUMER' },
   { id: 3, title: 'Integrated Multi-Child Switcher', ruleText: 'Allows parents with multiple children in school to toggle telemetry and attendance with one click.', badge: 'MULTI-CHILD' },
   { id: 4, title: 'Instant Panic & One-Touch Call Buttons', ruleText: 'Features instant call buttons to primary guardians, school admin, driver, and emergency SAPS dispatch.', badge: 'ONE-TOUCH CALL' },
   { id: 5, title: 'Interactive Map Boundary & Safe Zones', ruleText: 'Renders Home, School, Transport Route, and Geofence Boundaries with accuracy radii and vehicle markers.', badge: 'GEOFENCE MAP' },

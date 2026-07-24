@@ -362,7 +362,7 @@ export const LearnerModule: React.FC = () => {
             <User className="w-5 h-5" />
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-cyan-400">
-            Prompt 020 Learner Digital Safety Profile Module
+            Learner Digital Safety Profile Module
           </span>
         </div>
 
@@ -484,7 +484,7 @@ export const LearnerModule: React.FC = () => {
             }`}
           >
             <ListCheck className="w-4 h-4" />
-            <span>Prompt 020 Checklist</span>
+            <span>Compliance Matrix</span>
           </button>
         </div>
       </div>
@@ -1269,13 +1269,13 @@ export const LearnerModule: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 8: PROMPT 020 CHECKLIST */}
+      {/* TAB 8: CHECKLIST */}
       {activeTab === 'checklist' && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
           <div className="border-b border-slate-800 pb-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <ListCheck className="w-5 h-5 text-emerald-400" />
-              Prompt 020 Learner Module Requirements Verification
+              Learner Module Requirements Verification
             </h3>
           </div>
 

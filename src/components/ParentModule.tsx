@@ -322,7 +322,7 @@ export const ParentModule: React.FC = () => {
             <Users className="w-5 h-5" />
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-indigo-400">
-            Prompt 019 Parent & Guardian Management Module
+            Parent & Guardian Management Module
           </span>
         </div>
 
@@ -448,7 +448,7 @@ export const ParentModule: React.FC = () => {
             }`}
           >
             <ListCheck className="w-4 h-4" />
-            <span>Prompt 019 Checklist</span>
+            <span>Compliance Matrix</span>
           </button>
         </div>
       </div>
@@ -1171,13 +1171,13 @@ export const ParentModule: React.FC = () => {
         </div>
       )}
 
-      {/* VIEW 8: PROMPT 019 CHECKLIST */}
+      {/* VIEW 8: CHECKLIST */}
       {activeView === 'checklist' && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
           <div className="border-b border-slate-800 pb-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <ListCheck className="w-5 h-5 text-emerald-400" />
-              Prompt 019 Requirements Verification (11/11)
+              Requirements Verification (11/11)
             </h3>
             <p className="text-xs text-slate-400 mt-1">
               Verification checklist confirming full production compliance with zero unrequested modules built.

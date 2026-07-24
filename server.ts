@@ -5,7 +5,33 @@ import { correlationIdMiddleware, AuditLogger } from './src/backend/common/audit
 import { checkDatabaseHealth } from './src/backend/database/prisma';
 import { authRouter } from './src/backend/auth/auth.controller';
 import { learnerRouter } from './src/backend/learners/learner.controller';
-import { attendanceRouter, telemetryRouter, incidentRouter, schoolRouter, deviceRouter, eventsStreamRouter } from './src/backend/api.routes';
+import {
+  attendanceRouter,
+  telemetryRouter,
+  incidentRouter,
+  schoolRouter,
+  deviceRouter,
+  eventsStreamRouter,
+  parentRouter,
+  notificationRouter,
+  executiveRouter,
+  auditLogsRouter,
+  seedRouter
+} from './src/backend/api.routes';
+import { setupRouter } from './src/backend/setup/setup.controller';
+import { iotRouter } from './src/backend/iot/iot.controller';
+import { paymentRouter } from './src/backend/payment/payment.controller';
+import { billingRouter } from './src/backend/billing/billing.controller';
+import { invoiceRouter } from './src/backend/billing/invoice.controller';
+import { communicationsRouter } from './src/backend/communications/communications.controller';
+import { emailProviderRouter } from './src/backend/communications/email/email-provider.controller';
+import { smsProviderRouter } from './src/backend/communications/sms/sms-provider.controller';
+import { pushProviderRouter } from './src/backend/communications/push/push-provider.controller';
+import { governmentGatewayRouter } from './src/backend/integrations/government/government-gateway.controller';
+import { emisSyncRouter } from './src/backend/integrations/emis/emis-sync.controller';
+import { sapsAdapterRouter } from './src/backend/integrations/saps/saps-adapter.controller';
+import { sitaGatewayRouter } from './src/backend/integrations/sita/sita-gateway.controller';
+import { infrastructureRouter } from './src/backend/infrastructure/infrastructure.controller';
 import { swaggerDocument } from './src/backend/swagger';
 
 async function startServer() {
@@ -33,6 +59,25 @@ async function startServer() {
   app.use('/api/v1/incidents', incidentRouter);
   app.use('/api/v1/schools', schoolRouter);
   app.use('/api/v1/devices', deviceRouter);
+  app.use('/api/v1/parents', parentRouter);
+  app.use('/api/v1/notifications', notificationRouter);
+  app.use('/api/v1/executive', executiveRouter);
+  app.use('/api/v1/audit-logs', auditLogsRouter);
+  app.use('/api/v1/seed', seedRouter);
+  app.use('/api/v1/setup', setupRouter);
+  app.use('/api/v1/iot', iotRouter);
+  app.use('/api/v1/payments', paymentRouter);
+  app.use('/api/v1/billing', billingRouter);
+  app.use('/api/v1/invoices', invoiceRouter);
+  app.use('/api/v1/communications/email', emailProviderRouter);
+  app.use('/api/v1/communications/sms', smsProviderRouter);
+  app.use('/api/v1/communications/push', pushProviderRouter);
+  app.use('/api/v1/communications', communicationsRouter);
+  app.use('/api/v1/integrations/government', governmentGatewayRouter);
+  app.use('/api/v1/integrations/emis', emisSyncRouter);
+  app.use('/api/v1/integrations/saps', sapsAdapterRouter);
+  app.use('/api/v1/integrations/sita', sitaGatewayRouter);
+  app.use('/api/v1/infrastructure', infrastructureRouter);
   app.use('/api/v1/events', eventsStreamRouter);
 
   // OpenAPI Swagger Spec Endpoint

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Footer } from './Footer';
 import {
   Shield,
   KeyRound,
@@ -201,7 +202,7 @@ export const AuthModule: React.FC = () => {
             </h1>
 
             <p className="text-slate-300 text-sm md:text-base leading-relaxed">
-              Sovereign RSA single sign-on entry point connecting Parents, Schools, Command Operators, and Emergency Responders to the Prompt 017 NestJS authentication backend architecture.
+              Sovereign RSA single sign-on entry point connecting Parents, Schools, Command Operators, and Emergency Responders to the ITIS enterprise authentication backend architecture.
             </p>
           </div>
 
@@ -1086,28 +1087,8 @@ export const AuthModule: React.FC = () => {
         </div>
       )}
 
-      {/* MANDATORY AUTHENTICATION SECURITY RULES */}
-      <div className="bg-slate-900/90 rounded-3xl border border-slate-800 p-6 space-y-4 shadow-xl">
-        <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
-          <Lock className="w-5 h-5 text-amber-400" />
-          <span>10 Mandatory Enterprise Authentication & Identity Rules</span>
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          {CRITICAL_AUTH_RULES.map((rule) => (
-            <div key={rule.id} className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-amber-400">RULE #{rule.id}</span>
-                <span className="px-1.5 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300 font-semibold">
-                  {rule.badge}
-                </span>
-              </div>
-              <h4 className="text-xs font-bold text-white">{rule.title}</h4>
-              <p className="text-[11px] text-slate-400 leading-tight">{rule.ruleText}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 };

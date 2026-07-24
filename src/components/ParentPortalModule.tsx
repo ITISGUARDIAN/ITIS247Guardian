@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Footer } from './Footer';
 import {
   Shield,
   ShieldCheck,
@@ -238,7 +239,7 @@ export const ParentPortalModule: React.FC = () => {
           <div className="space-y-3 max-w-2xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold">
               <ShieldCheck className="w-4 h-4 text-amber-400 animate-pulse" />
-              <span>PROMPT 054 — PRODUCTION PARENT SAFETY PORTAL</span>
+              <span>— PRODUCTION PARENT SAFETY PORTAL</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
@@ -1050,6 +1051,9 @@ export const ParentPortalModule: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 };

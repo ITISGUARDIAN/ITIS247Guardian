@@ -170,7 +170,7 @@ export const PIPELINE_STAGES_LIST: PipelineStage[] = [
   {
     stageNumber: 7,
     name: 'Learner Resolution Engine',
-    description: 'Queries active Prompt 022 device pairing database to resolve IMEI to exactly one active Learner ID.',
+    description: 'Queries active device pairing database to resolve IMEI to exactly one active Learner ID.',
     validationCheck: '1:1 Active Wearable-to-Learner database binding lookup (Rule 1 & 2)',
     avgLatencyMs: 3.5,
     status: 'PASSED',
@@ -604,7 +604,7 @@ export class TelemetryPipelineProcessor {
     // Stage 7: Learner Resolution (Rule 1 & 2 Enforcement)
     const binding = await this.pairingService.resolveLearnerByImei(payload.imei);
     if (!binding || binding.pairingStatus !== 'ACTIVATED_PROTECTED') {
-      throw new UnauthorizedException('Stage 7 Failure: Wearable not paired or activated (Prompt 022 Rule 1).');
+      throw new UnauthorizedException('Stage 7 Failure: Wearable not paired or activated (Rule 1).');
     }
 
     // Stage 8: Telemetry Enrichment
@@ -984,8 +984,8 @@ describe('Telemetry Ingestion Benchmark (50,000 msg/sec)', () => {
 export const CRITICAL_TELEMETRY_RULES = [
   {
     id: 1,
-    title: 'Prompt 022 Pairing Prerequisite',
-    ruleText: 'No telemetry may enter the system unless the wearable has successfully completed Prompt 022 pairing and activation.',
+    title: 'Pairing Prerequisite',
+    ruleText: 'No telemetry may enter the system unless the wearable has successfully completed pairing and activation.',
     badge: 'MANDATORY',
   },
   {

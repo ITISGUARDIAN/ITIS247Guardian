@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { itisApiClient } from '../lib/api-client';
+import { Footer } from './Footer';
 import {
   Wrench,
   QrCode,
@@ -151,15 +153,12 @@ export function TechnicianProvisioningModule() {
     setActiveWorkOrder(updatedWorkOrder);
     setWorkOrders((prev) => prev.map((w) => (w.id === updatedWorkOrder.id ? updatedWorkOrder : w)));
 
-    // Post newly provisioned device to backend API
-    fetch('/api/v1/devices/provision', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        serialNumber: updatedWorkOrder.newDeviceSerial,
-        imei: '864209041284901',
-        learnerName: updatedWorkOrder.learnerName || 'Learner Assigned',
-      }),
+    // Post newly provisioned device to backend IoT API
+    itisApiClient.request('/iot/activate', 'POST', {
+      imei: '869402059381001',
+      serialNumber: updatedWorkOrder.newDeviceSerial,
+      learnerName: updatedWorkOrder.learnerName || 'Learner Assigned',
+      schoolName: updatedWorkOrder.schoolName || 'Department of Basic Education School'
     }).catch(console.warn);
 
     if (isOffline) {
@@ -182,8 +181,7 @@ export function TechnicianProvisioningModule() {
                 FIELD TABLET
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 058
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               1:1 Learner Device Activation, BLE Diagnostics, NFC Pairing, SIM Provisioning & Digital Sign-off
@@ -804,6 +802,9 @@ export function TechnicianProvisioningModule() {
           </div>
         )}
       </div>
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 }

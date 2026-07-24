@@ -62,7 +62,7 @@ export const NestJsFoundation: React.FC = () => {
             <Server className="w-5 h-5" />
           </span>
           <span className="text-xs uppercase tracking-widest font-bold text-indigo-400">
-            Prompt 016 NestJS Enterprise Foundation Layer
+            NestJS Enterprise Foundation Layer
           </span>
         </div>
 
@@ -376,10 +376,10 @@ export const NestJsFoundation: React.FC = () => {
           <div className="border-b border-slate-800 pb-4">
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
               <ListCheck className="w-5 h-5 text-emerald-400" />
-              Prompt 016 Full Requirements Verification (27/27)
+              Full Requirements Verification (27/27)
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Every item requested in Prompt 016 has been generated with enterprise-grade TypeScript source code. Zero business modules (School, Learner, GPS, Telemetry, Incident) have been added.
+              Every item requested in has been generated with enterprise-grade TypeScript source code. Zero business modules (School, Learner, GPS, Telemetry, Incident) have been added.
             </p>
           </div>
 

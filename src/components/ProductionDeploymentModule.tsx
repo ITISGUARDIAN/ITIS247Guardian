@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Footer } from './Footer';
 import {
   Rocket,
   ShieldCheck,
@@ -134,7 +135,7 @@ database:
                 NATIONAL LIVE (v1.0.0)
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 065 (FINAL)
+                (FINAL)
               </span>
             </div>
             <p className="text-xs text-slate-400">
@@ -550,6 +551,9 @@ database:
           </div>
         )}
       </div>
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 }

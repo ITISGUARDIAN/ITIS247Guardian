@@ -94,7 +94,7 @@ export const EarnsipModule: React.FC = () => {
           <div className="space-y-3 max-w-3xl">
             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-teal-900/60 border border-teal-700/50 text-teal-300 text-xs font-semibold">
               <BarChart3 className="w-3.5 h-3.5 animate-pulse text-teal-400" />
-              <span>PROMPT 033 — ENTERPRISE ANALYTICS & NATIONAL SAFETY INTELLIGENCE (EARNSIP)</span>
+              <span>— ENTERPRISE ANALYTICS & NATIONAL SAFETY INTELLIGENCE (EARNSIP)</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
@@ -678,7 +678,7 @@ export const EarnsipModule: React.FC = () => {
       <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4">
         <h3 className="text-base font-bold text-white flex items-center space-x-2">
           <ShieldCheck className="w-5 h-5 text-teal-400" />
-          <span>10 Mandatory EARNSIP Analytics & Intelligence Rules</span>
+          <span>Enterprise Directives & Compliance Standards</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">

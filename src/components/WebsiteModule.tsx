@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Footer } from './Footer';
 import {
   Shield,
   Globe,
@@ -1186,104 +1187,8 @@ export const WebsiteModule: React.FC<WebsiteModuleProps> = ({ onNavigateTab }) =
         </div>
       )}
 
-      {/* MANDATORY WEBSITE RULES PANEL */}
-      <div className="bg-slate-900/90 rounded-3xl border border-slate-800 p-6 space-y-4 shadow-xl">
-        <h3 className="text-base font-bold text-white flex items-center space-x-2 border-b border-slate-800 pb-3">
-          <Lock className="w-5 h-5 text-amber-400" />
-          <span>10 Mandatory Corporate Website Foundation Rules</span>
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-          {CRITICAL_WEBSITE_RULES.map((rule) => (
-            <div key={rule.id} className="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-amber-400">RULE #{rule.id}</span>
-                <span className="px-1.5 py-0.5 rounded bg-slate-800 text-[9px] text-slate-300 font-semibold">
-                  {rule.badge}
-                </span>
-              </div>
-              <h4 className="text-xs font-bold text-white">{rule.title}</h4>
-              <p className="text-[11px] text-slate-400 leading-tight">{rule.ruleText}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* ENTERPRISE FOOTER */}
-      <footer className="bg-slate-950 rounded-3xl border border-slate-800 p-8 space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 border-b border-slate-800 pb-8 text-xs">
-          {/* COLUMN 1: BRAND */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-black">
-                <Shield className="w-5 h-5" />
-              </div>
-              <span className="text-lg font-black text-white tracking-wider">ITIS</span>
-            </div>
-            <p className="text-slate-400 leading-relaxed pr-4">
-              Integrated Transport & Safety — South Africa's official sovereign child safety platform uniting 12.4M learners, DBE, DoT, SAPS, and SITA.
-            </p>
-          </div>
-
-          {/* COLUMN 2: QUICK LINKS */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-white text-xs uppercase tracking-wider text-amber-400">Company</h4>
-            <ul className="space-y-2 text-slate-400">
-              <li onClick={() => setActiveNav('about')} className="hover:text-white cursor-pointer">About ITIS</li>
-              <li onClick={() => setActiveNav('features')} className="hover:text-white cursor-pointer">Features</li>
-              <li onClick={() => setActiveNav('solutions')} className="hover:text-white cursor-pointer">Solutions</li>
-              <li onClick={() => setActiveNav('contact')} className="hover:text-white cursor-pointer">Contact & Demo</li>
-            </ul>
-          </div>
-
-          {/* COLUMN 3: DOWNLOADS & PORTALS */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-white text-xs uppercase tracking-wider text-amber-400">Downloads</h4>
-            <ul className="space-y-2 text-slate-400">
-              <li onClick={() => setActiveNav('downloads')} className="hover:text-white cursor-pointer">Parent App APK</li>
-              <li onClick={() => setActiveNav('downloads')} className="hover:text-white cursor-pointer">School Portal Windows</li>
-              <li onClick={() => setActiveNav('downloads')} className="hover:text-white cursor-pointer">Whitepapers (PDF)</li>
-              <li onClick={() => setActiveNav('legal')} className="hover:text-white cursor-pointer">POPIA Manual</li>
-            </ul>
-          </div>
-
-          {/* COLUMN 4: NEWSLETTER SIGNUP */}
-          <div className="space-y-3">
-            <h4 className="font-bold text-white text-xs uppercase tracking-wider text-amber-400">Government Updates</h4>
-            {newsletterSubscribed ? (
-              <p className="text-emerald-400 text-xs font-bold">Subscribed to official DBE / ITIS announcements!</p>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="space-y-2">
-                <input
-                  type="email"
-                  required
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="enter.email@dbe.gov.za"
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500"
-                />
-                <button
-                  type="submit"
-                  className="w-full py-2 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-all"
-                >
-                  Subscribe
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-
-        {/* BOTTOM COPYRIGHT */}
-        <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 font-mono gap-4">
-          <p>© 2026 Integrated Transport & Safety (ITIS) Platform. Republic of South Africa. All Rights Reserved.</p>
-          <div className="flex space-x-4">
-            <span onClick={() => setActiveNav('legal')} className="hover:text-slate-300 cursor-pointer">Privacy Policy</span>
-            <span onClick={() => setActiveNav('legal')} className="hover:text-slate-300 cursor-pointer">POPIA Directives</span>
-            <span onClick={() => setActiveNav('legal')} className="hover:text-slate-300 cursor-pointer">SITA Cloud Terms</span>
-          </div>
-        </div>
-      </footer>
-
+      <Footer onNavigateTab={onNavigateTab} />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Footer } from './Footer';
 import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   Building2,
@@ -117,8 +118,7 @@ export function ExecutiveCabinetModule() {
                 NATIONAL CABINET
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 060
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               National Strategic Oversight, RT-57 Financial Intelligence, AI Predictive Hotspots & Cabinet Briefings
@@ -455,6 +455,9 @@ export function ExecutiveCabinetModule() {
           </div>
         )}
       </div>
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 }

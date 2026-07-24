@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Footer } from './Footer';
 import { itisWebSocketHub } from '../lib/websocket-hub';
 import {
   Shield,
@@ -294,8 +295,7 @@ export function ResponderMobileModule() {
                 SAPS / EMS
               </span>
               <span className="bg-slate-800 text-slate-300 text-[10px] font-semibold px-2 py-0.5 rounded border border-slate-700 font-mono">
-                PROMPT 057
-              </span>
+                </span>
             </div>
             <p className="text-xs text-slate-400">
               Tactical Field Dispatch, Live Turn-by-Turn Navigation & Cryptographic Chain of Custody
@@ -905,6 +905,9 @@ export function ResponderMobileModule() {
           </div>
         )}
       </div>
+
+      {/* ENTERPRISE FOOTER */}
+      <Footer />
     </div>
   );
 }
