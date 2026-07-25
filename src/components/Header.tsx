@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Globe, Layers, Search, Compass, FileCheck2, ShieldAlert, Brain, Flame, Siren, Bell, FileCode, Database, Server, KeyRound, School, Users, Smartphone, Cpu, Link2, Radio, Activity, MapPin, BarChart3, CreditCard, Building2, Cloud, Award, GraduationCap, Box, Heart, Wrench, Zap, Palette, ShieldCheck, Package, Rocket } from 'lucide-react';
+import { Shield, Globe, Layers, Search, Compass, FileCheck2, ShieldAlert, Brain, Flame, Siren, Bell, FileCode, Database, Server, KeyRound, School, Users, Smartphone, Cpu, Link2, Radio, Activity, MapPin, BarChart3, CreditCard, Building2, Cloud, Award, GraduationCap, Box, Heart, Wrench, Zap, Palette, ShieldCheck, Package, Rocket, LifeBuoy, Briefcase, Factory, Scale } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: string;
@@ -170,6 +170,19 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Go-Live & Deployment</span>
             </button>
 
+            {/* 10.1 v1.0 LAUNCH CERTIFICATION & PROMPT 080 AUDIT */}
+            <button
+              onClick={() => setActiveTab('certification')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'certification' || activeTab === 'v1_certification'
+                  ? 'bg-gradient-to-r from-amber-500 to-indigo-600 text-white font-bold shadow-md shadow-indigo-600/40 ring-1 ring-amber-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+              <span>v1.0 Certification &amp; Audit</span>
+            </button>
+
             {/* 11. PROMPT 068 ENTERPRISE SETUP WIZARD */}
             <button
               onClick={() => setActiveTab('setup')}
@@ -181,6 +194,58 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Wrench className="w-3.5 h-3.5 text-amber-400" />
               <span>Setup Wizard</span>
+            </button>
+
+            {/* 14. PROMPT 078 LEGAL, COMPLIANCE & INVESTOR DATA ROOM */}
+            <button
+              onClick={() => setActiveTab('legal')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'legal' || activeTab === 'dataroom' || activeTab === 'compliance'
+                  ? 'bg-indigo-600 text-white font-bold shadow-md shadow-indigo-600/40 ring-1 ring-indigo-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Scale className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Legal Vault</span>
+            </button>
+
+            {/* 13. PROMPT 077 MANUFACTURING & SUPPLY CHAIN */}
+            <button
+              onClick={() => setActiveTab('supplychain')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'supplychain' || activeTab === 'manufacturing'
+                  ? 'bg-amber-600 text-white font-bold shadow-md shadow-amber-600/40 ring-1 ring-amber-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Factory className="w-3.5 h-3.5 text-amber-300" />
+              <span>Supply Chain</span>
+            </button>
+
+            {/* 12. PROMPT 076 BUSINESS OPERATIONS & CUSTOMER SUCCESS */}
+            <button
+              onClick={() => setActiveTab('crm')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'crm' || activeTab === 'sales'
+                  ? 'bg-purple-600 text-white font-bold shadow-md shadow-purple-600/40 ring-1 ring-purple-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <Briefcase className="w-3.5 h-3.5 text-purple-300" />
+              <span>CRM & Success</span>
+            </button>
+
+            {/* 12. PROMPT 075 OPERATIONS & SUPPORT CENTRE */}
+            <button
+              onClick={() => setActiveTab('operations')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
+                activeTab === 'operations' || activeTab === 'support'
+                  ? 'bg-purple-600 text-white font-bold shadow-md shadow-purple-600/40 ring-1 ring-purple-300'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+              }`}
+            >
+              <LifeBuoy className="w-3.5 h-3.5 text-purple-300" />
+              <span>Operations & Support</span>
             </button>
 
             <button

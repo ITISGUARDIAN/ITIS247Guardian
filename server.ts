@@ -32,22 +32,42 @@ import { emisSyncRouter } from './src/backend/integrations/emis/emis-sync.contro
 import { sapsAdapterRouter } from './src/backend/integrations/saps/saps-adapter.controller';
 import { sitaGatewayRouter } from './src/backend/integrations/sita/sita-gateway.controller';
 import { infrastructureRouter } from './src/backend/infrastructure/infrastructure.controller';
+import { operationsRouter } from './src/backend/operations/operations.controller';
+import { crmRouter } from './src/backend/crm/crm.controller';
+import { supplyChainRouter } from './src/backend/supplychain/supplychain.controller';
+import { legalRouter } from './src/backend/legal/legal.controller';
+import { releaseCertificationRouter } from './src/backend/release/v1-certification.controller';
+import { repositoryHealthRouter } from './src/backend/release/repository-health.controller';
+import { infrastructureHealthRouter } from './src/backend/release/infrastructure-health.controller';
+import { managedServicesHealthRouter } from './src/backend/release/managed-services-health.controller';
+import { internetHealthRouter } from './src/backend/release/internet-health.controller';
+import { mobileHealthRouter } from './src/backend/release/mobile-health.controller';
+import { deploymentHealthRouter } from './src/backend/release/deployment-health.controller';
 import { swaggerDocument } from './src/backend/swagger';
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Configure Trust Proxy for NGINX Ingress & Cloudflare Edge
+  app.set('trust proxy', true);
+
   // Global Middlewares
   app.use(express.json());
   app.use(correlationIdMiddleware);
 
-  // Security Headers Simulation
+  // Production Security Headers & CORS Middleware
   app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Correlation-ID');
+    if (req.method === 'OPTIONS') {
+      return res.sendStatus(200);
+    }
     next();
   });
 
@@ -78,6 +98,17 @@ async function startServer() {
   app.use('/api/v1/integrations/saps', sapsAdapterRouter);
   app.use('/api/v1/integrations/sita', sitaGatewayRouter);
   app.use('/api/v1/infrastructure', infrastructureRouter);
+  app.use('/api/v1/operations', operationsRouter);
+  app.use('/api/v1/crm', crmRouter);
+  app.use('/api/v1/supplychain', supplyChainRouter);
+  app.use('/api/v1/legal', legalRouter);
+  app.use('/api/v1/release/certification', releaseCertificationRouter);
+  app.use('/api/v1/release/health', repositoryHealthRouter);
+  app.use('/api/v1/release/infrastructure', infrastructureHealthRouter);
+  app.use('/api/v1/release/managed-services', managedServicesHealthRouter);
+  app.use('/api/v1/release/internet', internetHealthRouter);
+  app.use('/api/v1/release/mobile', mobileHealthRouter);
+  app.use('/api/v1/release/deployment', deploymentHealthRouter);
   app.use('/api/v1/events', eventsStreamRouter);
 
   // OpenAPI Swagger Spec Endpoint
@@ -85,16 +116,26 @@ async function startServer() {
     res.json(swaggerDocument);
   });
 
-  // System Health Endpoint
-  app.get('/api/v1/health', async (req, res) => {
+  // Root & Standard Health Check Endpoints
+  const getHealthStatus = async () => {
     const dbHealth = await checkDatabaseHealth();
-    res.json({
+    return {
       status: dbHealth.status === 'UP' ? 'HEALTHY' : 'DEGRADED',
       timestamp: new Date().toISOString(),
-      version: '1.0.0-rc2',
+      version: 'v1.0.0-GA',
       database: dbHealth,
       uptimeSeconds: process.uptime()
-    });
+    };
+  };
+
+  app.get('/health', async (req, res) => {
+    const status = await getHealthStatus();
+    res.json(status);
+  });
+
+  app.get('/api/v1/health', async (req, res) => {
+    const status = await getHealthStatus();
+    res.json(status);
   });
 
   // Vite middleware for development

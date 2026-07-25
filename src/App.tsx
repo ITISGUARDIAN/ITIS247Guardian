@@ -61,7 +61,12 @@ import { EnterpriseDesignSystemModule } from './components/EnterpriseDesignSyste
 import { SystemValidationModule } from './components/SystemValidationModule';
 import { ReleaseEngineeringModule } from './components/ReleaseEngineeringModule';
 import { ProductionDeploymentModule } from './components/ProductionDeploymentModule';
+import { OperationsSupportCentreModule } from './components/OperationsSupportCentreModule';
+import { CrmCustomerSuccessModule } from './components/CrmCustomerSuccessModule';
+import { ManufacturingSupplyChainModule } from './components/ManufacturingSupplyChainModule';
+import { LegalComplianceDataRoomModule } from './components/LegalComplianceDataRoomModule';
 import { SetupWizardModule } from './components/SetupWizardModule';
+import { Version1LaunchCertificationModule } from './components/Version1LaunchCertificationModule';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import {
@@ -124,6 +129,8 @@ const PATH_TO_TAB_MAP: Record<string, string> = {
   '/execcabinet': 'execcabinet',
   '/deployment': 'production_deployment',
   '/admin/deployment': 'production_deployment',
+  '/certification': 'certification',
+  '/v1': 'certification',
 };
 
 const TAB_TO_PATH_MAP: Record<string, string> = {
@@ -138,6 +145,7 @@ const TAB_TO_PATH_MAP: Record<string, string> = {
   natgov: '/government',
   execcabinet: '/executive',
   production_deployment: '/deployment',
+  certification: '/certification',
 };
 
 const getInitialTabFromPath = (): string => {
@@ -215,6 +223,21 @@ export default function App() {
 
         {/* Main Container */}
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* TAB 0: PROMPT 079 & 080 VERSION 1.0 LAUNCH CERTIFICATION & PROMPT 080 AUDIT */}
+          {(activeTab === 'certification' || activeTab === 'v1_certification') && <Version1LaunchCertificationModule />}
+
+          {/* TAB 0: PROMPT 078 LEGAL, COMPLIANCE & INVESTOR DATA ROOM */}
+          {(activeTab === 'legal' || activeTab === 'dataroom' || activeTab === 'compliance') && <LegalComplianceDataRoomModule />}
+
+          {/* TAB 0: PROMPT 077 MANUFACTURING & SUPPLY CHAIN */}
+          {(activeTab === 'supplychain' || activeTab === 'manufacturing') && <ManufacturingSupplyChainModule />}
+
+          {/* TAB 0: PROMPT 076 BUSINESS OPERATIONS & CUSTOMER SUCCESS */}
+          {(activeTab === 'crm' || activeTab === 'sales') && <CrmCustomerSuccessModule />}
+
+          {/* TAB 0: PROMPT 075 OPERATIONS, MONITORING & SUPPORT CENTRE */}
+          {(activeTab === 'operations' || activeTab === 'support') && <OperationsSupportCentreModule />}
+
           {/* TAB 0: PROMPT 068 ENTERPRISE INSTALLATION WIZARD & FIRST-TIME SETUP */}
           {activeTab === 'setup' && <SetupWizardModule onNavigateTab={handleTabRedirect} />}
 
