@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { 
   ShieldCheck, 
   Lock, 
@@ -41,8 +41,10 @@ import {
   HelpCircle, 
   TrendingUp, 
   Layers, 
-  Award 
+  Award,
+  Globe
 } from 'lucide-react';
+import { WebsiteModule } from './WebsiteModule';
 
 import { 
   fontPosture as initialSecurityPosture, 
@@ -117,6 +119,35 @@ import {
 } from './types';
 
 export default function App() {
+  // Route state: default route "/" renders WebsiteModule, "/certification" or "/release" renders Go-Live dashboard
+  const [currentPath, setCurrentPath] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname;
+    }
+    return '/';
+  });
+
+  const navigateTo = useCallback((path: string) => {
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', path);
+    }
+    setCurrentPath(path);
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const isDashboardRoute = currentPath === '/certification' || 
+                           currentPath === '/release' || 
+                           currentPath.startsWith('/certification') || 
+                           currentPath.startsWith('/release');
+
   // Navigation Mode: Release Operations vs Pilot Operations vs Performance Engineering vs Security Operations
   const [viewMode, setViewMode] = useState<'release' | 'pilot' | 'performance' | 'security'>('release');
 
@@ -466,6 +497,10 @@ export default function App() {
     });
   }, [threatEvents, filterCategory, searchTerm]);
 
+  if (!isDashboardRoute) {
+    return <WebsiteModule onNavigateToDashboard={navigateTo} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
       {/* Top Banner & Header */}
@@ -484,6 +519,14 @@ export default function App() {
 
         {/* Mode Switcher & Status Bar */}
         <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          <button
+            onClick={() => navigateTo('/')}
+            className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 rounded-lg text-xs font-mono font-bold transition flex items-center gap-1.5 shadow-sm"
+          >
+            <Globe className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Corporate Portal</span>
+          </button>
+
           {/* Operations View Toggle */}
           <div className="bg-slate-950 p-1 border border-slate-800 rounded-lg flex items-center gap-1 font-mono text-xs">
             <button
