@@ -1,9 +1,0 @@
-apiVersion: v2
-name: itis-app
-description: Production Helm Chart for ITIS Integrated Scholar Transport Infrastructure System
-type: application
-version: 2.6.0
-appVersion: "2.6.0"
-maintainers:
-  - name: SITA GovCloud DevOps Team
-    email: devops@sita.co.za
