@@ -343,7 +343,7 @@ export function NotificationsDashboard() {
                 <label className="text-slate-400 block">From Address:</label>
                 <input 
                   type="email"
-                  placeholder="alerts@itis.co.za"
+                  placeholder="itis.intergrated@gmail.com"
                   value={providerConfig.emailFromAddress || ''}
                   onChange={(e) => setProviderConfig({ ...providerConfig, emailFromAddress: e.target.value })}
                   className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-white"
@@ -760,7 +760,7 @@ export function NotificationsDashboard() {
               <h4 className="font-mono text-xs font-bold text-amber-400 uppercase">⚠ Commercial & Carrier Prerequisites</h4>
               <ul className="space-y-2 text-xs font-sans text-slate-300">
                 <li className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-amber-400 shrink-0" /> Twilio / Clickatell Commercial Account & ZAR SMS Credits</li>
-                <li className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-amber-400 shrink-0" /> Verified SendGrid / Amazon SES Domain (alerts@itis.co.za)</li>
+                <li className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-amber-400 shrink-0" /> Verified SendGrid / Google Workspace Domain (itis.intergrated@gmail.com)</li>
                 <li className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-amber-400 shrink-0" /> Firebase Cloud Messaging Service Account Credentials</li>
                 <li className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-amber-400 shrink-0" /> ICASA Telecommunications Approval for Dedicated SMS Shortcodes</li>
               </ul>

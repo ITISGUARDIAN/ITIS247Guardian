@@ -64,6 +64,7 @@ import { ProductionErrorPages } from './components/production/ProductionErrorPag
 import { NotificationsDashboard } from './components/notifications/NotificationsDashboard';
 import { IdentityDashboard } from './components/auth/IdentityDashboard';
 import { GisDashboard } from './components/gis/GisDashboard';
+import { DeviceLifecycleModule } from './components/DeviceLifecycleModule';
 
 interface WebsiteModuleProps {
   onNavigateToDashboard: (route: string) => void;
@@ -101,7 +102,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
   // Selected Commercial Suite Tab State
   const [activeCommercialTab, setActiveCommercialTab] = useState<
-    'demo' | 'roi' | 'proposal' | 'hardware' | 'government' | 'partner' | 'investor' | 'faq' | 'certification' | 'readiness' | 'errors' | 'communications' | 'identity' | 'gis'
+    'demo' | 'roi' | 'proposal' | 'hardware' | 'government' | 'partner' | 'investor' | 'faq' | 'certification' | 'readiness' | 'errors' | 'communications' | 'identity' | 'gis' | 'lifecycle'
   >('gis');
 
   const handleDemoSubmit = (e: React.FormEvent) => {
@@ -123,7 +124,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
   };
 
   const handleCommercialTabClick = (tabId: string) => {
-    const adminTabs = ['identity', 'communications', 'readiness', 'errors', 'certification'];
+    const adminTabs = ['identity', 'communications', 'readiness', 'errors', 'certification', 'lifecycle'];
     if (adminTabs.includes(tabId) && !isAdminUnlocked) {
       setPendingAdminTab(tabId);
       setIsAdminModalOpen(true);
@@ -166,17 +167,26 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
       <header className="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-6 py-4 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3.5">
-            <div className="p-2.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 rounded-xl text-cyan-400 shadow-lg shadow-cyan-500/10 shrink-0">
-              <ShieldCheck className="w-7 h-7" />
+            <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-950/50 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
+              <img 
+                src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
+                alt="Official ITIS Seal" 
+                className="w-10 h-10 object-contain rounded-lg drop-shadow-[0_0_10px_rgba(245,158,11,0.25)]" 
+                referrerPolicy="no-referrer"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tracking-tight text-white font-mono">ITIS</span>
+                <span className="text-2xs px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-mono font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                  Official Seal
+                </span>
                 <span className="text-2xs px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full font-mono font-bold">
                   Version 1.0.0
                 </span>
               </div>
-              <p className="text-2xs text-slate-400 uppercase tracking-wider font-semibold hidden sm:block">
+              <p className="text-2xs text-slate-300 uppercase tracking-wider font-semibold hidden sm:block">
                 Integrated Technology Intelligence & Safety
               </p>
             </div>
@@ -198,7 +208,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsDemoModalOpen(true)}
-              className="px-3.5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-lg shadow-cyan-500/20"
+              className="px-3.5 py-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-lg shadow-amber-500/20"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Request Demo</span>
@@ -222,59 +232,119 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
       </header>
 
       {/* Hero Section */}
-      <section id="about" className="relative pt-20 pb-28 border-b border-slate-800 overflow-hidden bg-gradient-to-b from-slate-900/90 via-slate-950 to-slate-950">
-        {/* Subtle Ambient Network Backdrop Grid */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-cyan-900/15 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-r from-blue-600/10 via-cyan-500/10 to-emerald-500/10 blur-3xl pointer-events-none rounded-full" />
+      <section id="about" className="relative pt-16 pb-24 border-b border-slate-800/80 overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-slate-950">
+        {/* Subtle Ambient Gold & Blue Network Backdrop */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-amber-500/10 via-blue-950/20 to-transparent pointer-events-none" />
+        <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-r from-amber-500/10 via-cyan-500/10 to-blue-600/10 blur-3xl pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-start max-w-4xl">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
-            {/* National Enclave Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-semibold mb-6">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Integrated Technology Intelligence & Safety (ITIS) • Republic of South Africa</span>
+            {/* Left Content Column */}
+            <div className="lg:col-span-7 space-y-6">
+              
+              {/* National Enclave Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-semibold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Integrated Technology Intelligence & Safety (ITIS) • Official National Enclave</span>
+              </div>
+
+              {/* Official Tagline Heading */}
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] font-sans">
+                Protecting Every Learner. <br className="hidden sm:inline" />
+                <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-cyan-300 bg-clip-text text-transparent">
+                  Every Journey. Every Second.
+                </span>
+              </h1>
+
+              {/* Official Executive Subheading */}
+              <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+                Integrated Technology Intelligence & Safety (ITIS) is a next-generation intelligent safety platform that helps schools, parents, transport providers and emergency services work together to protect learners through real-time technology, secure communications and coordinated emergency response.
+              </p>
+
+              {/* Supporting Brand Message */}
+              <div className="p-4 rounded-xl bg-slate-900/80 border border-amber-500/30 text-xs text-slate-300 font-medium flex items-center gap-3.5 shadow-lg shadow-amber-500/5">
+                <ShieldCheck className="w-6 h-6 text-amber-400 shrink-0" />
+                <span>
+                  <strong className="text-white">Powered by Intelligence. Uncompromised Safety.</strong> Connecting parents, schools, transport providers and SAPS emergency responders into one unified national enclave.
+                </span>
+              </div>
+
+              {/* Hero CTAs */}
+              <div className="pt-2 flex flex-wrap items-center gap-4">
+                <a
+                  href="#stakeholders"
+                  className="px-6 py-3.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold rounded-xl text-sm transition flex items-center gap-2 shadow-xl shadow-amber-500/20"
+                >
+                  <span>Explore ITIS Ecosystem</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+
+                <button
+                  onClick={() => setIsDemoModalOpen(true)}
+                  className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold border border-slate-700 rounded-xl text-sm transition flex items-center gap-2 shadow-sm"
+                >
+                  <Send className="w-4 h-4 text-amber-400" />
+                  <span>Request Demonstration</span>
+                </button>
+              </div>
             </div>
 
-            {/* Official Tagline Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] font-sans">
-              Protecting Every Learner. <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
-                Every Journey. Every Second.
-              </span>
-            </h1>
+            {/* Right Column: 3D Official Seal Badge Showcase Card */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative group w-full max-w-sm">
+                
+                {/* Glow Backdrop */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-cyan-500/20 to-blue-600/30 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500 opacity-80" />
 
-            {/* Official Executive Subheading */}
-            <p className="text-base sm:text-lg md:text-xl text-slate-300 mt-6 leading-relaxed font-normal">
-              Integrated Technology Intelligence & Safety (ITIS) is a next-generation intelligent safety platform that helps schools, parents, transport providers and emergency services work together to protect learners through real-time technology, secure communications and coordinated emergency response.
-            </p>
+                <div className="relative bg-slate-950 border-2 border-amber-500/40 rounded-3xl p-6 space-y-5 shadow-2xl text-center">
+                  
+                  {/* Badge Header Bar */}
+                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+                    <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                      Official Police Shield
+                    </span>
+                    <span className="text-2xs font-mono px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-bold">
+                      REPUBLIC OF SOUTH AFRICA
+                    </span>
+                  </div>
 
-            {/* Supporting Brand Message */}
-            <div className="mt-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 text-xs text-slate-300 font-medium flex items-center gap-3">
-              <Network className="w-5 h-5 text-cyan-400 shrink-0" />
-              <span>
-                <strong>Powered by Intelligence. Trusted by Communities.</strong> Connecting parents, schools, transport providers and emergency responders into one unified, intelligent safety ecosystem.
-              </span>
+                  {/* High Resolution Seal Image */}
+                  <div className="relative mx-auto w-52 h-52 sm:w-60 sm:h-60 p-2 bg-slate-900 rounded-full border-2 border-amber-500/50 shadow-inner flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                    <img 
+                      src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
+                      alt="Official ITIS Shield Seal" 
+                      className="w-full h-full object-cover rounded-full drop-shadow-[0_0_15px_rgba(245,158,11,0.35)]" 
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+
+                  {/* Motto & Statutory Badges */}
+                  <div className="space-y-1.5 pt-1">
+                    <div className="text-sm font-extrabold text-white tracking-wide font-mono">
+                      UNCOMPROMISED SAFETY.
+                    </div>
+                    <p className="text-2xs text-amber-300/90 font-mono">
+                      Protecting. Monitoring. Responding. Every Life. Every Second.
+                    </p>
+                  </div>
+
+                  {/* Footer metadata chip */}
+                  <div className="pt-2 border-t border-slate-900 flex items-center justify-around text-2xs font-mono text-slate-400">
+                    <span className="flex items-center gap-1">
+                      <Check className="w-3 h-3 text-emerald-400" /> SITA Cloud Enclave
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Check className="w-3 h-3 text-emerald-400" /> POPIA Compliant
+                    </span>
+                  </div>
+
+                </div>
+
+              </div>
             </div>
 
-            {/* Hero CTAs */}
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="#stakeholders"
-                className="px-6 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-sm transition flex items-center gap-2 shadow-lg shadow-cyan-500/20"
-              >
-                <span>Explore ITIS</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-
-              <button
-                onClick={() => setIsDemoModalOpen(true)}
-                className="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold border border-slate-700 rounded-xl text-sm transition flex items-center gap-2 shadow-sm"
-              >
-                <Send className="w-4 h-4 text-cyan-400" />
-                <span>Request a Demonstration</span>
-              </button>
-            </div>
           </div>
 
           {/* South African Safety Ecosystem Graphic / Hero Visual Display */}
@@ -1296,7 +1366,8 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
               { id: 'communications', label: 'Communications Engine', icon: Bell, admin: true },
               { id: 'readiness', label: 'Cloud Launch Readiness', icon: Server, admin: true },
               { id: 'errors', label: 'System Resilience', icon: ShieldCheck, admin: true },
-              { id: 'certification', label: 'Commercial Certification', icon: Award, admin: true }
+              { id: 'certification', label: 'Commercial Certification', icon: Award, admin: true },
+              { id: 'lifecycle', label: 'Device Provisioning & Lifecycle', icon: Cpu, admin: true }
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeCommercialTab === tab.id;
@@ -1336,6 +1407,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             {activeCommercialTab === 'investor' && <InvestorPortalSection />}
             {activeCommercialTab === 'faq' && <PublicDocsFAQ />}
             {activeCommercialTab === 'certification' && <CommercialCertificationReport />}
+            {activeCommercialTab === 'lifecycle' && <DeviceLifecycleModule onNavigateToTab={(t) => handleCommercialTabClick(t)} />}
           </div>
 
         </div>
@@ -1349,10 +1421,18 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             
             <div className="space-y-3 md:col-span-1">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 rounded-xl text-cyan-400">
-                  <ShieldCheck className="w-5 h-5" />
+                <div className="p-1 bg-gradient-to-br from-amber-500/20 via-blue-950/40 to-slate-950 border border-amber-500/40 rounded-xl shadow-md shrink-0">
+                  <img 
+                    src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
+                    alt="Official ITIS Seal" 
+                    className="w-8 h-8 object-contain rounded-lg drop-shadow-[0_0_8px_rgba(245,158,11,0.25)]" 
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
-                <span className="text-base font-black text-white font-mono">ITIS</span>
+                <div>
+                  <span className="text-base font-black text-white font-mono block">ITIS</span>
+                  <span className="text-2xs text-amber-300 font-mono font-bold">UNCOMPROMISED SAFETY</span>
+                </div>
               </div>
               <p className="text-xs text-slate-300 font-semibold">
                 Integrated Technology Intelligence & Safety
@@ -1413,8 +1493,8 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                   <span>+27 62 430 4906 (0624304906)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span>contact@itis.gov.za / info@itis.co.za</span>
+                  <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span>itis.intergrated@gmail.com</span>
                 </div>
                 <div className="flex items-center gap-2 pt-1">
                   <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
@@ -1759,7 +1839,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                       <span className="text-cyan-400 font-mono">Cape Town</span>
                     </li>
                   </ul>
-                  <p className="text-2xs text-slate-500 pt-2">Send CVs to: <strong className="text-slate-300">careers@itis.gov.za</strong> or contact 0624304906.</p>
+                  <p className="text-2xs text-slate-500 pt-2">Send CVs to: <strong className="text-amber-300">itis.intergrated@gmail.com</strong> or contact 0624304906.</p>
                 </div>
               </div>
             )}
@@ -1785,7 +1865,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                       <span className="text-cyan-400 font-bold">1.1 MB</span>
                     </li>
                   </ul>
-                  <p className="text-2xs text-slate-500 pt-2">Media Enquiries: <strong className="text-slate-300">media@itis.gov.za</strong> / +27 62 430 4906</p>
+                  <p className="text-2xs text-slate-500 pt-2">Media Enquiries: <strong className="text-amber-300">itis.intergrated@gmail.com</strong> / +27 62 430 4906</p>
                 </div>
               </div>
             )}

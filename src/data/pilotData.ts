@@ -469,8 +469,8 @@ export const initialPilotDevices: PilotDeviceReadiness[] = [
 
 export const initialPilotSupportReadiness: PilotSupportReadiness = {
   deskAvailability: '24/7 Operations Duty Center',
-  supportChannelPhone: '+27 (0) 800 484 723',
-  supportChannelEmail: 'pilot-support@itis.gov.uk',
+  supportChannelPhone: '+27 62 430 4906',
+  supportChannelEmail: 'itis.intergrated@gmail.com',
   knowledgeBaseArticlesCount: 48,
   onCallEngineersCount: 8,
   avgTicketSlaResponseMin: 5,

@@ -118,6 +118,8 @@ import {
   FinalGoLiveReport
 } from './types';
 
+import { DeviceLifecycleModule } from './components/DeviceLifecycleModule';
+
 export default function App() {
   // Route state: default route "/" renders WebsiteModule, "/certification" or "/release" renders Go-Live dashboard
   const [currentPath, setCurrentPath] = useState<string>(() => {
@@ -148,8 +150,8 @@ export default function App() {
                            currentPath.startsWith('/certification') || 
                            currentPath.startsWith('/release');
 
-  // Navigation Mode: Release Operations vs Pilot Operations vs Performance Engineering vs Security Operations
-  const [viewMode, setViewMode] = useState<'release' | 'pilot' | 'performance' | 'security'>('release');
+  // Navigation Mode: Release Operations vs Pilot Operations vs Performance Engineering vs Security Operations vs Hardware Lifecycle
+  const [viewMode, setViewMode] = useState<'release' | 'pilot' | 'performance' | 'security' | 'device_lifecycle'>('release');
 
   // Go-Live & Release Command State
   const [releaseTab, setReleaseTab] = useState<
@@ -506,8 +508,13 @@ export default function App() {
       {/* Top Banner & Header */}
       <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sticky top-0 z-50">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-emerald-500/20 to-cyan-600/20 border border-emerald-500/40 rounded-xl text-emerald-400 shadow-lg shadow-emerald-500/5">
-            <Rocket className="w-7 h-7" />
+          <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
+            <img 
+              src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
+              alt="Official ITIS Seal" 
+              className="w-10 h-10 object-contain rounded-lg drop-shadow-[0_0_10px_rgba(245,158,11,0.25)]" 
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
             <h1 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">

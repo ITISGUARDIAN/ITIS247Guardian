@@ -117,8 +117,13 @@ export function CommercialCertificationReport() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="p-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg">
-              <Award className="w-5 h-5" />
+            <span className="p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-lg shrink-0">
+              <img 
+                src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
+                alt="Official ITIS Seal" 
+                className="w-7 h-7 object-contain rounded" 
+                referrerPolicy="no-referrer"
+              />
             </span>
             <h3 className="text-xl font-bold text-white">Commercial Readiness Certification Report</h3>
           </div>
