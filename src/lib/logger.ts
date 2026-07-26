@@ -66,7 +66,7 @@ class ProductionLogger {
 
     this.pushLog(entry);
     if (level === 'critical' || level === 'error') {
-      console.error(`[SECURITY ALERT] ${event}`, metadata);
+      console.warn(`[SECURITY ALERT] ${event}`, metadata);
     }
   }
 

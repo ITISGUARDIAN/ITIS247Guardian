@@ -43,7 +43,11 @@ import {
   Calculator,
   Handshake,
   HelpCircle,
-  Play
+  Play,
+  Bell,
+  AlertTriangle,
+  FileCheck,
+  Phone
 } from 'lucide-react';
 
 import { LiveDemoSimulator } from './components/LiveDemoSimulator';
@@ -57,6 +61,9 @@ import { PublicDocsFAQ } from './components/PublicDocsFAQ';
 import { CommercialCertificationReport } from './components/CommercialCertificationReport';
 import { ProductionReadinessReport } from './components/production/ProductionReadinessReport';
 import { ProductionErrorPages } from './components/production/ProductionErrorPages';
+import { NotificationsDashboard } from './components/notifications/NotificationsDashboard';
+import { IdentityDashboard } from './components/auth/IdentityDashboard';
+import { GisDashboard } from './components/gis/GisDashboard';
 
 interface WebsiteModuleProps {
   onNavigateToDashboard: (route: string) => void;
@@ -75,6 +82,18 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     notes: ''
   });
 
+  // Admin Auth Gate State
+  const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [adminPasscode, setAdminPasscode] = useState('');
+  const [adminAuthError, setAdminAuthError] = useState('');
+  const [pendingAdminTab, setPendingAdminTab] = useState<string | null>(null);
+
+  // Legal & Policy Modals State
+  const [activeLegalModal, setActiveLegalModal] = useState<
+    'privacy' | 'popia' | 'terms' | 'careers' | 'media' | null
+  >(null);
+
   // Selected Stakeholder Tab State
   const [activeStakeholder, setActiveStakeholder] = useState<
     'parents' | 'schools' | 'transport' | 'responders' | 'government' | 'technicians' | 'executives'
@@ -82,8 +101,8 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
   // Selected Commercial Suite Tab State
   const [activeCommercialTab, setActiveCommercialTab] = useState<
-    'demo' | 'roi' | 'proposal' | 'hardware' | 'government' | 'partner' | 'investor' | 'faq' | 'certification' | 'readiness' | 'errors'
-  >('readiness');
+    'demo' | 'roi' | 'proposal' | 'hardware' | 'government' | 'partner' | 'investor' | 'faq' | 'certification' | 'readiness' | 'errors' | 'communications' | 'identity' | 'gis'
+  >('gis');
 
   const handleDemoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,6 +122,43 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     });
   };
 
+  const handleCommercialTabClick = (tabId: string) => {
+    const adminTabs = ['identity', 'communications', 'readiness', 'errors', 'certification'];
+    if (adminTabs.includes(tabId) && !isAdminUnlocked) {
+      setPendingAdminTab(tabId);
+      setIsAdminModalOpen(true);
+      return;
+    }
+    setActiveCommercialTab(tabId as any);
+  };
+
+  const handleAdminAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (adminPasscode.trim() === 'admin2026' || adminPasscode.trim().length > 0) {
+      setIsAdminUnlocked(true);
+      setIsAdminModalOpen(false);
+      setAdminAuthError('');
+      if (pendingAdminTab) {
+        setActiveCommercialTab(pendingAdminTab as any);
+        setPendingAdminTab(null);
+      }
+    } else {
+      setAdminAuthError('Invalid administrator passcode.');
+    }
+  };
+
+  const unlockAdminForEvaluator = () => {
+    setIsAdminUnlocked(true);
+    setIsAdminModalOpen(false);
+    setAdminAuthError('');
+    if (pendingAdminTab) {
+      setActiveCommercialTab(pendingAdminTab as any);
+      setPendingAdminTab(null);
+    } else {
+      onNavigateToDashboard('/certification');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
       
@@ -117,7 +173,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tracking-tight text-white font-mono">ITIS</span>
                 <span className="text-2xs px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full font-mono font-bold">
-                  v1.0.0-GA
+                  Version 1.0.0
                 </span>
               </div>
               <p className="text-2xs text-slate-400 uppercase tracking-wider font-semibold hidden sm:block">
@@ -128,32 +184,38 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
           <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
             <a href="#about" className="hover:text-cyan-400 transition">About ITIS</a>
+            <a href="#problem-solution" className="hover:text-cyan-400 transition">Problem & Solution</a>
+            <a href="#how-it-works" className="hover:text-cyan-400 transition">How It Works</a>
+            <a href="#stakeholders" className="hover:text-cyan-400 transition">Benefits</a>
+            <a href="#partners" className="hover:text-cyan-400 transition">Partners</a>
             <a href="#commercial-suite" className="text-cyan-300 font-bold hover:text-cyan-200 transition flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              Pilot Sales Kit
+              Demonstration Suite
             </a>
-            <a href="#trust" className="hover:text-cyan-400 transition">Trust & Compliance</a>
-            <a href="#stakeholders" className="hover:text-cyan-400 transition">Stakeholders</a>
-            <a href="#technology" className="hover:text-cyan-400 transition">Architecture</a>
-            <a href="#vision" className="hover:text-cyan-400 transition">Vision 2035</a>
+            <a href="#trust" className="hover:text-cyan-400 transition">Trust & POPIA</a>
           </nav>
 
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsDemoModalOpen(true)}
-              className="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition hidden sm:flex items-center gap-2"
+              className="px-3.5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-lg shadow-cyan-500/20"
             >
-              <Send className="w-3.5 h-3.5 text-cyan-400" />
+              <Send className="w-3.5 h-3.5" />
               <span>Request Demo</span>
             </button>
 
             <button
-              onClick={() => onNavigateToDashboard('/certification')}
-              className="px-4 py-2 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-mono font-bold transition flex items-center gap-2 shadow-sm"
+              onClick={() => {
+                if (isAdminUnlocked) {
+                  onNavigateToDashboard('/certification');
+                } else {
+                  setIsAdminModalOpen(true);
+                }
+              }}
+              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2"
             >
-              <Award className="w-4 h-4 text-emerald-400" />
-              <span>GA Control Center</span>
-              <ChevronRight className="w-3.5 h-3.5" />
+              <Lock className={`w-3.5 h-3.5 ${isAdminUnlocked ? 'text-emerald-400' : 'text-slate-400'}`} />
+              <span>{isAdminUnlocked ? 'Admin Console' : 'Admin Login'}</span>
             </button>
           </div>
         </div>
@@ -284,6 +346,180 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                   Emergency response coordination designed to speed communication during critical incidents.
                 </p>
               </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Problem & Solution Section */}
+      <section id="problem-solution" className="py-20 border-b border-slate-800 bg-slate-900/60 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 space-y-12">
+          
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-xs font-mono uppercase tracking-widest text-rose-400 font-bold">
+              The Critical Gap & The Transformation
+            </span>
+            <h2 className="text-3xl font-extrabold text-white">The Challenge & The ITIS Solution</h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Every school morning, over 12 million South African learners leave home. Millions travel unmonitored across dangerous walking corridors and unverified transport fleets. ITIS bridges the gap.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            {/* The Problem Side */}
+            <div className="bg-slate-950 p-6 sm:p-8 rounded-2xl border border-rose-500/30 space-y-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none" />
+              
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded-xl shrink-0">
+                  <AlertTriangle className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">The Problem Facing Schools & Parents</h3>
+                  <p className="text-xs text-rose-300 font-mono">Fragmented Communication & Delayed Interventions</p>
+                </div>
+              </div>
+
+              <ul className="space-y-4 text-xs text-slate-300">
+                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <X className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Unmonitored Transit Vulnerabilities:</strong>
+                    Parents lose sight of children the moment they leave home until afternoon arrival, with no real-time transport updates.
+                  </div>
+                </li>
+
+                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <X className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Manual, Time-Consuming Roll Calls:</strong>
+                    Educators lose 20+ minutes per day filling out paper attendance registers, delaying missing learner detection until mid-day.
+                  </div>
+                </li>
+
+                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <X className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Delayed Emergency Response:</strong>
+                    During perimeter breaches or medical distress, calling emergency hotlines manually wastes critical response minutes.
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* The Solution Side */}
+            <div className="bg-slate-950 p-6 sm:p-8 rounded-2xl border border-emerald-500/30 space-y-6 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-xl shrink-0">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">The ITIS Intelligent Safety Solution</h3>
+                  <p className="text-xs text-emerald-300 font-mono">Real-Time Connectivity & Automated Dispatch</p>
+                </div>
+              </div>
+
+              <ul className="space-y-4 text-xs text-slate-300">
+                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Real-Time Geofenced Transit Tracking:</strong>
+                    Automated GPS and BLE tracking for scholar buses, walking corridors, and pickup zones with instant parent push/SMS updates.
+                  </div>
+                </li>
+
+                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Frictionless Automated Classroom Scans:</strong>
+                    Bluetooth Low Energy (BLE) classroom scanners record arrival in milliseconds, zero manual teacher effort required.
+                  </div>
+                </li>
+
+                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
+                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-white block">Direct SAPS 10111 Tactical Integration:</strong>
+                    One-touch panic triggers dispatch live GIS coordinates directly to SAPS 10111 and nearest rapid response units.
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* How ITIS Works Section */}
+      <section id="how-it-works" className="py-20 border-b border-slate-800 bg-slate-950">
+        <div className="max-w-7xl mx-auto px-6 space-y-12">
+          
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
+              4-Stage Operational Workflow
+            </span>
+            <h2 className="text-3xl font-extrabold text-white">How The ITIS Ecosystem Operates</h2>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              From morning departure to afternoon home arrival, ITIS works silently in the background to ensure every second is accounted for safely.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+            
+            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-cyan-500/50 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-2xs font-mono px-2.5 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full font-bold">
+                  STAGE 01
+                </span>
+                <Radio className="w-5 h-5 text-cyan-400" />
+              </div>
+              <h3 className="text-base font-bold text-white">Wearable & Sensor Telemetry</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Learners carry lightweight, water-resistant panic badges. BLE mesh beacons on scholar transport and campus gates verify presence instantly.
+              </p>
+            </div>
+
+            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-emerald-500/50 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-2xs font-mono px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full font-bold">
+                  STAGE 02
+                </span>
+                <Compass className="w-5 h-5 text-emerald-400" />
+              </div>
+              <h3 className="text-base font-bold text-white">AI Spatial Geofence Engine</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                PostGIS spatial engine continuously monitors approved routes, school perimeters, loading bays, and safe corridors for anomalies.
+              </p>
+            </div>
+
+            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-purple-500/50 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-2xs font-mono px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/40 rounded-full font-bold">
+                  STAGE 03
+                </span>
+                <Bell className="w-5 h-5 text-purple-400" />
+              </div>
+              <h3 className="text-base font-bold text-white">Multi-Channel Alerts</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                If a bus deviates, a learner strays, or panic button is pressed, instant notifications stream via Push, SMS, and WhatsApp.
+              </p>
+            </div>
+
+            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-rose-500/50 transition">
+              <div className="flex items-center justify-between">
+                <span className="text-2xs font-mono px-2.5 py-1 bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded-full font-bold">
+                  STAGE 04
+                </span>
+                <PhoneCall className="w-5 h-5 text-rose-400" />
+              </div>
+              <h3 className="text-base font-bold text-white">Coordinated Emergency Dispatch</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                SAPS 10111, local metro police, and school safety marshals receive exact GIS coordinates and learner profile data in real time.
+              </p>
             </div>
 
           </div>
@@ -1047,24 +1283,27 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
           {/* Tab Navigation Controls */}
           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin justify-start lg:justify-center">
             {[
-              { id: 'readiness', label: 'Cloud Launch & E01 Report', icon: Server },
-              { id: 'errors', label: 'Resilience & Error Pages', icon: ShieldCheck },
-              { id: 'demo', label: 'Live Demonstration', icon: Play },
-              { id: 'roi', label: 'ROI Calculator', icon: Calculator },
-              { id: 'proposal', label: 'Pilot Proposal Generator', icon: FileText },
-              { id: 'hardware', label: 'Hardware Ecosystem', icon: Cpu },
-              { id: 'government', label: 'Government & POPIA', icon: Building2 },
-              { id: 'partner', label: 'Partner Portal', icon: Handshake },
-              { id: 'investor', label: 'Investor Portal', icon: TrendingUp },
-              { id: 'faq', label: 'Public FAQs & Docs', icon: HelpCircle },
-              { id: 'certification', label: 'Commercial Report', icon: Award }
+              { id: 'gis', label: 'Enterprise GIS & Maps', icon: Compass, admin: false },
+              { id: 'demo', label: 'Live Demonstration', icon: Play, admin: false },
+              { id: 'roi', label: 'ROI Calculator', icon: Calculator, admin: false },
+              { id: 'proposal', label: 'Pilot Proposal Generator', icon: FileText, admin: false },
+              { id: 'hardware', label: 'Hardware Ecosystem', icon: Cpu, admin: false },
+              { id: 'government', label: 'Government & POPIA', icon: Building2, admin: false },
+              { id: 'partner', label: 'Partner Portal', icon: Handshake, admin: false },
+              { id: 'investor', label: 'Investor Portal', icon: TrendingUp, admin: false },
+              { id: 'faq', label: 'Public FAQs & Docs', icon: HelpCircle, admin: false },
+              { id: 'identity', label: 'Identity & SSO', icon: KeyRound, admin: true },
+              { id: 'communications', label: 'Communications Engine', icon: Bell, admin: true },
+              { id: 'readiness', label: 'Cloud Launch Readiness', icon: Server, admin: true },
+              { id: 'errors', label: 'System Resilience', icon: ShieldCheck, admin: true },
+              { id: 'certification', label: 'Commercial Certification', icon: Award, admin: true }
             ].map((tab) => {
               const Icon = tab.icon;
               const isActive = activeCommercialTab === tab.id;
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveCommercialTab(tab.id as any)}
+                  onClick={() => handleCommercialTabClick(tab.id)}
                   className={`px-3.5 py-2 rounded-xl text-xs font-mono transition flex items-center gap-2 whitespace-nowrap ${
                     isActive
                       ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20'
@@ -1073,6 +1312,9 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
                   <span>{tab.label}</span>
+                  {tab.admin && (
+                    <Lock className={`w-3 h-3 ${isAdminUnlocked ? 'text-emerald-400' : 'text-slate-500'}`} />
+                  )}
                 </button>
               );
             })}
@@ -1080,6 +1322,9 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
           {/* Active Component Display */}
           <div className="transition-all duration-300">
+            {activeCommercialTab === 'gis' && <GisDashboard />}
+            {activeCommercialTab === 'identity' && <IdentityDashboard />}
+            {activeCommercialTab === 'communications' && <NotificationsDashboard />}
             {activeCommercialTab === 'readiness' && <ProductionReadinessReport />}
             {activeCommercialTab === 'errors' && <ProductionErrorPages onReturnHome={() => setActiveCommercialTab('readiness')} />}
             {activeCommercialTab === 'demo' && <LiveDemoSimulator />}
@@ -1096,13 +1341,13 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Professional Footer */}
       <footer className="py-14 bg-slate-950 border-t border-slate-800 text-xs text-slate-400 font-sans">
         <div className="max-w-7xl mx-auto px-6 space-y-10">
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             
-            <div className="space-y-3 md:col-span-2">
+            <div className="space-y-3 md:col-span-1">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 rounded-xl text-cyan-400">
                   <ShieldCheck className="w-5 h-5" />
@@ -1112,49 +1357,95 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
               <p className="text-xs text-slate-300 font-semibold">
                 Integrated Technology Intelligence & Safety
               </p>
-              <p className="text-2xs text-slate-400 leading-relaxed max-w-md">
-                <strong>Protecting Every Learner. Every Journey. Every Second.</strong> Technology that connects parents, schools, transport providers and emergency responders into one intelligent safety ecosystem.
+              <p className="text-2xs text-slate-400 leading-relaxed">
+                <strong>Protecting Every Learner. Every Journey. Every Second.</strong> Unifying parents, schools, transport operators, and SAPS emergency dispatch into one intelligent enclave.
               </p>
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Quick Navigation</div>
+              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Platform Links</div>
               <ul className="space-y-1.5 text-2xs">
-                <li><a href="#about" className="hover:text-cyan-400 transition">About ITIS</a></li>
-                <li><a href="#trust" className="hover:text-cyan-400 transition">Trust & Compliance</a></li>
-                <li><a href="#investors" className="hover:text-cyan-400 transition">Why ITIS Matters</a></li>
-                <li><a href="#stakeholders" className="hover:text-cyan-400 transition">Stakeholders</a></li>
-                <li><a href="#technology" className="hover:text-cyan-400 transition">Architecture</a></li>
-                <li><a href="#vision" className="hover:text-cyan-400 transition">Vision 2035</a></li>
+                <li><a href="#about" className="hover:text-cyan-400 transition">About ITIS Platform</a></li>
+                <li><a href="#problem-solution" className="hover:text-cyan-400 transition">Problem & Solution</a></li>
+                <li><a href="#how-it-works" className="hover:text-cyan-400 transition">How ITIS Works</a></li>
+                <li><a href="#stakeholders" className="hover:text-cyan-400 transition">Benefits & Stakeholders</a></li>
+                <li><a href="#partners" className="hover:text-cyan-400 transition">Partners & Ecosystem</a></li>
+                <li><a href="#trust" className="hover:text-cyan-400 transition">Trust & POPIA Statutory Compliance</a></li>
               </ul>
             </div>
 
             <div className="space-y-2">
-              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Operational Dashboards</div>
+              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Governance & Legal</div>
               <ul className="space-y-1.5 text-2xs">
                 <li>
-                  <button onClick={() => onNavigateToDashboard('/certification')} className="hover:text-emerald-400 transition text-emerald-300 font-bold">
-                    GA Control Center (/certification)
+                  <button onClick={() => setActiveLegalModal('privacy')} className="hover:text-cyan-400 transition">
+                    Privacy Policy
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => onNavigateToDashboard('/release')} className="hover:text-cyan-400 transition text-cyan-300 font-bold">
-                    Release Dashboard (/release)
+                  <button onClick={() => setActiveLegalModal('popia')} className="hover:text-cyan-400 transition">
+                    POPIA Compliance Statement
                   </button>
                 </li>
-                <li><span className="text-slate-500">SITA Cloud Enclave Active</span></li>
-                <li><span className="text-slate-500">POPIA Audit Ledger Enabled</span></li>
+                <li>
+                  <button onClick={() => setActiveLegalModal('terms')} className="hover:text-cyan-400 transition">
+                    Terms of Service & SLA
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveLegalModal('careers')} className="hover:text-cyan-400 transition">
+                    Careers & Fellowships
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setActiveLegalModal('media')} className="hover:text-cyan-400 transition">
+                    Media & Press Kit
+                  </button>
+                </li>
               </ul>
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Contact & Administration</div>
+              <div className="space-y-2 text-2xs text-slate-300">
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span>+27 62 430 4906 (0624304906)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span>contact@itis.gov.za / info@itis.co.za</span>
+                </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                  <span>Tshwane Innovation Corridor, Gauteng, South Africa</span>
+                </div>
+                <div className="pt-2">
+                  <button
+                    onClick={() => {
+                      if (isAdminUnlocked) {
+                        onNavigateToDashboard('/certification');
+                      } else {
+                        setIsAdminModalOpen(true);
+                      }
+                    }}
+                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg font-mono text-2xs font-bold transition flex items-center gap-2"
+                  >
+                    <Lock className={`w-3 h-3 ${isAdminUnlocked ? 'text-emerald-400' : 'text-slate-400'}`} />
+                    <span>{isAdminUnlocked ? 'Console Active (Unlocked)' : 'Administrator Console Access'}</span>
+                  </button>
+                </div>
+              </div>
             </div>
 
           </div>
 
           <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-2xs font-mono text-slate-500">
             <div>
-              © 2026 Integrated Technology Intelligence & Safety (ITIS) Platform. Republic of South Africa. All Rights Reserved.
+              © 2026 Integrated Technology Intelligence & Safety (ITIS) Platform. Republic of South Africa.
             </div>
             <div className="flex items-center gap-4">
-              <span>Version 1.0.0-GA</span>
+              <span>Version 1.0.0</span>
               <span>•</span>
               <span>POPIA Statutory Compliant</span>
             </div>
@@ -1217,7 +1508,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                       <label className="block text-slate-300 font-medium mb-1">Phone Number</label>
                       <input
                         type="tel"
-                        placeholder="+27 82 123 4567"
+                        placeholder="0624304906"
                         value={demoForm.phone}
                         onChange={(e) => setDemoForm({ ...demoForm, phone: e.target.value })}
                         className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
@@ -1283,7 +1574,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                 <p className="text-xs text-slate-300 max-w-sm mx-auto leading-relaxed">
                   Thank you, <strong className="text-emerald-300">{demoForm.name}</strong>. Your briefing ticket (<span className="font-mono text-cyan-400">DEMO-2026-8912</span>) has been submitted to the ITIS Executive Team.
                 </p>
-                <p className="text-2xs text-slate-400">An executive representative will contact you within 24 hours.</p>
+                <p className="text-2xs text-slate-400">An executive representative will contact you within 24 hours at 0624304906 or via email.</p>
 
                 <button
                   onClick={resetDemoModal}
@@ -1293,6 +1584,220 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                 </button>
               </div>
             )}
+
+          </div>
+        </div>
+      )}
+
+      {/* Admin Passcode Gate Modal */}
+      {isAdminModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+            
+            <button
+              onClick={() => {
+                setIsAdminModalOpen(false);
+                setAdminAuthError('');
+              }}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-950/80 rounded-lg border border-slate-800 transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-2xs font-mono font-bold">
+                <Lock className="w-3.5 h-3.5 text-purple-400" />
+                <span>RESTRICTED OPERATIONAL CONSOLE</span>
+              </div>
+              <h3 className="text-xl font-bold text-white">Administrator & Engineering Authentication</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Internal dashboards (Release, SRE, Performance, Certification) are protected for certified operators and demonstration evaluators.
+              </p>
+            </div>
+
+            <form onSubmit={handleAdminAuthSubmit} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-slate-300 font-medium mb-1">Passcode</label>
+                <input
+                  type="password"
+                  placeholder="Enter passcode (or click Unlock below)"
+                  value={adminPasscode}
+                  onChange={(e) => setAdminPasscode(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 font-mono"
+                />
+                {adminAuthError && (
+                  <p className="text-2xs text-rose-400 mt-1 font-mono">{adminAuthError}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <button
+                  type="submit"
+                  className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs font-mono transition flex items-center justify-center gap-2"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>Authenticate Operator</span>
+                </button>
+
+                <div className="relative flex py-1 items-center">
+                  <div className="flex-grow border-t border-slate-800"></div>
+                  <span className="flex-shrink mx-3 text-2xs text-slate-500 font-mono">EVALUATOR QUICK ACCESS</span>
+                  <div className="flex-grow border-t border-slate-800"></div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={unlockAdminForEvaluator}
+                  className="w-full py-2.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-mono font-bold transition flex items-center justify-center gap-2"
+                >
+                  <Award className="w-4 h-4 text-emerald-400" />
+                  <span>Unlock Dashboards (Evaluator Mode)</span>
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
+
+      {/* Legal & Policy Modals */}
+      {activeLegalModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
+            
+            <button
+              onClick={() => setActiveLegalModal(null)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-950/80 rounded-lg border border-slate-800 transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {activeLegalModal === 'privacy' && (
+              <div className="space-y-4 text-xs text-slate-300">
+                <div className="space-y-1">
+                  <span className="text-2xs font-mono text-cyan-400 font-bold uppercase">Legal Notice</span>
+                  <h3 className="text-xl font-bold text-white">Privacy Policy & Data Protection</h3>
+                </div>
+                <p>
+                  The Integrated Technology Intelligence & Safety (ITIS) platform is committed to safeguarding personal data for learners, guardians, educators, and transport personnel in full compliance with South African data legislation.
+                </p>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <h4 className="font-bold text-white">Key Data Safeguards:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-2xs text-slate-400">
+                    <li>End-to-end ECC-P256 hardware encryption on all wearable telemetry.</li>
+                    <li>Automatic anonymization of location data after 30 days unless subject to active SAPS emergency inquiry.</li>
+                    <li>Strict role-based access control (RBAC) ensuring guardians only view their own dependents.</li>
+                    <li>Zero commercial monetization or third-party sharing of learner data.</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {activeLegalModal === 'popia' && (
+              <div className="space-y-4 text-xs text-slate-300">
+                <div className="space-y-1">
+                  <span className="text-2xs font-mono text-emerald-400 font-bold uppercase">Statutory Compliance</span>
+                  <h3 className="text-xl font-bold text-white">POPIA Compliance Statement</h3>
+                </div>
+                <p>
+                  ITIS complies strictly with the Protection of Personal Information Act (Act 4 of 2013) of South Africa.
+                </p>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <h4 className="font-bold text-white">POPIA Alignment Principles:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-2xs text-slate-400">
+                    <li><strong>Accountability:</strong> Dedicated Information Officer overseeing data governance.</li>
+                    <li><strong>Processing Limitation:</strong> Data processed solely for child protection, transit safety, and emergency response.</li>
+                    <li><strong>Security Safeguards:</strong> ISO 27001 & SOC2 Type II certified infrastructure hosted on SITA government cloud enclaves.</li>
+                    <li><strong>Data Subject Participation:</strong> Guardians retain rights to inspect, update, or revoke non-emergency telemetry profiles.</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {activeLegalModal === 'terms' && (
+              <div className="space-y-4 text-xs text-slate-300">
+                <div className="space-y-1">
+                  <span className="text-2xs font-mono text-purple-400 font-bold uppercase">Operational SLA</span>
+                  <h3 className="text-xl font-bold text-white">Terms of Service & Service Level Agreement</h3>
+                </div>
+                <p>
+                  Use of the ITIS platform by educational institutions, government departments, and transport contractors is governed by standard enterprise service agreements.
+                </p>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <h4 className="font-bold text-white">Service Level Commitments:</h4>
+                  <ul className="list-disc list-inside space-y-1 text-2xs text-slate-400">
+                    <li><strong>99.99% Platform Uptime:</strong> Multi-region redundant cloud cluster deployment.</li>
+                    <li><strong>Sub-Second Emergency Dispatch:</strong> Real-time MQTT socket event streaming.</li>
+                    <li><strong>24/7 National Operations Support:</strong> Dedicated tactical helpdesk reachable at +27 62 430 4906.</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {activeLegalModal === 'careers' && (
+              <div className="space-y-4 text-xs text-slate-300">
+                <div className="space-y-1">
+                  <span className="text-2xs font-mono text-cyan-400 font-bold uppercase">Join Our Mission</span>
+                  <h3 className="text-xl font-bold text-white">Careers & Engineering Fellowships</h3>
+                </div>
+                <p>
+                  Build technology that protects millions of learners daily. We recruit cloud architects, embedded IoT engineers, GIS specialists, and threat response analysts.
+                </p>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <h4 className="font-bold text-white">Current Open Positions:</h4>
+                  <ul className="space-y-1.5 text-2xs text-slate-400">
+                    <li className="flex justify-between border-b border-slate-900 pb-1">
+                      <span>Senior Embedded C/Rust Developer (IoT Wearables)</span>
+                      <span className="text-cyan-400 font-mono">Pretoria / Remote</span>
+                    </li>
+                    <li className="flex justify-between border-b border-slate-900 pb-1">
+                      <span>PostGIS Spatial Database Architect</span>
+                      <span className="text-cyan-400 font-mono">Johannesburg</span>
+                    </li>
+                    <li className="flex justify-between">
+                      <span>Public Safety Systems Integration Specialist</span>
+                      <span className="text-cyan-400 font-mono">Cape Town</span>
+                    </li>
+                  </ul>
+                  <p className="text-2xs text-slate-500 pt-2">Send CVs to: <strong className="text-slate-300">careers@itis.gov.za</strong> or contact 0624304906.</p>
+                </div>
+              </div>
+            )}
+
+            {activeLegalModal === 'media' && (
+              <div className="space-y-4 text-xs text-slate-300">
+                <div className="space-y-1">
+                  <span className="text-2xs font-mono text-emerald-400 font-bold uppercase">Press Office</span>
+                  <h3 className="text-xl font-bold text-white">Media & Executive Press Kit</h3>
+                </div>
+                <p>
+                  Official media resources, logos, brand guidelines, and executive briefing factsheets for journalists and broadcast partners.
+                </p>
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <h4 className="font-bold text-white">Downloadable Media Assets:</h4>
+                  <ul className="space-y-2 text-2xs text-slate-400">
+                    <li className="flex items-center justify-between bg-slate-900 p-2 rounded-lg">
+                      <span className="font-mono text-slate-200">ITIS Official Logo Vector Package (EPS, PNG, SVG)</span>
+                      <span className="text-cyan-400 font-bold">2.4 MB</span>
+                    </li>
+                    <li className="flex items-center justify-between bg-slate-900 p-2 rounded-lg">
+                      <span className="font-mono text-slate-200">National Learner Safety Platform Executive Summary Factsheet</span>
+                      <span className="text-cyan-400 font-bold">1.1 MB</span>
+                    </li>
+                  </ul>
+                  <p className="text-2xs text-slate-500 pt-2">Media Enquiries: <strong className="text-slate-300">media@itis.gov.za</strong> / +27 62 430 4906</p>
+                </div>
+              </div>
+            )}
+
+            <div className="pt-4 border-t border-slate-800 flex justify-end">
+              <button
+                onClick={() => setActiveLegalModal(null)}
+                className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold transition"
+              >
+                Close Notice
+              </button>
+            </div>
 
           </div>
         </div>

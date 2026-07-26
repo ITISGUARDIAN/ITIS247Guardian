@@ -6,8 +6,8 @@ import {
 } from '../types';
 
 export const initialReleaseMetadata: ReleaseMetadata = {
-  version: '1.0.0-GA',
-  releaseName: 'Phase D14 General Availability Horizon Release',
+  version: '1.0.0',
+  releaseName: 'General Availability Release (v1.0.0)',
   buildNumber: 'BUILD-2026-0726-0014',
   gitSha: 'c8a3f912e7b44589d9128031a0b',
   releaseDate: '2026-07-26',
@@ -404,8 +404,8 @@ The platform provides end-to-end integration across parent mobile applications, 
 
 export const initialReleaseCertification: ReleaseCertificationReport = {
   generatedAt: new Date().toISOString(),
-  releaseVersion: '1.0.0-GA',
-  releaseName: 'Phase D14 General Availability Horizon Release',
+  releaseVersion: '1.0.0',
+  releaseName: 'General Availability Release (v1.0.0)',
   certifiedBy: 'Release Engineering, DevSecOps & Operational Handover Panel',
   versionFreezeVerified: true,
   artifactPackagingScore: 100,

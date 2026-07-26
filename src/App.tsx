@@ -511,9 +511,9 @@ export default function App() {
           </div>
           <div>
             <h1 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              ITIS Enterprise Platform <span className="text-xs font-mono px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full">Phase D14 v1.0.0-GA Release</span>
+              ITIS Enterprise Platform <span className="text-xs font-mono px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full">Version 1.0.0</span>
             </h1>
-            <p className="text-xs text-slate-400">Release Engineering, Artifact Packaging, Deployment Handbooks & Operational Handover</p>
+            <p className="text-xs text-slate-400">Enterprise Operations Console, Artifact Packaging & System Health</p>
           </div>
         </div>
 
