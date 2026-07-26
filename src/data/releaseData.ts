@@ -359,7 +359,7 @@ export const initialReleaseNotesText = `
 # ITIS Enterprise Platform — Version 1.0.0-GA Release Notes
 
 ## Executive Summary
-The Integrated Transportation & Identity Safety (ITIS) Enterprise Platform has officially reached **Version 1.0.0 General Availability (GA)**. This milestone marks the complete delivery of a multi-tenant, zero-trust, high-throughput national child safety and school transportation monitoring system.
+The Integrated Technology Intelligence & Safety (ITIS) Enterprise Platform has officially reached **Version 1.0.0 General Availability (GA)**. This milestone marks the complete delivery of a multi-tenant, zero-trust, high-throughput national child safety and school transportation monitoring system.
 
 The platform provides end-to-end integration across parent mobile applications, school administration portals, emergency response tactical units, national command centers (C3), government oversight portals, and field technician provisioning tools.
 

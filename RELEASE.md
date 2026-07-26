@@ -11,7 +11,7 @@
 ---
 
 ## 1. Executive Summary
-The Integrated Transportation & Identity Safety (ITIS) Enterprise Platform has formally completed all engineering, security, performance, pilot readiness, and operational testing phases (Phases D01 through D13). The platform is hereby frozen and packaged at **Version 1.0.0-GA**.
+The Integrated Technology Intelligence & Safety (ITIS) Enterprise Platform has formally completed all engineering, security, performance, pilot readiness, and operational testing phases (Phases D01 through D13). The platform is hereby frozen and packaged at **Version 1.0.0-GA**.
 
 This release is fully certified for operational handover to Release Engineering, NOC Operations, Support Teams, SRE, School Administrators, Parents, Command Centre Operators, Government Overseers, Emergency Responders, and Field Technicians.
 
