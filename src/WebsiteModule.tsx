@@ -146,8 +146,8 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
           <div className="flex items-center gap-3.5">
             <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-950/50 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
               <img 
-                src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                alt="ITIS" 
+                src="/itis-logo.png" 
+                alt="ITIS Logo" 
                 className="w-10 h-10 object-contain rounded-lg drop-shadow-[0_0_10px_rgba(245,158,11,0.25)]" 
                 referrerPolicy="no-referrer"
               />
@@ -286,8 +286,8 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
                   <div className="relative mx-auto w-52 h-52 sm:w-60 sm:h-60 p-2 bg-slate-900 rounded-full border-2 border-amber-500/50 shadow-inner flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-500">
                     <img 
-                      src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                      alt="ITIS Safety" 
+                      src="/itis-logo.png" 
+                      alt="ITIS Logo" 
                       className="w-full h-full object-cover rounded-full drop-shadow-[0_0_15px_rgba(245,158,11,0.35)]" 
                       referrerPolicy="no-referrer"
                     />
@@ -1084,8 +1084,8 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             <div className="space-y-3">
               <div className="flex items-center gap-3">
                 <img 
-                  src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                  alt="ITIS" 
+                  src="/itis-logo.png" 
+                  alt="ITIS Logo" 
                   className="w-8 h-8 object-contain rounded-lg" 
                   referrerPolicy="no-referrer"
                 />

@@ -119,8 +119,8 @@ export function CommercialCertificationReport() {
           <div className="flex items-center gap-2">
             <span className="p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-lg shrink-0">
               <img 
-                src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                alt="ITIS" 
+                src="/itis-logo.png" 
+                alt="ITIS Logo" 
                 className="w-7 h-7 object-contain rounded" 
                 referrerPolicy="no-referrer"
               />
