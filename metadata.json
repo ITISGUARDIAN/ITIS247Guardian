@@ -1,6 +1,6 @@
 {
   "name": "ITIS",
-  "description": "ITIS Production Go-Live & National Deployment Platform (Prompt 065 - Final Operational Package v1.0.0), Production Packaging & Release Engineering (Prompt 064), System Certification (Prompt 063), Enterprise Design System (Prompt 062) with SITA Cloud Enclave infrastructure, minute-by-minute runbook, 90-day hypercare SLA matrix, and national pilot launch certification.",
+  "description": "ITIS Enterprise Platform featuring 24/7 Operations Command Centre, live incident queue, 3-panel operational workspace, guided incident flow, voice navigation for responders, automated communications logging, incident simulation centre, forensic audit timeline, and printable digital signature PDF report generation.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

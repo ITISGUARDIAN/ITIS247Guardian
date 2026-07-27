@@ -511,14 +511,14 @@ export default function App() {
           <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
             <img 
               src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-              alt="Official ITIS Seal" 
+              alt="ITIS" 
               className="w-10 h-10 object-contain rounded-lg drop-shadow-[0_0_10px_rgba(245,158,11,0.25)]" 
               referrerPolicy="no-referrer"
             />
           </div>
           <div>
             <h1 className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-              ITIS Enterprise Platform <span className="text-xs font-mono px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full">Version 1.0.0</span>
+              ITIS Enterprise Platform <span className="text-xs font-mono px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full">Active</span>
             </h1>
             <p className="text-xs text-slate-400">Enterprise Operations Console, Artifact Packaging & System Health</p>
           </div>
@@ -948,7 +948,7 @@ export default function App() {
                     <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-3">
                       Go-Live Control Center
                       <span className="text-xs px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full font-mono">
-                        VERSION 1.0.0-GA ACTIVE
+                        SYSTEM ACTIVE
                       </span>
                     </h2>
                     <p className="text-sm text-slate-400 mt-1">

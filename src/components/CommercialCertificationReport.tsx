@@ -120,7 +120,7 @@ export function CommercialCertificationReport() {
             <span className="p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-lg shrink-0">
               <img 
                 src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                alt="Official ITIS Seal" 
+                alt="ITIS" 
                 className="w-7 h-7 object-contain rounded" 
                 referrerPolicy="no-referrer"
               />
@@ -145,7 +145,7 @@ export function CommercialCertificationReport() {
       <div className="bg-slate-950 p-6 rounded-xl border border-amber-500/30 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="space-y-2 text-center md:text-left">
           <span className="text-xs font-mono text-amber-400 font-bold uppercase tracking-widest flex items-center gap-1.5 justify-center md:justify-start">
-            <Sparkles className="w-4 h-4" /> ITIS PLATFORM VERSION 1.0.0-GA
+            <Sparkles className="w-4 h-4" /> ITIS ENTERPRISE PLATFORM
           </span>
           <h2 className="text-2xl font-black text-white font-sans">Commercial Readiness Score</h2>
           <p className="text-xs text-slate-400 max-w-xl">

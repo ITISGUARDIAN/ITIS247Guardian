@@ -111,7 +111,7 @@ export function IdentityDashboard() {
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/40 rounded-full text-xs font-mono font-bold flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>PHASE E03 — ENTERPRISE IDENTITY & SSO FEDERATION</span>
+                <span>ENTERPRISE IDENTITY & SSO FEDERATION</span>
               </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-xs font-mono font-bold">
                 OIDC + SAML 2.0 MULTI-TENANT

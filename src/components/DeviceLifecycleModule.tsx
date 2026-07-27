@@ -318,7 +318,7 @@ export function DeviceLifecycleModule({ onNavigateToTab }: DeviceLifecycleModule
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-300 text-2xs font-mono font-bold">
               <Cpu className="w-3.5 h-3.5 text-amber-400" />
-              <span>PHASE E05 • ENTERPRISE DEVICE LIFECYCLE & MANUFACTURING</span>
+              <span>ENTERPRISE DEVICE LIFECYCLE & MANUFACTURING</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-3">

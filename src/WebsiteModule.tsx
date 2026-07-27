@@ -4,7 +4,6 @@ import {
   School, 
   Radio, 
   Users, 
-  Award, 
   ArrowRight, 
   Lock, 
   CheckCircle2, 
@@ -12,66 +11,44 @@ import {
   PhoneCall, 
   Building2, 
   MapPin, 
-  ExternalLink, 
   Sparkles, 
-  ChevronRight,
-  Shield,
-  Clock,
-  Zap,
-  Globe,
-  Bus,
-  TrendingUp,
-  HeartPulse,
-  Cpu,
-  Database,
-  Layers,
-  Server,
-  Smartphone,
-  Eye,
-  FileText,
-  Mail,
-  X,
-  Send,
-  Building,
-  Briefcase,
-  Check,
-  Compass,
-  BarChart3,
-  Flame,
-  KeyRound,
-  Network,
-  Calculator,
-  Handshake,
-  HelpCircle,
-  Play,
-  Bell,
-  AlertTriangle,
-  FileCheck,
-  Phone
+  Bus, 
+  Cpu, 
+  Smartphone, 
+  FileText, 
+  Mail, 
+  X, 
+  Send, 
+  Check, 
+  HelpCircle, 
+  User, 
+  Phone,
+  AlertTriangle
 } from 'lucide-react';
 
-import { LiveDemoSimulator } from './components/LiveDemoSimulator';
-import { ROICalculator } from './components/ROICalculator';
-import { PilotProposalGenerator } from './components/PilotProposalGenerator';
+import { EnterprisePortalSuite, UserProfile } from './components/auth/EnterprisePortalSuite';
 import { HardwareShowcase } from './components/HardwareShowcase';
 import { GovernmentReadinessSection } from './components/GovernmentReadinessSection';
-import { PartnerPortalSection } from './components/PartnerPortalSection';
-import { InvestorPortalSection } from './components/InvestorPortalSection';
 import { PublicDocsFAQ } from './components/PublicDocsFAQ';
 import { CommercialCertificationReport } from './components/CommercialCertificationReport';
-import { ProductionReadinessReport } from './components/production/ProductionReadinessReport';
-import { ProductionErrorPages } from './components/production/ProductionErrorPages';
 import { NotificationsDashboard } from './components/notifications/NotificationsDashboard';
-import { IdentityDashboard } from './components/auth/IdentityDashboard';
 import { GisDashboard } from './components/gis/GisDashboard';
 import { DeviceLifecycleModule } from './components/DeviceLifecycleModule';
+import { CommercialCRMModule } from './components/CommercialCRMModule';
+import { FinancialProcurementModule } from './components/FinancialProcurementModule';
+import { AIDecisionIntelligenceModule } from './components/AIDecisionIntelligenceModule';
+import { CommandCentreModule } from './components/CommandCentreModule';
 
 interface WebsiteModuleProps {
   onNavigateToDashboard: (route: string) => void;
 }
 
 export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
-  // Demo Modal State
+  // Portal & Authentication Gateway State
+  const [portalUser, setPortalUser] = useState<UserProfile | null>(null);
+  const [isPortalModalOpen, setIsPortalModalOpen] = useState(false);
+
+  // Demo Request Modal State
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const [demoSubmitted, setDemoSubmitted] = useState(false);
   const [demoForm, setDemoForm] = useState({
@@ -83,12 +60,15 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     notes: ''
   });
 
-  // Admin Auth Gate State
-  const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-  const [adminPasscode, setAdminPasscode] = useState('');
-  const [adminAuthError, setAdminAuthError] = useState('');
-  const [pendingAdminTab, setPendingAdminTab] = useState<string | null>(null);
+  // Contact Form State
+  const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'General Enquiry',
+    message: ''
+  });
 
   // Legal & Policy Modals State
   const [activeLegalModal, setActiveLegalModal] = useState<
@@ -97,17 +77,22 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
   // Selected Stakeholder Tab State
   const [activeStakeholder, setActiveStakeholder] = useState<
-    'parents' | 'schools' | 'transport' | 'responders' | 'government' | 'technicians' | 'executives'
+    'parents' | 'schools' | 'transport' | 'responders' | 'government' | 'communities'
   >('parents');
 
-  // Selected Commercial Suite Tab State
+  // Selected Public Showcase Tab State
   const [activeCommercialTab, setActiveCommercialTab] = useState<
-    'demo' | 'roi' | 'proposal' | 'hardware' | 'government' | 'partner' | 'investor' | 'faq' | 'certification' | 'readiness' | 'errors' | 'communications' | 'identity' | 'gis' | 'lifecycle'
-  >('gis');
+    'government' | 'faq'
+  >('government');
 
   const handleDemoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setDemoSubmitted(true);
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactSubmitted(true);
   };
 
   const resetDemoModal = () => {
@@ -123,54 +108,46 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     });
   };
 
-  const handleCommercialTabClick = (tabId: string) => {
-    const adminTabs = ['identity', 'communications', 'readiness', 'errors', 'certification', 'lifecycle'];
-    if (adminTabs.includes(tabId) && !isAdminUnlocked) {
-      setPendingAdminTab(tabId);
-      setIsAdminModalOpen(true);
-      return;
-    }
-    setActiveCommercialTab(tabId as any);
-  };
+  // IF USER IS AUTHENTICATED: SHOW FULL ROLE PORTAL SUITE
+  if (portalUser) {
+    return (
+      <EnterprisePortalSuite
+        currentUser={portalUser}
+        onLogin={(u) => setPortalUser(u)}
+        onLogout={() => setPortalUser(null)}
+        onNavigateToTab={(tab) => {
+          if (tab === 'release' || tab === 'certification') {
+            onNavigateToDashboard('/certification');
+          }
+        }}
+        childrenComponents={{
+          gisDashboard: <GisDashboard />,
+          deviceLifecycle: <DeviceLifecycleModule />,
+          commercialReport: <CommercialCertificationReport />,
+          notifications: <NotificationsDashboard />,
+          commercialCrm: <CommercialCRMModule />,
+          financialModule: <FinancialProcurementModule />,
+          aiIntelligenceModule: <AIDecisionIntelligenceModule />,
+          commandCentreModule: <CommandCentreModule />
+        }}
+      />
+    );
+  }
 
-  const handleAdminAuthSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (adminPasscode.trim() === 'admin2026' || adminPasscode.trim().length > 0) {
-      setIsAdminUnlocked(true);
-      setIsAdminModalOpen(false);
-      setAdminAuthError('');
-      if (pendingAdminTab) {
-        setActiveCommercialTab(pendingAdminTab as any);
-        setPendingAdminTab(null);
-      }
-    } else {
-      setAdminAuthError('Invalid administrator passcode.');
-    }
-  };
-
-  const unlockAdminForEvaluator = () => {
-    setIsAdminUnlocked(true);
-    setIsAdminModalOpen(false);
-    setAdminAuthError('');
-    if (pendingAdminTab) {
-      setActiveCommercialTab(pendingAdminTab as any);
-      setPendingAdminTab(null);
-    } else {
-      onNavigateToDashboard('/certification');
-    }
-  };
-
+  // PUBLIC WEBSITE VIEW
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
       
-      {/* Top Corporate Header */}
-      <header className="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-6 py-4 sticky top-0 z-50">
+      {/* Top Navigation Header */}
+      <header className="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 sm:px-8 py-3.5 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
+          
+          {/* Logo & Brand Title */}
           <div className="flex items-center gap-3.5">
             <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-950/50 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
               <img 
                 src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                alt="Official ITIS Seal" 
+                alt="ITIS" 
                 className="w-10 h-10 object-contain rounded-lg drop-shadow-[0_0_10px_rgba(245,158,11,0.25)]" 
                 referrerPolicy="no-referrer"
               />
@@ -178,33 +155,36 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-black tracking-tight text-white font-mono">ITIS</span>
-                <span className="text-2xs px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-mono font-bold flex items-center gap-1">
+                <span className="text-3xs px-2.5 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-mono font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-                  Official Seal
-                </span>
-                <span className="text-2xs px-2.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full font-mono font-bold">
-                  Version 1.0.0
+                  Enterprise Platform
                 </span>
               </div>
-              <p className="text-2xs text-slate-300 uppercase tracking-wider font-semibold hidden sm:block">
+              <p className="text-3xs text-slate-400 uppercase tracking-wider font-semibold hidden sm:block">
                 Integrated Technology Intelligence & Safety
               </p>
             </div>
           </div>
 
+          {/* Navigation Menu Links */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-300">
-            <a href="#about" className="hover:text-cyan-400 transition">About ITIS</a>
-            <a href="#problem-solution" className="hover:text-cyan-400 transition">Problem & Solution</a>
-            <a href="#how-it-works" className="hover:text-cyan-400 transition">How It Works</a>
-            <a href="#stakeholders" className="hover:text-cyan-400 transition">Benefits</a>
-            <a href="#partners" className="hover:text-cyan-400 transition">Partners</a>
-            <a href="#commercial-suite" className="text-cyan-300 font-bold hover:text-cyan-200 transition flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              Demonstration Suite
+            <a href="#about" className="hover:text-amber-400 transition">Vision</a>
+            <a href="#solutions" className="hover:text-amber-400 transition">Solutions</a>
+            <a href="#how-it-works" className="hover:text-amber-400 transition">How It Works</a>
+            <a href="#benefits" className="hover:text-amber-400 transition">Benefits</a>
+            <a href="#partners" className="hover:text-amber-400 transition">Partners</a>
+            <a 
+              href="#demo-suite" 
+              onClick={() => setActiveCommercialTab('government')} 
+              className="text-amber-300 font-bold hover:text-amber-200 transition flex items-center gap-1"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              Government Brief
             </a>
-            <a href="#trust" className="hover:text-cyan-400 transition">Trust & POPIA</a>
+            <a href="#contact" className="hover:text-amber-400 transition">Contact</a>
           </nav>
 
+          {/* Action CTAs */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setIsDemoModalOpen(true)}
@@ -215,17 +195,11 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             </button>
 
             <button
-              onClick={() => {
-                if (isAdminUnlocked) {
-                  onNavigateToDashboard('/certification');
-                } else {
-                  setIsAdminModalOpen(true);
-                }
-              }}
-              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2"
+              onClick={() => setIsPortalModalOpen(true)}
+              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-semibold transition flex items-center gap-2"
             >
-              <Lock className={`w-3.5 h-3.5 ${isAdminUnlocked ? 'text-emerald-400' : 'text-slate-400'}`} />
-              <span>{isAdminUnlocked ? 'Admin Console' : 'Admin Login'}</span>
+              <Lock className="w-3.5 h-3.5 text-amber-400" />
+              <span>Login to Portal</span>
             </button>
           </div>
         </div>
@@ -233,7 +207,6 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
       {/* Hero Section */}
       <section id="about" className="relative pt-16 pb-24 border-b border-slate-800/80 overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-slate-950">
-        {/* Subtle Ambient Gold & Blue Network Backdrop */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-amber-500/10 via-blue-950/20 to-transparent pointer-events-none" />
         <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-r from-amber-500/10 via-cyan-500/10 to-blue-600/10 blur-3xl pointer-events-none rounded-full" />
 
@@ -243,40 +216,35 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             {/* Left Content Column */}
             <div className="lg:col-span-7 space-y-6">
               
-              {/* National Enclave Pill */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>Integrated Technology Intelligence & Safety (ITIS) • Official National Enclave</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                <span>Integrated Technology Intelligence & Safety (ITIS)</span>
               </div>
 
-              {/* Official Tagline Heading */}
+              {/* Primary Tagline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] font-sans">
                 Protecting Every Learner. <br className="hidden sm:inline" />
-                <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-cyan-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-200 bg-clip-text text-transparent">
                   Every Journey. Every Second.
                 </span>
               </h1>
 
-              {/* Official Executive Subheading */}
-              <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
-                Integrated Technology Intelligence & Safety (ITIS) is a next-generation intelligent safety platform that helps schools, parents, transport providers and emergency services work together to protect learners through real-time technology, secure communications and coordinated emergency response.
+              {/* Secondary Tagline */}
+              <p className="text-lg sm:text-xl font-bold text-slate-200 font-mono tracking-wide">
+                Powered by Intelligence. Trusted by Communities.
               </p>
 
-              {/* Supporting Brand Message */}
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-amber-500/30 text-xs text-slate-300 font-medium flex items-center gap-3.5 shadow-lg shadow-amber-500/5">
-                <ShieldCheck className="w-6 h-6 text-amber-400 shrink-0" />
-                <span>
-                  <strong className="text-white">Powered by Intelligence. Uncompromised Safety.</strong> Connecting parents, schools, transport providers and SAPS emergency responders into one unified national enclave.
-                </span>
-              </div>
+              <p className="text-base text-slate-300 leading-relaxed font-normal">
+                ITIS is South Africa's leading national child safety and school transport protection platform, uniting parents, schools, fleet operators, SAPS, and emergency medical services into a seamless real-time safety enclave.
+              </p>
 
-              {/* Hero CTAs */}
+              {/* Hero Action CTAs */}
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <a
-                  href="#stakeholders"
+                  href="#solutions"
                   className="px-6 py-3.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold rounded-xl text-sm transition flex items-center gap-2 shadow-xl shadow-amber-500/20"
                 >
-                  <span>Explore ITIS Ecosystem</span>
+                  <span>Explore ITIS</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
 
@@ -287,40 +255,44 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                   <Send className="w-4 h-4 text-amber-400" />
                   <span>Request Demonstration</span>
                 </button>
+
+                <button
+                  onClick={() => setIsPortalModalOpen(true)}
+                  className="px-6 py-3.5 bg-slate-950 hover:bg-slate-900 text-amber-300 font-bold border border-amber-500/40 rounded-xl text-sm transition flex items-center gap-2"
+                >
+                  <Lock className="w-4 h-4 text-amber-400" />
+                  <span>Portal Login</span>
+                </button>
               </div>
+
             </div>
 
-            {/* Right Column: 3D Official Seal Badge Showcase Card */}
+            {/* Right Column: Official Showcase Badge */}
             <div className="lg:col-span-5 flex justify-center">
               <div className="relative group w-full max-w-sm">
-                
-                {/* Glow Backdrop */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-cyan-500/20 to-blue-600/30 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500 opacity-80" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-500/20 to-blue-600/30 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500 opacity-80" />
 
                 <div className="relative bg-slate-950 border-2 border-amber-500/40 rounded-3xl p-6 space-y-5 shadow-2xl text-center">
                   
-                  {/* Badge Header Bar */}
                   <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
                     <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                       <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-                      Official Police Shield
+                      ITIS Safety
                     </span>
-                    <span className="text-2xs font-mono px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-bold">
+                    <span className="text-3xs font-mono px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-bold">
                       REPUBLIC OF SOUTH AFRICA
                     </span>
                   </div>
 
-                  {/* High Resolution Seal Image */}
                   <div className="relative mx-auto w-52 h-52 sm:w-60 sm:h-60 p-2 bg-slate-900 rounded-full border-2 border-amber-500/50 shadow-inner flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-500">
                     <img 
                       src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                      alt="Official ITIS Shield Seal" 
+                      alt="ITIS Safety" 
                       className="w-full h-full object-cover rounded-full drop-shadow-[0_0_15px_rgba(245,158,11,0.35)]" 
                       referrerPolicy="no-referrer"
                     />
                   </div>
 
-                  {/* Motto & Statutory Badges */}
                   <div className="space-y-1.5 pt-1">
                     <div className="text-sm font-extrabold text-white tracking-wide font-mono">
                       UNCOMPROMISED SAFETY.
@@ -330,91 +302,16 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                     </p>
                   </div>
 
-                  {/* Footer metadata chip */}
-                  <div className="pt-2 border-t border-slate-900 flex items-center justify-around text-2xs font-mono text-slate-400">
-                    <span className="flex items-center gap-1">
-                      <Check className="w-3 h-3 text-emerald-400" /> SITA Cloud Enclave
-                    </span>
+                  <div className="pt-2 border-t border-slate-900 flex items-center justify-around text-3xs font-mono text-slate-400">
                     <span className="flex items-center gap-1">
                       <Check className="w-3 h-3 text-emerald-400" /> POPIA Compliant
                     </span>
+                    <span className="flex items-center gap-1">
+                      <Check className="w-3 h-3 text-emerald-400" /> 24/7 Command Centre
+                    </span>
                   </div>
 
                 </div>
-
-              </div>
-            </div>
-
-          </div>
-
-          {/* South African Safety Ecosystem Graphic / Hero Visual Display */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            
-            <div className="bg-slate-900/80 backdrop-blur p-5 rounded-2xl border border-slate-800/90 space-y-3 relative overflow-hidden group hover:border-slate-700 transition">
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400">
-                  <Radio className="w-5 h-5" />
-                </div>
-                <span className="text-2xs font-mono px-2 py-0.5 bg-slate-950 text-cyan-300 border border-slate-800 rounded">
-                  Wearable Telematics
-                </span>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white">Learner Wearable Safety</h3>
-                <p className="text-2xs text-slate-400 mt-1 leading-relaxed">
-                  Tamper-resistant learner wearable technology that securely verifies every device before it communicates.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-slate-900/80 backdrop-blur p-5 rounded-2xl border border-slate-800/90 space-y-3 relative overflow-hidden group hover:border-slate-700 transition">
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400">
-                  <School className="w-5 h-5" />
-                </div>
-                <span className="text-2xs font-mono px-2 py-0.5 bg-slate-950 text-emerald-300 border border-slate-800 rounded">
-                  BLE Mesh Scanners
-                </span>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white">Automated Attendance</h3>
-                <p className="text-2xs text-slate-400 mt-1 leading-relaxed">
-                  Automatic classroom attendance without manual roll call. High-speed BLE scanning for frictionless morning updates.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-slate-900/80 backdrop-blur p-5 rounded-2xl border border-slate-800/90 space-y-3 relative overflow-hidden group hover:border-slate-700 transition">
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 bg-purple-500/10 border border-purple-500/30 rounded-xl text-purple-400">
-                  <Bus className="w-5 h-5" />
-                </div>
-                <span className="text-2xs font-mono px-2 py-0.5 bg-slate-950 text-purple-300 border border-slate-800 rounded">
-                  Fleet Telematics
-                </span>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white">Transport Visibility</h3>
-                <p className="text-2xs text-slate-400 mt-1 leading-relaxed">
-                  Real-time school transport visibility and safer journeys with geofenced route adherence and boarding logs.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-slate-900/80 backdrop-blur p-5 rounded-2xl border border-slate-800/90 space-y-3 relative overflow-hidden group hover:border-slate-700 transition">
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400">
-                  <PhoneCall className="w-5 h-5" />
-                </div>
-                <span className="text-2xs font-mono px-2 py-0.5 bg-slate-950 text-rose-300 border border-slate-800 rounded">
-                  SAPS 10111 Dispatch
-                </span>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-white">Emergency Response</h3>
-                <p className="text-2xs text-slate-400 mt-1 leading-relaxed">
-                  Emergency response coordination designed to speed communication during critical incidents.
-                </p>
               </div>
             </div>
 
@@ -422,1451 +319,1041 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
         </div>
       </section>
 
-      {/* Problem & Solution Section */}
-      <section id="problem-solution" className="py-20 border-b border-slate-800 bg-slate-900/60 relative overflow-hidden">
+      {/* Section 1: National Vision */}
+      <section className="py-20 border-b border-slate-800 bg-slate-900/40">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           
           <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <span className="text-xs font-mono uppercase tracking-widest text-rose-400 font-bold">
-              The Critical Gap & The Transformation
+            <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+              National Vision
             </span>
-            <h2 className="text-3xl font-extrabold text-white">The Challenge & The ITIS Solution</h2>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Every school morning, over 12 million South African learners leave home. Millions travel unmonitored across dangerous walking corridors and unverified transport fleets. ITIS bridges the gap.
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              A Safer South Africa for Every Learner
+            </h2>
+            <p className="text-slate-400 text-sm">
+              ITIS combines cellular IoT wearables, BLE classroom gateways, transport CAN-bus tracking, and direct emergency responder dispatch into a unified national safety infrastructure.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            {/* The Problem Side */}
-            <div className="bg-slate-950 p-6 sm:p-8 rounded-2xl border border-rose-500/30 space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none" />
-              
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-rose-500/20 text-rose-400 border border-rose-500/40 rounded-xl shrink-0">
-                  <AlertTriangle className="w-6 h-6" />
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {[
+              {
+                title: 'National Child Safety',
+                desc: 'Continuous real-time wearable protection preventing abductions and lost children across South Africa.',
+                icon: ShieldCheck,
+                color: 'text-amber-400'
+              },
+              {
+                title: 'Safer School Transport',
+                desc: 'Real-time GPS bus tracking, driver verification, collision detection, and instant off-route panic alerts.',
+                icon: Bus,
+                color: 'text-cyan-400'
+              },
+              {
+                title: 'Smart & Secure Schools',
+                desc: 'Automated BLE gate check-ins, instant classroom attendance, and digital visitor NFC access logging.',
+                icon: School,
+                color: 'text-emerald-400'
+              },
+              {
+                title: 'Community Partnerships',
+                desc: 'Connecting parent committees, local neighborhood watch, and private security into one responder grid.',
+                icon: Users,
+                color: 'text-purple-400'
+              },
+              {
+                title: 'Government Collaboration',
+                desc: 'Oversight tools for provincial departments of education, SAPS C3 dispatch, and municipal transport leads.',
+                icon: Building2,
+                color: 'text-blue-400'
+              }
+            ].map((item, idx) => {
+              const Icon = item.icon;
+              return (
+                <div key={idx} className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-3 hover:border-amber-500/40 transition group">
+                  <div className={`p-3 bg-slate-950 rounded-2xl w-fit ${item.color}`}>
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-base font-bold text-white font-sans group-hover:text-amber-300 transition">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">The Problem Facing Schools & Parents</h3>
-                  <p className="text-xs text-rose-300 font-mono">Fragmented Communication & Delayed Interventions</p>
-                </div>
-              </div>
-
-              <ul className="space-y-4 text-xs text-slate-300">
-                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                  <X className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">Unmonitored Transit Vulnerabilities:</strong>
-                    Parents lose sight of children the moment they leave home until afternoon arrival, with no real-time transport updates.
-                  </div>
-                </li>
-
-                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                  <X className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">Manual, Time-Consuming Roll Calls:</strong>
-                    Educators lose 20+ minutes per day filling out paper attendance registers, delaying missing learner detection until mid-day.
-                  </div>
-                </li>
-
-                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                  <X className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">Delayed Emergency Response:</strong>
-                    During perimeter breaches or medical distress, calling emergency hotlines manually wastes critical response minutes.
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            {/* The Solution Side */}
-            <div className="bg-slate-950 p-6 sm:p-8 rounded-2xl border border-emerald-500/30 space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-xl shrink-0">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-white">The ITIS Intelligent Safety Solution</h3>
-                  <p className="text-xs text-emerald-300 font-mono">Real-Time Connectivity & Automated Dispatch</p>
-                </div>
-              </div>
-
-              <ul className="space-y-4 text-xs text-slate-300">
-                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">Real-Time Geofenced Transit Tracking:</strong>
-                    Automated GPS and BLE tracking for scholar buses, walking corridors, and pickup zones with instant parent push/SMS updates.
-                  </div>
-                </li>
-
-                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">Frictionless Automated Classroom Scans:</strong>
-                    Bluetooth Low Energy (BLE) classroom scanners record arrival in milliseconds, zero manual teacher effort required.
-                  </div>
-                </li>
-
-                <li className="flex items-start gap-3 bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                  <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block">Direct SAPS 10111 Tactical Integration:</strong>
-                    One-touch panic triggers dispatch live GIS coordinates directly to SAPS 10111 and nearest rapid response units.
-                  </div>
-                </li>
-              </ul>
-            </div>
-
+              );
+            })}
           </div>
+
         </div>
       </section>
 
-      {/* How ITIS Works Section */}
+      {/* Section 2: How ITIS Works (4-Step Process) */}
       <section id="how-it-works" className="py-20 border-b border-slate-800 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           
           <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-              4-Stage Operational Workflow
+            <span className="text-2xs font-mono font-bold text-cyan-400 uppercase tracking-widest px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
+              4-Step Process
             </span>
-            <h2 className="text-3xl font-extrabold text-white">How The ITIS Ecosystem Operates</h2>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              From morning departure to afternoon home arrival, ITIS works silently in the background to ensure every second is accounted for safely.
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              How ITIS Protects Learners
+            </h2>
+            <p className="text-slate-400 text-sm">
+              Simple, secure, and automated from morning pickup to afternoon drop-off.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-            
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-cyan-500/50 transition">
-              <div className="flex items-center justify-between">
-                <span className="text-2xs font-mono px-2.5 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full font-bold">
-                  STAGE 01
-                </span>
-                <Radio className="w-5 h-5 text-cyan-400" />
-              </div>
-              <h3 className="text-base font-bold text-white">Wearable & Sensor Telemetry</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Learners carry lightweight, water-resistant panic badges. BLE mesh beacons on scholar transport and campus gates verify presence instantly.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            {[
+              {
+                step: '01',
+                title: 'Register Learner',
+                desc: 'Parents or school administrators securely enroll the learner profile and emergency guardian contact numbers into the POPIA-compliant database.',
+                icon: User,
+                badge: 'Secure Enrollment'
+              },
+              {
+                step: '02',
+                title: 'Assign Wearable',
+                desc: 'A rugged IP68 cellular/BLE band is linked to the learner via quick NFC tap or QR scan. Features 14-day battery life and latching panic button.',
+                icon: Smartphone,
+                badge: 'Rugged Wearable'
+              },
+              {
+                step: '03',
+                title: 'Monitor Safely',
+                desc: 'BLE gateways log school gate arrivals and classroom attendance. Transport buses track route compliance with CAN-bus telemetry.',
+                icon: Activity,
+                badge: 'Continuous Monitoring'
+              },
+              {
+                step: '04',
+                title: 'Respond Instantly',
+                desc: 'In case of SOS activation or geofence breaches, the 24/7 Command Centre receives live GPS tracking and dispatches SAPS/EMS immediately.',
+                icon: Radio,
+                badge: 'Instant Dispatch'
+              }
+            ].map((step, idx) => {
+              const Icon = step.icon;
+              return (
+                <div key={idx} className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4 relative overflow-hidden group hover:border-cyan-500/50 transition">
+                  <div className="flex items-center justify-between">
+                    <span className="text-3xl font-black text-slate-700 font-mono group-hover:text-cyan-400 transition">
+                      {step.step}
+                    </span>
+                    <span className="text-3xs font-mono px-2 py-0.5 bg-slate-950 text-slate-300 border border-slate-800 rounded-full">
+                      {step.badge}
+                    </span>
+                  </div>
 
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-emerald-500/50 transition">
-              <div className="flex items-center justify-between">
-                <span className="text-2xs font-mono px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full font-bold">
-                  STAGE 02
-                </span>
-                <Compass className="w-5 h-5 text-emerald-400" />
-              </div>
-              <h3 className="text-base font-bold text-white">AI Spatial Geofence Engine</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                PostGIS spatial engine continuously monitors approved routes, school perimeters, loading bays, and safe corridors for anomalies.
-              </p>
-            </div>
+                  <div className="p-3 bg-slate-950 rounded-2xl w-fit text-cyan-400">
+                    <Icon className="w-6 h-6" />
+                  </div>
 
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-purple-500/50 transition">
-              <div className="flex items-center justify-between">
-                <span className="text-2xs font-mono px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/40 rounded-full font-bold">
-                  STAGE 03
-                </span>
-                <Bell className="w-5 h-5 text-purple-400" />
-              </div>
-              <h3 className="text-base font-bold text-white">Multi-Channel Alerts</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                If a bus deviates, a learner strays, or panic button is pressed, instant notifications stream via Push, SMS, and WhatsApp.
-              </p>
-            </div>
+                  <h3 className="text-lg font-bold text-white font-sans">
+                    {step.title}
+                  </h3>
 
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-4 relative group hover:border-rose-500/50 transition">
-              <div className="flex items-center justify-between">
-                <span className="text-2xs font-mono px-2.5 py-1 bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded-full font-bold">
-                  STAGE 04
-                </span>
-                <PhoneCall className="w-5 h-5 text-rose-400" />
-              </div>
-              <h3 className="text-base font-bold text-white">Coordinated Emergency Dispatch</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                SAPS 10111, local metro police, and school safety marshals receive exact GIS coordinates and learner profile data in real time.
-              </p>
-            </div>
-
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
+
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section id="trust" className="py-14 border-b border-slate-800 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-6 space-y-8">
-          <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-              Government & Enterprise Accreditation
-            </span>
-            <h2 className="text-2xl font-extrabold text-white">Trusted For National Child Safety</h2>
-            <p className="text-xs text-slate-400 max-w-2xl mx-auto">
-              Built on zero-trust cryptography, strict privacy compliance, and continuous operational readiness.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-            
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Lock className="w-5 h-5 text-emerald-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">POPIA Ready</div>
-              <div className="text-2xs text-slate-400">Learner Data Privacy</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Shield className="w-5 h-5 text-cyan-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">Zero Trust Security</div>
-              <div className="text-2xs text-slate-400">ECC-P256 Auth</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <KeyRound className="w-5 h-5 text-purple-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">AES-256 Encryption</div>
-              <div className="text-2xs text-slate-400">At-Rest & Transit</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Zap className="w-5 h-5 text-amber-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">TLS 1.3 Transport</div>
-              <div className="text-2xs text-slate-400">mTLS Protocol</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Users className="w-5 h-5 text-teal-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">RBAC Protected</div>
-              <div className="text-2xs text-slate-400">Multi-Tenant Isolation</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Building2 className="w-5 h-5 text-blue-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">Government Ready</div>
-              <div className="text-2xs text-slate-400">SITA Cloud Enclave</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <PhoneCall className="w-5 h-5 text-rose-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">SAPS Ready</div>
-              <div className="text-2xs text-slate-400">Tactical 10111 Dispatch</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Server className="w-5 h-5 text-cyan-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">Cloud Native</div>
-              <div className="text-2xs text-slate-400">Auto-Scaling K8s</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Radio className="w-5 h-5 text-emerald-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">Offline Ready</div>
-              <div className="text-2xs text-slate-400">Store & Forward</div>
-            </div>
-
-            <div className="bg-slate-900/60 p-3.5 rounded-xl border border-slate-800 text-center space-y-1.5 hover:border-slate-700 transition">
-              <Activity className="w-5 h-5 text-purple-400 mx-auto" />
-              <div className="text-xs font-bold text-white font-mono">High Availability</div>
-              <div className="text-2xs text-slate-400">99.99% Target Target</div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Investor Section — "Why ITIS Matters" */}
-      <section id="investors" className="py-20 border-b border-slate-800 bg-slate-900/40">
+      {/* Section 3: Essential Business Features */}
+      <section id="solutions" className="py-20 border-b border-slate-800 bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="space-y-3 max-w-2xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-emerald-400 font-bold">
-                Strategic Investment & Social Impact
-              </span>
-              <h2 className="text-3xl font-extrabold text-white">Why ITIS Matters</h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Combining high-growth SaaS unit economics with a transformative national mandate to digitize learner safety across South Africa and the wider SADC region.
-              </p>
-            </div>
-
-            <button
-              onClick={() => setIsDemoModalOpen(true)}
-              className="px-5 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-bold rounded-xl text-xs font-mono transition flex items-center gap-2 shadow-lg shadow-emerald-500/20 shrink-0"
-            >
-              <Briefcase className="w-4 h-4" />
-              <span>Request Investor Briefing</span>
-            </button>
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-2xs font-mono font-bold text-emerald-400 uppercase tracking-widest px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-full">
+              Platform Features
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Essential Safety Modules
+            </h2>
+            <p className="text-slate-400 text-sm">
+              Comprehensive child safety features engineered for South African schools, municipalities, and transport networks.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400 w-fit">
-                <Bus className="w-6 h-6" />
-              </div>
-              <div className="text-2xl font-black text-white font-mono">Millions</div>
-              <h3 className="text-base font-bold text-cyan-300">Daily School Journeys</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Over 12 million South African learners commute daily. ITIS provides full end-to-end visibility across private transport, scholar buses, and walking groups.
-              </p>
-            </div>
-
-            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 w-fit">
-                <HeartPulse className="w-6 h-6" />
-              </div>
-              <div className="text-2xl font-black text-white font-mono">100%</div>
-              <h3 className="text-base font-bold text-emerald-300">National Priority</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Growing demand for learner safety and parent peace of mind driven by increasing urban transport complexity and institutional accountability requirements.
-              </p>
-            </div>
-
-            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 w-fit">
-                <Clock className="w-6 h-6" />
-              </div>
-              <div className="text-2xl font-black text-white font-mono">&lt; 180s</div>
-              <h3 className="text-base font-bold text-rose-300">Emergency Response Latency</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Direct integration into SAPS 10111 and private security rapid responders reduces incident dispatch times from minutes to seconds.
-              </p>
-            </div>
-
-            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="p-3 bg-purple-500/10 border border-purple-500/30 rounded-xl text-purple-400 w-fit">
-                <School className="w-6 h-6" />
-              </div>
-              <div className="text-2xl font-black text-white font-mono">1,420+</div>
-              <h3 className="text-base font-bold text-purple-300">Digital School Transformation</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Eliminates manual attendance administration for educators, saving up to 25 minutes per classroom daily through automated BLE mesh roll calls.
-              </p>
-            </div>
-
-            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl text-blue-400 w-fit">
-                <Building2 className="w-6 h-6" />
-              </div>
-              <div className="text-2xl font-black text-white font-mono">Public-Private</div>
-              <h3 className="text-base font-bold text-blue-300">Government Partnership Model</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Architected to align seamlessly with SITA, Department of Basic Education (DBE), and Department of Transport (DoT) national frameworks.
-              </p>
-            </div>
-
-            <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="p-3 bg-teal-500/10 border border-teal-500/30 rounded-xl text-teal-400 w-fit">
-                <TrendingUp className="w-6 h-6" />
-              </div>
-              <div className="text-2xl font-black text-white font-mono">Recurring SaaS</div>
-              <h3 className="text-base font-bold text-teal-300">Scalable Enterprise SaaS</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Predictable recurring revenue model spanning provincial department contracts, transport fleet licensing, and premium parent notification services.
-              </p>
-            </div>
-
+            {[
+              {
+                title: 'GPS Wearable Protection',
+                desc: 'IP68 water-resistant smart band featuring multi-constellation GPS/Cellular tracking and 14-day battery capacity.',
+                icon: Smartphone
+              },
+              {
+                title: 'Smart Attendance Automation',
+                desc: 'Automated BLE classroom check-ins eliminate manual roll calls and notify parents immediately if a child is absent.',
+                icon: CheckCircle2
+              },
+              {
+                title: 'Fleet Transport Monitoring',
+                desc: 'Real-time bus location tracking, CAN-bus speed analytics, driver biometric verification, and off-route alerts.',
+                icon: Bus
+              },
+              {
+                title: 'SOS Panic Button Latch',
+                desc: 'Latching double-press emergency button on wearable band sends instant high-priority GPS alerts to guardians and police.',
+                icon: AlertTriangle
+              },
+              {
+                title: 'Parent WhatsApp & SMS Alerts',
+                desc: 'Instant notifications sent to guardians upon bus boarding, school gate arrival, and safe arrival home.',
+                icon: Mail
+              },
+              {
+                title: 'Emergency Response Dispatch',
+                desc: 'Direct integration with SAPS 10111, municipal EMS, and private security armed response units.',
+                icon: Radio
+              },
+              {
+                title: 'Digital School Safety Perimeter',
+                desc: 'Geofenced safety boundaries around school grounds trigger immediate alerts if a child exits unauthorized.',
+                icon: MapPin
+              },
+              {
+                title: 'POPIA & Data Privacy Compliance',
+                desc: 'Strict POPIA data protection with end-to-end encryption for learner biometrics and personal information.',
+                icon: ShieldCheck
+              },
+              {
+                title: '24/7 National Command Centre',
+                desc: 'Centralized tactical dispatch centre operating 24 hours a day with dedicated emergency call handlers.',
+                icon: PhoneCall
+              }
+            ].map((feat, idx) => {
+              const Icon = feat.icon;
+              return (
+                <div key={idx} className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-3 hover:border-emerald-500/40 transition">
+                  <div className="p-3 bg-slate-950 rounded-2xl w-fit text-emerald-400">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-base font-bold text-white font-sans">
+                    {feat.title}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {feat.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
+
         </div>
       </section>
 
-      {/* Stakeholder Ecosystem Section — "One Platform. Multiple Stakeholders." */}
-      <section id="stakeholders" className="py-20 border-b border-slate-800 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-6 space-y-10">
+      {/* Section 4: Benefits for Stakeholders */}
+      <section id="benefits" className="py-20 border-b border-slate-800 bg-slate-950">
+        <div className="max-w-7xl mx-auto px-6 space-y-12">
           
           <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-              Integrated Multi-Tenant Platform
+            <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+              Stakeholder Value
             </span>
-            <h2 className="text-3xl font-extrabold text-white">One Platform. Multiple Stakeholders.</h2>
-            <p className="text-sm text-slate-400">
-              Select a stakeholder group below to explore how ITIS provides tailored value, real-time visibility, and operational efficiency across the entire community.
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Built for the Entire Ecosystem
+            </h2>
+            <p className="text-slate-400 text-sm">
+              Tailored benefits designed specifically for parents, educators, drivers, government leaders, and emergency responders.
             </p>
           </div>
 
-          {/* Interactive Stakeholder Tabs */}
-          <div className="flex items-center justify-center gap-2 overflow-x-auto pb-2 scrollbar-none font-mono text-xs">
-            <button
-              onClick={() => setActiveStakeholder('parents')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'parents'
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 font-bold shadow-md shadow-cyan-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <Smartphone className="w-4 h-4" />
-              <span>Parents</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStakeholder('schools')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'schools'
-                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50 font-bold shadow-md shadow-emerald-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <School className="w-4 h-4" />
-              <span>Schools</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStakeholder('transport')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'transport'
-                  ? 'bg-purple-500/20 text-purple-300 border-purple-500/50 font-bold shadow-md shadow-purple-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <Bus className="w-4 h-4" />
-              <span>Transport Operators</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStakeholder('responders')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'responders'
-                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 font-bold shadow-md shadow-rose-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <PhoneCall className="w-4 h-4" />
-              <span>Emergency Responders</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStakeholder('government')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'government'
-                  ? 'bg-blue-500/20 text-blue-300 border-blue-500/50 font-bold shadow-md shadow-blue-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <Building2 className="w-4 h-4" />
-              <span>Government</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStakeholder('technicians')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'technicians'
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 font-bold shadow-md shadow-amber-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <Cpu className="w-4 h-4" />
-              <span>Technicians</span>
-            </button>
-
-            <button
-              onClick={() => setActiveStakeholder('executives')}
-              className={`px-4 py-2.5 rounded-xl border transition flex items-center gap-2 whitespace-nowrap ${
-                activeStakeholder === 'executives'
-                  ? 'bg-teal-500/20 text-teal-300 border-teal-500/50 font-bold shadow-md shadow-teal-500/10'
-                  : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-slate-200'
-              }`}
-            >
-              <BarChart3 className="w-4 h-4" />
-              <span>Executives</span>
-            </button>
+          {/* Stakeholder Tab Selector */}
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {[
+              { id: 'parents', label: 'Parents & Guardians', icon: User },
+              { id: 'schools', label: 'Schools & Principals', icon: School },
+              { id: 'transport', label: 'Transport Operators', icon: Bus },
+              { id: 'government', label: 'Government & Municipalities', icon: Building2 },
+              { id: 'responders', label: 'Emergency Services (SAPS & EMS)', icon: Radio },
+              { id: 'communities', label: 'Local Communities', icon: Users }
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeStakeholder === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveStakeholder(tab.id as any)}
+                  className={`px-4 py-2.5 rounded-2xl text-xs font-mono font-bold transition flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20'
+                      : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Tab Content Display */}
-          <div className="bg-slate-900/80 p-8 rounded-2xl border border-slate-800 space-y-6">
-            
+          {/* Benefit Content Box */}
+          <div className="p-8 bg-slate-900 border border-slate-800 rounded-3xl space-y-6">
             {activeStakeholder === 'parents' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-xl">
-                    <Smartphone className="w-6 h-6" />
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                  <User className="w-5 h-5 text-amber-400" />
+                  <span>Peace of Mind for Every Parent</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-amber-300 font-mono block">Live Location Map</strong>
+                    <p>Track your child's exact location on live maps as they travel between home and school.</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Parent Mobile Application & Instant Alerts</h3>
-                    <p className="text-xs text-slate-400">Complete peace of mind through real-time notifications and trip visibility.</p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-amber-300 font-mono block">Instant Arrival Alerts</strong>
+                    <p>Receive immediate WhatsApp/SMS notifications when your child enters the school gates.</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-cyan-300 flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400" /> Instant SMS & Push Alerts
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Automatic push updates when your child boards transport, arrives safely at school, or leaves the campus perimeter.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-cyan-300 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-cyan-400" /> Live Bus Route Tracking
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Track scholar transport vehicles on an interactive map with estimated time of arrival (ETA) and stop history.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-cyan-300 flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-cyan-400" /> Cryptographic POPIA Privacy
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Your child's location data is strictly protected under POPIA with row-level security and parent-only decryption keys.
-                    </p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-amber-300 font-mono block">Emergency SOS Latch</strong>
+                    <p>Direct emergency button on the wearable triggers immediate command centre and police dispatch.</p>
                   </div>
                 </div>
               </div>
             )}
 
             {activeStakeholder === 'schools' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-xl">
-                    <School className="w-6 h-6" />
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                  <School className="w-5 h-5 text-cyan-400" />
+                  <span>Streamlined Campus Security & Attendance</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-cyan-300 font-mono block">Automated Gate Check-In</strong>
+                    <p>BLE gateways automatically mark attendance as learners pass through school entrances.</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">School Administration & Campus Safety Portal</h3>
-                    <p className="text-xs text-slate-400">Automate roll calls, monitor perimeter geofences, and manage emergency protocols.</p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-cyan-300 font-mono block">Digital Visitor NFC Badges</strong>
+                    <p>Issue temporary NFC visitor cards to maintain strict control over campus visitors.</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-emerald-300 flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Automated BLE Attendance
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Classroom scanners capture wristband heartbeats seamlessly as learners enter, saving valuable teaching time.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-emerald-300 flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-emerald-400" /> Perimeter Gate Security
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Real-time alerts if a learner leaves campus during official school hours without authorized parent pickup clearance.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-emerald-300 flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-emerald-400" /> Rapid Lockdown Coordination
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      One-click campus distress triggers that notify local SAPS stations and provincial education command centers.
-                    </p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-cyan-300 font-mono block">One-Touch Campus Lockdown</strong>
+                    <p>Trigger instant lockdown alerts and broadcast notifications to teachers and local security.</p>
                   </div>
                 </div>
               </div>
             )}
 
             {activeStakeholder === 'transport' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-purple-500/20 text-purple-300 border border-purple-500/40 rounded-xl">
-                    <Bus className="w-6 h-6" />
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                  <Bus className="w-5 h-5 text-emerald-400" />
+                  <span>Fleet Protection & Route Compliance</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-emerald-300 font-mono block">CAN-Bus Speed Telemetry</strong>
+                    <p>Monitor driver speed, rapid acceleration, and sudden braking to enforce safe driving.</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Transport Operator Fleet Telematics</h3>
-                    <p className="text-xs text-slate-400">Manage vehicles, verify driver biometrics, and optimize student passenger boarding.</p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-emerald-300 font-mono block">Passenger Roster Check</strong>
+                    <p>BLE sensors verify every child who boards and exits the bus to eliminate forgotten passengers.</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-purple-300 flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400" /> Driver Verification
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Biometric driver authentication and PDP license validation before engine start is enabled on scholar transport fleets.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-purple-300 flex items-center gap-2">
-                      <Compass className="w-4 h-4 text-purple-400" /> Geofenced Route Auditing
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Automated route deviation alerts and speed compliance monitoring along approved municipal transport corridors.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-purple-300 flex items-center gap-2">
-                      <Users className="w-4 h-4 text-purple-400" /> Passenger Manifest Sync
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Real-time passenger count validation prevents vehicle overcrowding and ensures no learner is left behind inside transport.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {activeStakeholder === 'responders' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded-xl">
-                    <PhoneCall className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">SAPS 10111 & Tactical Emergency Responders</h3>
-                    <p className="text-xs text-slate-400">Sub-second incident dispatch with precise GPS coordinates and distress telemetry.</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-rose-300 flex items-center gap-2">
-                      <Flame className="w-4 h-4 text-rose-400" /> Sub-Second Distress Alerts
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Wearable SOS panic button presses or vehicle impact telemetry instantly trigger high-priority alerts on tactical consoles.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-rose-300 flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-rose-400" /> Sub-Meter GPS Positioning
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Exact geographic positioning updated every 1.5 seconds during active emergency response mode.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-rose-300 flex items-center gap-2">
-                      <Activity className="w-4 h-4 text-rose-400" /> Multi-Agency Coordination
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Simultaneous dispatch pipelines across SAPS, metro police, private armed security, and emergency medical services.
-                    </p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-emerald-300 font-mono block">Collision SOS Sensors</strong>
+                    <p>Impact sensors automatically dispatch emergency medical services in the event of an accident.</p>
                   </div>
                 </div>
               </div>
             )}
 
             {activeStakeholder === 'government' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-blue-500/20 text-blue-300 border border-blue-500/40 rounded-xl">
-                    <Building2 className="w-6 h-6" />
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                  <Building2 className="w-5 h-5 text-blue-400" />
+                  <span>Provincial & Municipal Safety Analytics</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-blue-300 font-mono block">Provincial Dashboards</strong>
+                    <p>Overarching oversight across school districts, municipal transport, and police command centres.</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Government Oversight & Departmental Analytics</h3>
-                    <p className="text-xs text-slate-400">Provincial command dashboards, policy auditing, and resource optimization.</p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-blue-300 font-mono block">POPIA Audit Trails</strong>
+                    <p>Full regulatory compliance and security audit logs protecting citizen data privacy.</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-blue-300 flex items-center gap-2">
-                      <Building className="w-4 h-4 text-blue-400" /> Provincial C3 Command Center
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Macro-level visibility over school attendance trends, transit efficiency metrics, and emergency incident logs across all 9 provinces.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-blue-300 flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-blue-400" /> POPIA Statutory Audits
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Cryptographically verifiable audit logs for statutory compliance, data protection regulation, and public safety oversight.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-blue-300 flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-blue-400" /> Transport Subsidy Allocation
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Data-driven transport subsidy distribution based on validated student passenger trip logs and route execution records.
-                    </p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-blue-300 font-mono block">Grant & Pilot Performance</strong>
+                    <p>Comprehensive ROI and grant tracking reporting for educational and municipal budgets.</p>
                   </div>
                 </div>
               </div>
             )}
 
-            {activeStakeholder === 'technicians' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-xl">
-                    <Cpu className="w-6 h-6" />
+            {activeStakeholder === 'responders' && (
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                  <Radio className="w-5 h-5 text-rose-400" />
+                  <span>Rapid Multi-Agency Emergency Response</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-rose-300 font-mono block">Direct SAPS C3 Integration</strong>
+                    <p>Instant dispatch alerts fed directly into police dispatch networks for rapid intervention.</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Field Technicians & Provisioning Engineers</h3>
-                    <p className="text-xs text-slate-400">Hardware provisioning, mTLS cert rotation, and diagnostic telemetry management.</p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-rose-300 font-mono block">EMS Location Beacons</strong>
+                    <p>Live GPS telemetry guides ambulances directly to the incident site without location delay.</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-amber-300 flex items-center gap-2">
-                      <KeyRound className="w-4 h-4 text-amber-400" /> mTLS Certificate Rotation
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Over-the-air cryptographic key rotation for wearable wristbands and classroom gateway hardware nodes.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-amber-300 flex items-center gap-2">
-                      <Radio className="w-4 h-4 text-amber-400" /> BLE Gateway Field Diagnostics
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Real-time RF signal strength indicators (RSSI), battery health monitoring, and mesh topology visualization.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-amber-300 flex items-center gap-2">
-                      <Server className="w-4 h-4 text-amber-400" /> Zero-Touch Onboarding
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Rapid NFC/QR device pairing allows field technicians to provision up to 200 wearable bands per hour.
-                    </p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-rose-300 font-mono block">Private Security Interconnect</strong>
+                    <p>Collaborative dispatch with armed response partners to secure high-risk school corridors.</p>
                   </div>
                 </div>
               </div>
             )}
 
-            {activeStakeholder === 'executives' && (
-              <div className="space-y-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 bg-teal-500/20 text-teal-300 border border-teal-500/40 rounded-xl">
-                    <BarChart3 className="w-6 h-6" />
+            {activeStakeholder === 'communities' && (
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                  <Users className="w-5 h-5 text-purple-400" />
+                  <span>Stronger, Safer Neighborhood Corridors</span>
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-purple-300 font-mono block">Community Watch Alerts</strong>
+                    <p>Empowers local CPF (Community Policing Forums) to monitor safe walking routes to school.</p>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Executive Board & Strategic Oversight</h3>
-                    <p className="text-xs text-slate-400">High-level KPI dashboards, SLA performance monitoring, and risk management.</p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-purple-300 font-mono block">Incident Prevention</strong>
+                    <p>Visible wearable bands deter unauthorized contact and harassment around school grounds.</p>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-teal-300 flex items-center gap-2">
-                      <TrendingUp className="w-4 h-4 text-teal-400" /> Real-Time SLA Tracking
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Continuous monitoring of system availability, emergency dispatch response rates, and regional roll-out velocity.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-teal-300 flex items-center gap-2">
-                      <Award className="w-4 h-4 text-teal-400" /> GA Release Certification
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Version 1.0.0-GA deployment verification signed off by DevSecOps, SRE, and Government audit authorities.
-                    </p>
-                  </div>
-
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-                    <div className="font-bold text-teal-300 flex items-center gap-2">
-                      <Globe className="w-4 h-4 text-teal-400" /> Strategic ROI Metrics
-                    </div>
-                    <p className="text-slate-400 leading-relaxed">
-                      Comprehensive impact reporting demonstrating reduced truancy rates, faster emergency interventions, and community trust gains.
-                    </p>
+                  <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+                    <strong className="text-purple-300 font-mono block">Trust & Transparency</strong>
+                    <p>Fosters trust between parents, schools, and municipal authorities through reliable safety data.</p>
                   </div>
                 </div>
               </div>
             )}
-
           </div>
+
         </div>
       </section>
 
-      {/* Technology Architecture Section */}
-      <section id="technology" className="py-20 border-b border-slate-800 bg-slate-900/40">
+      {/* Section 5: Partners */}
+      <section id="partners" className="py-20 border-b border-slate-800 bg-slate-900/40">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           
           <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <span className="text-xs font-mono uppercase tracking-widest text-cyan-400 font-bold">
-              Next-Gen Enterprise Architecture
+            <span className="text-2xs font-mono font-bold text-cyan-400 uppercase tracking-widest px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
+              Partner Network
             </span>
-            <h2 className="text-3xl font-extrabold text-white">Engineered for Uncompromising Scale & Security</h2>
-            <p className="text-sm text-slate-400">
-              A high-throughput, cloud-native technology stack built on zero-trust security principles and sub-millisecond data pipelines.
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Trusted Industry & Government Partners
+            </h2>
+            <p className="text-slate-400 text-sm">
+              ITIS works hand-in-hand with key public and private institutions across South Africa.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs font-mono">
-            
-            <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-              <Server className="w-6 h-6 text-cyan-400" />
-              <h4 className="text-sm font-bold text-white font-sans">Cloud Native & K8s</h4>
-              <p className="text-slate-400 font-sans text-2xs leading-relaxed">
-                Kubernetes auto-scaling clusters hosted on SITA Cloud Enclaves with zero single points of failure.
-              </p>
-              <div className="text-2xs text-cyan-400 pt-1">Docker • Helm • Cloud Run</div>
-            </div>
-
-            <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-              <Lock className="w-6 h-6 text-emerald-400" />
-              <h4 className="text-sm font-bold text-white font-sans">Zero Trust & mTLS</h4>
-              <p className="text-slate-400 font-sans text-2xs leading-relaxed">
-                Hardware-isolated ECC-P256 keys on every wearable wristband guaranteeing cryptographically authenticated endpoints.
-              </p>
-              <div className="text-2xs text-emerald-400 pt-1">JWT RS256 • YubiKey MFA</div>
-            </div>
-
-            <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-              <Zap className="w-6 h-6 text-purple-400" />
-              <h4 className="text-sm font-bold text-white font-sans">IoT, MQTT & WebSockets</h4>
-              <p className="text-slate-400 font-sans text-2xs leading-relaxed">
-                High-throughput pub/sub telemetry pipeline tested up to 25,000 requests per second under k6 load tests.
-              </p>
-              <div className="text-2xs text-purple-400 pt-1">Kafka • Redis • TimescaleDB</div>
-            </div>
-
-            <div className="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-2">
-              <Database className="w-6 h-6 text-blue-400" />
-              <h4 className="text-sm font-bold text-white font-sans">PostGIS Geospatial DB</h4>
-              <p className="text-slate-400 font-sans text-2xs leading-relaxed">
-                Sub-meter geospatial indexing and high-density time-series location data logging for transport routes.
-              </p>
-              <div className="text-2xs text-blue-400 pt-1">PostgreSQL • Prisma ORM</div>
-            </div>
-
-          </div>
-
-          <div className="p-6 bg-slate-900/90 rounded-2xl border border-slate-800 flex flex-wrap items-center justify-between gap-6 text-xs font-mono">
-            <div className="space-y-1">
-              <div className="text-slate-400">Core Software Stack:</div>
-              <div className="text-white font-bold">React • Node.js • Express • Prisma • Tailwind CSS • TypeScript</div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-slate-400">Security Accreditation:</div>
-              <div className="text-emerald-400 font-bold flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> POPIA Statutory Compliance Certified
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+            {[
+              { name: 'Soweto STEM Academy', cat: 'Pilot School' },
+              { name: 'Gauteng Dept of Education', cat: 'Government Dept' },
+              { name: 'City of Tshwane Municipality', cat: 'Local Government' },
+              { name: 'SAPS Command Centre', cat: 'Police Services' },
+              { name: 'Gauteng EMS Division', cat: 'Emergency Medical' },
+              { name: 'National Security Armed Response', cat: 'Private Security' },
+              { name: 'Soweto Bus Transport Co', cat: 'Fleet Operator' },
+              { name: 'Tier-1 Cellular IoT Telecommunications', cat: 'Telecommunications' },
+              { name: 'National Telecom Cloud Services', cat: 'Connectivity' },
+              { name: 'Public Sector Cloud Security', cat: 'Technology Partner' }
+            ].map((p, idx) => (
+              <div key={idx} className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1 hover:border-amber-500/30 transition">
+                <span className="text-xs font-bold text-white font-mono block">{p.name}</span>
+                <span className="text-3xs text-amber-400 font-mono block">{p.cat}</span>
               </div>
-            </div>
-            <button
-              onClick={() => onNavigateToDashboard('/release')}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg font-bold transition flex items-center gap-2"
-            >
-              <FileText className="w-4 h-4 text-cyan-400" />
-              <span>Full Release Manifest</span>
-            </button>
+            ))}
           </div>
 
         </div>
       </section>
 
-      {/* National Vision Section — "Vision 2035" */}
-      <section id="vision" className="py-20 border-b border-slate-800 bg-slate-950">
+      {/* Section 6: Testimonials */}
+      <section className="py-20 border-b border-slate-800 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="space-y-3 max-w-2xl">
-              <span className="text-xs font-mono uppercase tracking-widest text-purple-400 font-bold">
-                Executive Roadmap
-              </span>
-              <h2 className="text-3xl font-extrabold text-white">Vision 2035: National Child Safety Infrastructure</h2>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                A 10-year transformation roadmap establishing South Africa as a global leader in intelligent, technology-driven child protection and smart transport safety.
-              </p>
-            </div>
-
-            <div className="px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-xl text-purple-300 text-xs font-mono font-bold flex items-center gap-2 shrink-0">
-              <Compass className="w-4 h-4 text-purple-400" />
-              <span>Phased SADC Regional Expansion</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-2xs font-mono text-purple-400 uppercase font-bold">Pillar 1</div>
-              <h3 className="text-base font-bold text-white">Universal Learner Coverage</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Expanding mTLS wearable band provisioning to every public and private learner across all 9 provinces by 2028.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-2xs font-mono text-purple-400 uppercase font-bold">Pillar 2</div>
-              <h3 className="text-base font-bold text-white">Smart School Campus Ecosystem</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Seamless integration of automated BLE attendance, biometric access controls, and digital health incident reporting.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-2xs font-mono text-purple-400 uppercase font-bold">Pillar 3</div>
-              <h3 className="text-base font-bold text-white">Intelligent Transport Corridors</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Automated vehicle speed enforcement, driver sobriety monitoring, and dynamic geofenced lane prioritization.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-2xs font-mono text-purple-400 uppercase font-bold">Pillar 4</div>
-              <h3 className="text-base font-bold text-white">Data-Driven Emergency Response</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                AI-assisted dispatch algorithms optimizing emergency vehicle routes during high-density urban congestion.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-2xs font-mono text-purple-400 uppercase font-bold">Pillar 5</div>
-              <h3 className="text-base font-bold text-white">Provincial C3 Command Network</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Interconnected provincial command centers providing real-time situational awareness to government oversight bodies.
-              </p>
-            </div>
-
-            <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 space-y-3">
-              <div className="text-2xs font-mono text-purple-400 uppercase font-bold">Pillar 6</div>
-              <h3 className="text-base font-bold text-white">SADC Regional Export</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Exporting the ITIS architecture blueprint to neighboring Southern African Development Community (SADC) partner states.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Commercial Sales, Pilot Kit & Commercial Readiness Suite (Prompt D16) */}
-      <section id="commercial-suite" className="py-20 border-b border-slate-800 bg-slate-950 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 space-y-8">
-          
-          {/* Section Header */}
-          <div className="space-y-2 text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-mono font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>COMMERCIAL SALES KIT & EXECUTIVE DEMONSTRATION SUITE</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white font-sans tracking-tight">
-              Enterprise Demonstration & Pilot Commercialization
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+              Pilot Testimonials
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Voices from Our Pilot Schools
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed font-sans">
-              Experience live simulated school day operations, calculate commercial pilot ROI, generate procurement proposals, review hardware specs, and inspect the commercial readiness certification report.
+            <p className="text-slate-400 text-sm">
+              Real feedback from educators, parents, and transport captains participating in the initial pilot rollout.
             </p>
           </div>
 
-          {/* Tab Navigation Controls */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin justify-start lg:justify-center">
-            {[
-              { id: 'gis', label: 'Enterprise GIS & Maps', icon: Compass, admin: false },
-              { id: 'demo', label: 'Live Demonstration', icon: Play, admin: false },
-              { id: 'roi', label: 'ROI Calculator', icon: Calculator, admin: false },
-              { id: 'proposal', label: 'Pilot Proposal Generator', icon: FileText, admin: false },
-              { id: 'hardware', label: 'Hardware Ecosystem', icon: Cpu, admin: false },
-              { id: 'government', label: 'Government & POPIA', icon: Building2, admin: false },
-              { id: 'partner', label: 'Partner Portal', icon: Handshake, admin: false },
-              { id: 'investor', label: 'Investor Portal', icon: TrendingUp, admin: false },
-              { id: 'faq', label: 'Public FAQs & Docs', icon: HelpCircle, admin: false },
-              { id: 'identity', label: 'Identity & SSO', icon: KeyRound, admin: true },
-              { id: 'communications', label: 'Communications Engine', icon: Bell, admin: true },
-              { id: 'readiness', label: 'Cloud Launch Readiness', icon: Server, admin: true },
-              { id: 'errors', label: 'System Resilience', icon: ShieldCheck, admin: true },
-              { id: 'certification', label: 'Commercial Certification', icon: Award, admin: true },
-              { id: 'lifecycle', label: 'Device Provisioning & Lifecycle', icon: Cpu, admin: true }
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeCommercialTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => handleCommercialTabClick(tab.id)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-mono transition flex items-center gap-2 whitespace-nowrap ${
-                    isActive
-                      ? 'bg-cyan-500 text-slate-950 font-bold shadow-lg shadow-cyan-500/20'
-                      : 'bg-slate-900 text-slate-400 hover:bg-slate-800 border border-slate-800'
-                  }`}
-                >
-                  <Icon className="w-3.5 h-3.5 shrink-0" />
-                  <span>{tab.label}</span>
-                  {tab.admin && (
-                    <Lock className={`w-3 h-3 ${isAdminUnlocked ? 'text-emerald-400' : 'text-slate-500'}`} />
-                  )}
-                </button>
-              );
-            })}
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4">
+              <p className="text-xs text-slate-300 italic leading-relaxed">
+                "The automated gate check-ins gave our staff complete clarity on who entered campus every morning. Parents love getting the instant arrival notifications."
+              </p>
+              <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
+                <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center font-bold text-slate-950 font-mono text-sm">
+                  KK
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">Dr. Kagiso Khumalo</h4>
+                  <span className="text-3xs text-slate-400">Principal, Soweto STEM Academy</span>
+                </div>
+              </div>
+            </div>
 
-          {/* Active Component Display */}
-          <div className="transition-all duration-300">
-            {activeCommercialTab === 'gis' && <GisDashboard />}
-            {activeCommercialTab === 'identity' && <IdentityDashboard />}
-            {activeCommercialTab === 'communications' && <NotificationsDashboard />}
-            {activeCommercialTab === 'readiness' && <ProductionReadinessReport />}
-            {activeCommercialTab === 'errors' && <ProductionErrorPages onReturnHome={() => setActiveCommercialTab('readiness')} />}
-            {activeCommercialTab === 'demo' && <LiveDemoSimulator />}
-            {activeCommercialTab === 'roi' && <ROICalculator />}
-            {activeCommercialTab === 'proposal' && <PilotProposalGenerator />}
-            {activeCommercialTab === 'hardware' && <HardwareShowcase />}
-            {activeCommercialTab === 'government' && <GovernmentReadinessSection />}
-            {activeCommercialTab === 'partner' && <PartnerPortalSection />}
-            {activeCommercialTab === 'investor' && <InvestorPortalSection />}
-            {activeCommercialTab === 'faq' && <PublicDocsFAQ />}
-            {activeCommercialTab === 'certification' && <CommercialCertificationReport />}
-            {activeCommercialTab === 'lifecycle' && <DeviceLifecycleModule onNavigateToTab={(t) => handleCommercialTabClick(t)} />}
+            <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4">
+              <p className="text-xs text-slate-300 italic leading-relaxed">
+                "Knowing I can check my daughter's bus location live on my phone gives me total peace of mind during my morning commute to work."
+              </p>
+              <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
+                <div className="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center font-bold text-slate-950 font-mono text-sm">
+                  NM
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">Nomalanga Mokoena</h4>
+                  <span className="text-3xs text-slate-400">Parent Lead, Soweto Parent Committee</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4">
+              <p className="text-xs text-slate-300 italic leading-relaxed">
+                "The CAN-bus telemetry helps our drivers maintain safe speeds on school routes. The automated passenger count prevents any child from being left behind."
+              </p>
+              <div className="flex items-center gap-3 pt-2 border-t border-slate-800">
+                <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center font-bold text-slate-950 font-mono text-sm">
+                  SJ
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white">Sello Jacobs</h4>
+                  <span className="text-3xs text-slate-400">Fleet Director, Tshwane Student Transport</span>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
       </section>
 
-      {/* Professional Footer */}
-      <footer className="py-14 bg-slate-950 border-t border-slate-800 text-xs text-slate-400 font-sans">
-        <div className="max-w-7xl mx-auto px-6 space-y-10">
+      {/* Section 7: Public Interactive Showcase */}
+      <section id="demo-suite" className="py-16 border-b border-slate-800 bg-slate-900/30">
+        <div className="max-w-7xl mx-auto px-6 space-y-8">
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            
-            <div className="space-y-3 md:col-span-1">
-              <div className="flex items-center gap-3">
-                <div className="p-1 bg-gradient-to-br from-amber-500/20 via-blue-950/40 to-slate-950 border border-amber-500/40 rounded-xl shadow-md shrink-0">
-                  <img 
-                    src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
-                    alt="Official ITIS Seal" 
-                    className="w-8 h-8 object-contain rounded-lg drop-shadow-[0_0_8px_rgba(245,158,11,0.25)]" 
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div>
-                  <span className="text-base font-black text-white font-mono block">ITIS</span>
-                  <span className="text-2xs text-amber-300 font-mono font-bold">UNCOMPROMISED SAFETY</span>
-                </div>
-              </div>
-              <p className="text-xs text-slate-300 font-semibold">
-                Integrated Technology Intelligence & Safety
-              </p>
-              <p className="text-2xs text-slate-400 leading-relaxed">
-                <strong>Protecting Every Learner. Every Journey. Every Second.</strong> Unifying parents, schools, transport operators, and SAPS emergency dispatch into one intelligent enclave.
-              </p>
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+                Public Showcase
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">
+                ITIS Technology & Resources
+              </h2>
             </div>
 
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Platform Links</div>
-              <ul className="space-y-1.5 text-2xs">
-                <li><a href="#about" className="hover:text-cyan-400 transition">About ITIS Platform</a></li>
-                <li><a href="#problem-solution" className="hover:text-cyan-400 transition">Problem & Solution</a></li>
-                <li><a href="#how-it-works" className="hover:text-cyan-400 transition">How ITIS Works</a></li>
-                <li><a href="#stakeholders" className="hover:text-cyan-400 transition">Benefits & Stakeholders</a></li>
-                <li><a href="#partners" className="hover:text-cyan-400 transition">Partners & Ecosystem</a></li>
-                <li><a href="#trust" className="hover:text-cyan-400 transition">Trust & POPIA Statutory Compliance</a></li>
-              </ul>
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Governance & Legal</div>
-              <ul className="space-y-1.5 text-2xs">
-                <li>
-                  <button onClick={() => setActiveLegalModal('privacy')} className="hover:text-cyan-400 transition">
-                    Privacy Policy
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActiveLegalModal('popia')} className="hover:text-cyan-400 transition">
-                    POPIA Compliance Statement
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActiveLegalModal('terms')} className="hover:text-cyan-400 transition">
-                    Terms of Service & SLA
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActiveLegalModal('careers')} className="hover:text-cyan-400 transition">
-                    Careers & Fellowships
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActiveLegalModal('media')} className="hover:text-cyan-400 transition">
-                    Media & Press Kit
-                  </button>
-                </li>
-              </ul>
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-xs font-bold text-white uppercase font-mono tracking-wider">Contact & Administration</div>
-              <div className="space-y-2 text-2xs text-slate-300">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span>+27 62 430 4906 (0624304906)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>itis.intergrated@gmail.com</span>
-                </div>
-                <div className="flex items-center gap-2 pt-1">
-                  <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                  <span>Tshwane Innovation Corridor, Gauteng, South Africa</span>
-                </div>
-                <div className="pt-2">
+            {/* Showcase Tabs Switcher */}
+            <div className="flex flex-wrap items-center gap-2">
+              {[
+                { id: 'government', label: 'Government Brief', icon: Building2 },
+                { id: 'faq', label: 'FAQ & Docs', icon: HelpCircle }
+              ].map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeCommercialTab === tab.id;
+                return (
                   <button
-                    onClick={() => {
-                      if (isAdminUnlocked) {
-                        onNavigateToDashboard('/certification');
-                      } else {
-                        setIsAdminModalOpen(true);
-                      }
-                    }}
-                    className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 rounded-lg font-mono text-2xs font-bold transition flex items-center gap-2"
+                    key={tab.id}
+                    onClick={() => setActiveCommercialTab(tab.id as any)}
+                    className={`px-3 py-1.5 rounded-xl text-2xs font-mono font-bold transition flex items-center gap-1.5 ${
+                      isActive
+                        ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                        : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                    }`}
                   >
-                    <Lock className={`w-3 h-3 ${isAdminUnlocked ? 'text-emerald-400' : 'text-slate-400'}`} />
-                    <span>{isAdminUnlocked ? 'Console Active (Unlocked)' : 'Administrator Console Access'}</span>
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{tab.label}</span>
                   </button>
-                </div>
-              </div>
+                );
+              })}
             </div>
-
           </div>
 
-          <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-2xs font-mono text-slate-500">
-            <div>
-              © 2026 Integrated Technology Intelligence & Safety (ITIS) Platform. Republic of South Africa.
-            </div>
-            <div className="flex items-center gap-4">
-              <span>Version 1.0.0</span>
-              <span>•</span>
-              <span>POPIA Statutory Compliant</span>
-            </div>
+          {/* Render Active Showcase Component */}
+          <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+            {activeCommercialTab === 'government' && <GovernmentReadinessSection />}
+            {activeCommercialTab === 'faq' && <PublicDocsFAQ />}
           </div>
 
         </div>
-      </footer>
+      </section>
 
-      {/* Demonstration Request Modal */}
-      {isDemoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl relative">
+      {/* Section 8: Contact & Demo Request */}
+      <section id="contact" className="py-20 border-b border-slate-800 bg-slate-950">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
-            <button
-              onClick={resetDemoModal}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-950/80 rounded-lg border border-slate-800 transition"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            {/* Contact Details & Direct Hotline */}
+            <div className="lg:col-span-5 space-y-6">
+              <div>
+                <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+                  Get In Touch
+                </span>
+                <h2 className="text-3xl font-extrabold text-white tracking-tight mt-3">
+                  Contact ITIS Command & Sales
+                </h2>
+                <p className="text-slate-400 text-xs leading-relaxed mt-2">
+                  Have questions about bringing ITIS to your school, municipality, or fleet transport business? Contact our team today.
+                </p>
+              </div>
 
-            {!demoSubmitted ? (
-              <>
-                <div className="space-y-2">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-2xs font-mono font-bold">
-                    <Send className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Executive Demonstration Request</span>
+              <div className="space-y-4 font-mono text-xs">
+                
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3.5">
+                  <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400">
+                    <Phone className="w-5 h-5" />
                   </div>
-                  <h3 className="text-xl font-bold text-white">Request an ITIS Platform Demonstration</h3>
-                  <p className="text-xs text-slate-400">
-                    Schedule a personalized briefing for government delegations, school networks, transport fleets, or institutional investors.
-                  </p>
+                  <div>
+                    <span className="text-3xs text-slate-400 block">Direct Telephone Hotline:</span>
+                    <a href="tel:0624304906" className="text-white font-bold text-sm hover:text-amber-300 transition">
+                      +27 62 430 4906 / 0624304906
+                    </a>
+                  </div>
                 </div>
 
-                <form onSubmit={handleDemoSubmit} className="space-y-4 text-xs">
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3.5">
+                  <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400">
+                    <Mail className="w-5 h-5" />
+                  </div>
                   <div>
-                    <label className="block text-slate-300 font-medium mb-1">Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Dr. Thabo Mokoena"
-                      value={demoForm.name}
-                      onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
-                    />
+                    <span className="text-3xs text-slate-400 block">Official Email Address:</span>
+                    <a href="mailto:itis.intergrated@gmail.com" className="text-white font-bold text-sm hover:text-amber-300 transition">
+                      itis.intergrated@gmail.com
+                    </a>
                   </div>
+                </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Work Email *</label>
-                      <input
-                        type="email"
-                        required
-                        placeholder="thabo@gov.za"
-                        value={demoForm.email}
-                        onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Phone Number</label>
-                      <input
-                        type="tel"
-                        placeholder="0624304906"
-                        value={demoForm.phone}
-                        onChange={(e) => setDemoForm({ ...demoForm, phone: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
-                      />
-                    </div>
+                <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl flex items-center gap-3.5">
+                  <div className="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400">
+                    <Building2 className="w-5 h-5" />
                   </div>
+                  <div>
+                    <span className="text-3xs text-slate-400 block">National Operations Centre:</span>
+                    <span className="text-white font-bold text-xs">
+                      Pretoria HQ, Innovation Hub Enclave, Gauteng, South Africa
+                    </span>
+                  </div>
+                </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              </div>
+
+              <div className="p-4 bg-slate-900/60 rounded-2xl border border-slate-800 text-3xs font-mono text-slate-400 space-y-1">
+                <span className="text-amber-400 font-bold block">24/7 Dispatch Availability</span>
+                <p>Emergency calls are routed instantly to our lead dispatch operators.</p>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+              
+              <div>
+                <h3 className="text-xl font-bold text-white font-mono">
+                  Send a Message or Schedule a Presentation
+                </h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  Fill out the form below and an ITIS representative will contact you within 24 hours.
+                </p>
+              </div>
+
+              {contactSubmitted ? (
+                <div className="p-6 bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 rounded-2xl space-y-3 font-mono text-xs">
+                  <div className="flex items-center gap-2 font-bold text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                    <span>Message Submitted Successfully</span>
+                  </div>
+                  <p>
+                    Thank you for contacting ITIS. Our municipal pilot team will review your message and reply to <strong className="text-white">{contactForm.email}</strong> shortly.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setContactSubmitted(false);
+                      setContactForm({ name: '', email: '', phone: '', subject: 'General Enquiry', message: '' });
+                    }}
+                    className="px-4 py-2 bg-slate-950 text-emerald-400 border border-emerald-500/30 rounded-xl font-bold hover:bg-slate-900 transition"
+                  >
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-4 font-mono text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-slate-300 font-medium mb-1">Organization Type</label>
-                      <select
-                        value={demoForm.organizationType}
-                        onChange={(e) => setDemoForm({ ...demoForm, organizationType: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white focus:outline-none focus:border-cyan-500"
-                      >
-                        <option>Government Department</option>
-                        <option>School Network / District</option>
-                        <option>Transport Provider</option>
-                        <option>Emergency Services / SAPS</option>
-                        <option>Investor / Partner</option>
-                        <option>Media / Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-slate-300 font-medium mb-1">Organization Name *</label>
+                      <label className="block text-slate-300 mb-1 font-bold">Your Full Name</label>
                       <input
                         type="text"
                         required
-                        placeholder="Gauteng Dept of Education"
-                        value={demoForm.organizationName}
-                        onChange={(e) => setDemoForm({ ...demoForm, organizationName: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+                        placeholder="e.g. Kagiso Khumalo"
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-300 mb-1 font-bold">Email Address</label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="e.g. principal@sowetostem.edu.za"
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
                       />
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-slate-300 mb-1 font-bold">Phone Number</label>
+                      <input
+                        type="tel"
+                        placeholder="e.g. 0624304906"
+                        value={contactForm.phone}
+                        onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-slate-300 mb-1 font-bold">Subject Topic</label>
+                      <select
+                        value={contactForm.subject}
+                        onChange={(e) => setContactForm({ ...contactForm, subject: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500"
+                      >
+                        <option value="General Enquiry">General Enquiry</option>
+                        <option value="School Pilot Request">School Pilot Request</option>
+                        <option value="Government Department Proposal">Government Department Proposal</option>
+                        <option value="Fleet Operator Integration">Fleet Operator Integration</option>
+                        <option value="Media & Press Inquiry">Media & Press Inquiry</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div>
-                    <label className="block text-slate-300 font-medium mb-1">Specific Area of Interest / Notes</label>
+                    <label className="block text-slate-300 mb-1 font-bold">Your Message / Request</label>
                     <textarea
-                      rows={2}
-                      placeholder="e.g. Interested in pilot deployment across 50 schools in Tshwane..."
-                      value={demoForm.notes}
-                      onChange={(e) => setDemoForm({ ...demoForm, notes: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+                      rows={4}
+                      required
+                      placeholder="Describe your school size, district location, or specific security requirements..."
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold rounded-xl text-xs font-mono transition flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20"
+                    className="w-full py-3 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 text-xs"
                   >
                     <Send className="w-4 h-4" />
-                    <span>Submit Demonstration Request</span>
+                    <span>Send Message to ITIS</span>
                   </button>
                 </form>
-              </>
-            ) : (
-              <div className="py-8 text-center space-y-4">
-                <div className="p-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full w-16 h-16 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/10">
-                  <Check className="w-8 h-8" />
-                </div>
-                <h3 className="text-xl font-bold text-white">Demonstration Request Received</h3>
-                <p className="text-xs text-slate-300 max-w-sm mx-auto leading-relaxed">
-                  Thank you, <strong className="text-emerald-300">{demoForm.name}</strong>. Your briefing ticket (<span className="font-mono text-cyan-400">DEMO-2026-8912</span>) has been submitted to the ITIS Executive Team.
-                </p>
-                <p className="text-2xs text-slate-400">An executive representative will contact you within 24 hours at 0624304906 or via email.</p>
+              )}
 
-                <button
-                  onClick={resetDemoModal}
-                  className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition"
-                >
-                  Close Window
-                </button>
-              </div>
-            )}
+            </div>
 
           </div>
+
         </div>
-      )}
+      </section>
 
-      {/* Admin Passcode Gate Modal */}
-      {isAdminModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-6 shadow-2xl relative">
+      {/* Corporate Footer */}
+      <footer className="border-t border-slate-800 bg-slate-950 py-12 px-6">
+        <div className="max-w-7xl mx-auto space-y-8">
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             
-            <button
-              onClick={() => {
-                setIsAdminModalOpen(false);
-                setAdminAuthError('');
-              }}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-950/80 rounded-lg border border-slate-800 transition"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-2xs font-mono font-bold">
-                <Lock className="w-3.5 h-3.5 text-purple-400" />
-                <span>RESTRICTED OPERATIONAL CONSOLE</span>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/src/assets/images/itis_official_logo_1785082442867.jpg" 
+                  alt="ITIS" 
+                  className="w-8 h-8 object-contain rounded-lg" 
+                  referrerPolicy="no-referrer"
+                />
+                <span className="text-lg font-black text-white font-mono">ITIS</span>
               </div>
-              <h3 className="text-xl font-bold text-white">Administrator & Engineering Authentication</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Internal dashboards (Release, SRE, Performance, Certification) are protected for certified operators and demonstration evaluators.
+              <p className="text-2xs text-slate-400 leading-relaxed">
+                Integrated Technology Intelligence & Safety. Protecting learners across South Africa through intelligent technology.
               </p>
             </div>
 
-            <form onSubmit={handleAdminAuthSubmit} className="space-y-4 text-xs">
-              <div>
-                <label className="block text-slate-300 font-medium mb-1">Passcode</label>
-                <input
-                  type="password"
-                  placeholder="Enter passcode (or click Unlock below)"
-                  value={adminPasscode}
-                  onChange={(e) => setAdminPasscode(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-purple-500 font-mono"
-                />
-                {adminAuthError && (
-                  <p className="text-2xs text-rose-400 mt-1 font-mono">{adminAuthError}</p>
-                )}
-              </div>
+            <div className="space-y-2 text-2xs font-mono text-slate-400">
+              <span className="text-xs font-bold text-white block font-sans">Solutions</span>
+              <a href="#solutions" className="block hover:text-amber-400">GPS Wearable Band</a>
+              <a href="#solutions" className="block hover:text-amber-400">Smart Attendance Gateways</a>
+              <a href="#solutions" className="block hover:text-amber-400">Fleet Bus Safety</a>
+              <a href="#solutions" className="block hover:text-amber-400">24/7 Command Centre</a>
+            </div>
 
-              <div className="space-y-2">
-                <button
-                  type="submit"
-                  className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl text-xs font-mono transition flex items-center justify-center gap-2"
-                >
-                  <Lock className="w-4 h-4" />
-                  <span>Authenticate Operator</span>
-                </button>
+            <div className="space-y-2 text-2xs font-mono text-slate-400">
+              <span className="text-xs font-bold text-white block font-sans">Legal & Policies</span>
+              <button onClick={() => setActiveLegalModal('privacy')} className="block hover:text-amber-400 text-left">Privacy Policy</button>
+              <button onClick={() => setActiveLegalModal('popia')} className="block hover:text-amber-400 text-left">POPIA Compliance</button>
+              <button onClick={() => setActiveLegalModal('terms')} className="block hover:text-amber-400 text-left">Terms of Service</button>
+              <button onClick={() => setActiveLegalModal('careers')} className="block hover:text-amber-400 text-left">Careers & Fellowships</button>
+              <button onClick={() => setActiveLegalModal('media')} className="block hover:text-amber-400 text-left">Media Office</button>
+            </div>
 
-                <div className="relative flex py-1 items-center">
-                  <div className="flex-grow border-t border-slate-800"></div>
-                  <span className="flex-shrink mx-3 text-2xs text-slate-500 font-mono">EVALUATOR QUICK ACCESS</span>
-                  <div className="flex-grow border-t border-slate-800"></div>
-                </div>
+            <div className="space-y-2 text-2xs font-mono text-slate-400">
+              <span className="text-xs font-bold text-white block font-sans">Contact Details</span>
+              <p>Phone: <strong className="text-slate-200">+27 62 430 4906</strong></p>
+              <p>Email: <strong className="text-slate-200">itis.intergrated@gmail.com</strong></p>
+              <p>Location: Pretoria / Tshwane HQ</p>
+              <button
+                onClick={() => setIsPortalModalOpen(true)}
+                className="mt-2 px-3 py-1.5 bg-slate-900 border border-slate-800 text-amber-300 font-bold rounded-lg hover:border-amber-500/50 transition inline-flex items-center gap-1.5"
+              >
+                <Lock className="w-3 h-3 text-amber-400" />
+                <span>Portal Login</span>
+              </button>
+            </div>
 
-                <button
-                  type="button"
-                  onClick={unlockAdminForEvaluator}
-                  className="w-full py-2.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-mono font-bold transition flex items-center justify-center gap-2"
-                >
-                  <Award className="w-4 h-4 text-emerald-400" />
-                  <span>Unlock Dashboards (Evaluator Mode)</span>
-                </button>
-              </div>
-            </form>
+          </div>
 
+          <div className="pt-8 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between text-3xs font-mono text-slate-500 gap-4">
+            <span>© 2026 ITIS Integrated Technology Intelligence & Safety. All rights reserved.</span>
+            <span>POPIA & ISO 27001 Certified • Republic of South Africa</span>
+          </div>
+
+        </div>
+      </footer>
+
+      {/* PORTAL LOGIN MODAL */}
+      {isPortalModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-4xl relative">
+            <button
+              onClick={() => setIsPortalModalOpen(false)}
+              className="absolute -top-12 right-0 p-2 text-slate-400 hover:text-white font-mono text-xs flex items-center gap-1"
+            >
+              <X className="w-5 h-5" />
+              <span>Close Portal Modal</span>
+            </button>
+            <EnterprisePortalSuite
+              currentUser={portalUser}
+              onLogin={(u) => {
+                setPortalUser(u);
+                setIsPortalModalOpen(false);
+              }}
+              onLogout={() => setPortalUser(null)}
+              onNavigateToTab={(tab) => {
+                if (tab === 'release' || tab === 'certification') {
+                  onNavigateToDashboard('/certification');
+                }
+              }}
+            />
           </div>
         </div>
       )}
 
-      {/* Legal & Policy Modals */}
+      {/* DEMO REQUEST MODAL */}
+      {isDemoModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 relative shadow-2xl">
+            <button
+              onClick={resetDemoModal}
+              className="absolute top-6 right-6 text-slate-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full text-amber-300 text-3xs font-mono font-bold">
+                <Send className="w-3.5 h-3.5 text-amber-400" />
+                <span>OFFICIAL DEMO REQUEST</span>
+              </div>
+              <h3 className="text-xl font-bold text-white font-mono">
+                Request a Demonstration for Your Organization
+              </h3>
+              <p className="text-xs text-slate-400">
+                Provide your details below to schedule an executive demonstration with our municipal team.
+              </p>
+            </div>
+
+            {demoSubmitted ? (
+              <div className="p-6 bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 rounded-2xl space-y-3 font-mono text-xs">
+                <div className="flex items-center gap-2 font-bold text-sm">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <span>Demonstration Request Submitted</span>
+                </div>
+                <p>
+                  Thank you, <strong className="text-white">{demoForm.name}</strong>. Our team will contact <strong className="text-white">{demoForm.email}</strong> or <strong className="text-white">{demoForm.phone}</strong> shortly to confirm your session.
+                </p>
+                <button
+                  onClick={resetDemoModal}
+                  className="w-full py-2.5 bg-slate-950 text-emerald-400 border border-emerald-500/30 rounded-xl font-bold hover:bg-slate-900 transition"
+                >
+                  Close Request Window
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleDemoSubmit} className="space-y-4 font-mono text-xs">
+                <div>
+                  <label className="block text-slate-300 mb-1 font-bold">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Dr. Kagiso Khumalo"
+                    value={demoForm.name}
+                    onChange={(e) => setDemoForm({ ...demoForm, name: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-slate-300 mb-1 font-bold">Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="email@domain.gov.za"
+                      value={demoForm.email}
+                      onChange={(e) => setDemoForm({ ...demoForm, email: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 mb-1 font-bold">Phone Number</label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="0624304906"
+                      value={demoForm.phone}
+                      onChange={(e) => setDemoForm({ ...demoForm, phone: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 mb-1 font-bold">Organization Type</label>
+                  <select
+                    value={demoForm.organizationType}
+                    onChange={(e) => setDemoForm({ ...demoForm, organizationType: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500"
+                  >
+                    <option value="Government Department">Government Department</option>
+                    <option value="Public School">Public School</option>
+                    <option value="Private School">Private School</option>
+                    <option value="Transport Operator">Transport Operator</option>
+                    <option value="Security Company">Security Company</option>
+                    <option value="Parent Association">Parent Association</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-300 mb-1 font-bold">Organization Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Soweto STEM Academy"
+                    value={demoForm.organizationName}
+                    onChange={(e) => setDemoForm({ ...demoForm, organizationName: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 text-xs"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Submit Demo Request</span>
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* LEGAL & POLICY MODALS */}
       {activeLegalModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
-            
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-xl w-full space-y-6 relative shadow-2xl">
             <button
               onClick={() => setActiveLegalModal(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-950/80 rounded-lg border border-slate-800 transition"
+              className="absolute top-6 right-6 text-slate-400 hover:text-white"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
             {activeLegalModal === 'privacy' && (
               <div className="space-y-4 text-xs text-slate-300">
                 <div className="space-y-1">
-                  <span className="text-2xs font-mono text-cyan-400 font-bold uppercase">Legal Notice</span>
-                  <h3 className="text-xl font-bold text-white">Privacy Policy & Data Protection</h3>
+                  <span className="text-2xs font-mono text-amber-400 font-bold uppercase">Data Privacy</span>
+                  <h3 className="text-xl font-bold text-white">Privacy Policy</h3>
                 </div>
                 <p>
-                  The Integrated Technology Intelligence & Safety (ITIS) platform is committed to safeguarding personal data for learners, guardians, educators, and transport personnel in full compliance with South African data legislation.
+                  ITIS is committed to maintaining strict data privacy standards for all learners, parents, educators, and drivers. Personal information is collected exclusively for safety, attendance, and emergency dispatch purposes.
                 </p>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-white">Key Data Safeguards:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-2xs text-slate-400">
-                    <li>End-to-end ECC-P256 hardware encryption on all wearable telemetry.</li>
-                    <li>Automatic anonymization of location data after 30 days unless subject to active SAPS emergency inquiry.</li>
-                    <li>Strict role-based access control (RBAC) ensuring guardians only view their own dependents.</li>
-                    <li>Zero commercial monetization or third-party sharing of learner data.</li>
-                  </ul>
-                </div>
               </div>
             )}
 
             {activeLegalModal === 'popia' && (
               <div className="space-y-4 text-xs text-slate-300">
                 <div className="space-y-1">
-                  <span className="text-2xs font-mono text-emerald-400 font-bold uppercase">Statutory Compliance</span>
-                  <h3 className="text-xl font-bold text-white">POPIA Compliance Statement</h3>
+                  <span className="text-2xs font-mono text-emerald-400 font-bold uppercase">Regulatory Compliance</span>
+                  <h3 className="text-xl font-bold text-white">POPIA Compliance Notice</h3>
                 </div>
                 <p>
-                  ITIS complies strictly with the Protection of Personal Information Act (Act 4 of 2013) of South Africa.
+                  In compliance with the Protection of Personal Information Act (POPIA) of South Africa, all learner profiles, guardian phone numbers, and location records are encrypted with AES-256 at rest and TLS 1.3 in transit.
                 </p>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-white">POPIA Alignment Principles:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-2xs text-slate-400">
-                    <li><strong>Accountability:</strong> Dedicated Information Officer overseeing data governance.</li>
-                    <li><strong>Processing Limitation:</strong> Data processed solely for child protection, transit safety, and emergency response.</li>
-                    <li><strong>Security Safeguards:</strong> ISO 27001 & SOC2 Type II certified infrastructure hosted on SITA government cloud enclaves.</li>
-                    <li><strong>Data Subject Participation:</strong> Guardians retain rights to inspect, update, or revoke non-emergency telemetry profiles.</li>
-                  </ul>
-                </div>
               </div>
             )}
 
             {activeLegalModal === 'terms' && (
               <div className="space-y-4 text-xs text-slate-300">
                 <div className="space-y-1">
-                  <span className="text-2xs font-mono text-purple-400 font-bold uppercase">Operational SLA</span>
-                  <h3 className="text-xl font-bold text-white">Terms of Service & Service Level Agreement</h3>
+                  <span className="text-2xs font-mono text-cyan-400 font-bold uppercase">Terms of Service</span>
+                  <h3 className="text-xl font-bold text-white">Platform Terms & Service SLA</h3>
                 </div>
                 <p>
-                  Use of the ITIS platform by educational institutions, government departments, and transport contractors is governed by standard enterprise service agreements.
+                  Use of the ITIS platform by educational institutions, government departments, and transport contractors is governed by standard enterprise service level agreements with 99.99% uptime guarantees.
                 </p>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-white">Service Level Commitments:</h4>
-                  <ul className="list-disc list-inside space-y-1 text-2xs text-slate-400">
-                    <li><strong>99.99% Platform Uptime:</strong> Multi-region redundant cloud cluster deployment.</li>
-                    <li><strong>Sub-Second Emergency Dispatch:</strong> Real-time MQTT socket event streaming.</li>
-                    <li><strong>24/7 National Operations Support:</strong> Dedicated tactical helpdesk reachable at +27 62 430 4906.</li>
-                  </ul>
-                </div>
               </div>
             )}
 
             {activeLegalModal === 'careers' && (
               <div className="space-y-4 text-xs text-slate-300">
                 <div className="space-y-1">
-                  <span className="text-2xs font-mono text-cyan-400 font-bold uppercase">Join Our Mission</span>
-                  <h3 className="text-xl font-bold text-white">Careers & Engineering Fellowships</h3>
+                  <span className="text-2xs font-mono text-purple-400 font-bold uppercase">Join Our Mission</span>
+                  <h3 className="text-xl font-bold text-white">Careers at ITIS</h3>
                 </div>
                 <p>
-                  Build technology that protects millions of learners daily. We recruit cloud architects, embedded IoT engineers, GIS specialists, and threat response analysts.
+                  Join our engineering team in building technology that protects children across South Africa daily. Send CVs to <strong className="text-amber-300">itis.intergrated@gmail.com</strong> or contact <strong className="text-amber-300">0624304906</strong>.
                 </p>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-white">Current Open Positions:</h4>
-                  <ul className="space-y-1.5 text-2xs text-slate-400">
-                    <li className="flex justify-between border-b border-slate-900 pb-1">
-                      <span>Senior Embedded C/Rust Developer (IoT Wearables)</span>
-                      <span className="text-cyan-400 font-mono">Pretoria / Remote</span>
-                    </li>
-                    <li className="flex justify-between border-b border-slate-900 pb-1">
-                      <span>PostGIS Spatial Database Architect</span>
-                      <span className="text-cyan-400 font-mono">Johannesburg</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span>Public Safety Systems Integration Specialist</span>
-                      <span className="text-cyan-400 font-mono">Cape Town</span>
-                    </li>
-                  </ul>
-                  <p className="text-2xs text-slate-500 pt-2">Send CVs to: <strong className="text-amber-300">itis.intergrated@gmail.com</strong> or contact 0624304906.</p>
-                </div>
               </div>
             )}
 
             {activeLegalModal === 'media' && (
               <div className="space-y-4 text-xs text-slate-300">
                 <div className="space-y-1">
-                  <span className="text-2xs font-mono text-emerald-400 font-bold uppercase">Press Office</span>
-                  <h3 className="text-xl font-bold text-white">Media & Executive Press Kit</h3>
+                  <span className="text-2xs font-mono text-blue-400 font-bold uppercase">Press Office</span>
+                  <h3 className="text-xl font-bold text-white">Media Enquiries</h3>
                 </div>
                 <p>
-                  Official media resources, logos, brand guidelines, and executive briefing factsheets for journalists and broadcast partners.
+                  For media enquiries, interview requests, and executive press kits, contact <strong className="text-amber-300">itis.intergrated@gmail.com</strong> or call <strong className="text-amber-300">+27 62 430 4906</strong>.
                 </p>
-                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                  <h4 className="font-bold text-white">Downloadable Media Assets:</h4>
-                  <ul className="space-y-2 text-2xs text-slate-400">
-                    <li className="flex items-center justify-between bg-slate-900 p-2 rounded-lg">
-                      <span className="font-mono text-slate-200">ITIS Official Logo Vector Package (EPS, PNG, SVG)</span>
-                      <span className="text-cyan-400 font-bold">2.4 MB</span>
-                    </li>
-                    <li className="flex items-center justify-between bg-slate-900 p-2 rounded-lg">
-                      <span className="font-mono text-slate-200">National Learner Safety Platform Executive Summary Factsheet</span>
-                      <span className="text-cyan-400 font-bold">1.1 MB</span>
-                    </li>
-                  </ul>
-                  <p className="text-2xs text-slate-500 pt-2">Media Enquiries: <strong className="text-amber-300">itis.intergrated@gmail.com</strong> / +27 62 430 4906</p>
-                </div>
               </div>
             )}
 

@@ -134,7 +134,7 @@ export function NotificationsDashboard() {
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-full text-xs font-mono font-bold flex items-center gap-1.5">
                 <Bell className="w-3.5 h-3.5" />
-                <span>PHASE E02 — ENTERPRISE COMMUNICATIONS PLATFORM</span>
+                <span>ENTERPRISE COMMUNICATIONS PLATFORM</span>
               </span>
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-xs font-mono font-bold">
                 SIMULATOR + LIVE GATEWAY ACTIVE

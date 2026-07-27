@@ -119,10 +119,10 @@ export function ProductionReadinessReport() {
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full text-xs font-mono font-bold flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>VERSION 1.0.0-GA — PRODUCTION READY</span>
+                <span>PRODUCTION READY</span>
               </span>
               <span className="px-3 py-1 bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 rounded-full text-xs font-mono font-bold">
-                PHASE E01
+                ENTERPRISE ARCHITECTURE
               </span>
             </div>
             <h2 className="text-3xl font-black text-white font-sans tracking-tight">
