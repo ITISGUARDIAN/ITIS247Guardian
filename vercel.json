@@ -23,6 +23,9 @@
       "dest": "https://api.itis.co.za/api/$1"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
