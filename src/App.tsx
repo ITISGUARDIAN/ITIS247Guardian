@@ -518,7 +518,7 @@ export default function App() {
         <div className="flex items-center gap-3">
           <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
             <img 
-              src="/branding/itis-logo.png" 
+              src="/assets/official/itis-logo.png" 
               alt="ITIS Logo" 
               className="w-10 h-10 object-contain rounded-lg drop-shadow-[0_0_10px_rgba(245,158,11,0.25)]" 
               referrerPolicy="no-referrer"
