@@ -1,0 +1,12 @@
+Search and replace: change "/public/images/" -> "/images/" for known runtime references.
+
+Files modified:
+- public/assets/css/styles.css
+- src/components/Hero.tsx
+- src/pages/index.tsx
+
+Changes:
+- <img src="/public/images/command-center.jpg"> -> <img src="/images/command-center.jpg">
+- background-image: url('/public/images/command-center.jpg') -> url('/images/command-center.jpg')
+
+This commit updates runtime references to images in the public folder so they resolve correctly after deployment.

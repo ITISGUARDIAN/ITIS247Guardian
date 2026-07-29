@@ -1,0 +1,11 @@
+---
+*** Begin Patch
+*** Update File: public/assets/css/styles.css
+@@
+-.hero {
+-  background-image: url('/public/images/command-center.jpg');
+-}
++.hero {
++  background-image: url('/images/command-center.jpg');
++}
+*** End Patch

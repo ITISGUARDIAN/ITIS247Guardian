@@ -1,0 +1,7 @@
+---
+*** Begin Patch
+*** Update File: src/pages/index.tsx
+@@
+-      <section className="intro" style={{ backgroundImage: "url('/public/images/command-center.jpg')" }}>
++      <section className="intro" style={{ backgroundImage: "url('/images/command-center.jpg')" }}>
+*** End Patch

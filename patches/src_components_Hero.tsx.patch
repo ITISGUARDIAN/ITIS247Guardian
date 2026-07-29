@@ -1,0 +1,15 @@
+---
+*** Begin Patch
+*** Update File: src/components/Hero.tsx
+@@
+-  return (
+-    <div className="hero">
+-      <img src="/public/images/command-center.jpg" alt="Command Center" />
+-    </div>
+-  );
++  return (
++    <div className="hero">
++      <img src="/images/command-center.jpg" alt="Command Center" />
++    </div>
++  );
+*** End Patch
