@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   User,
@@ -201,10 +201,19 @@ export function EnterprisePortalSuite({
     }
   };
 
+  const sosTimeoutRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (sosTimeoutRef.current) clearTimeout(sosTimeoutRef.current);
+    };
+  }, []);
+
   const handleTriggerSos = () => {
     setSosTriggered(true);
     setSosSuccessMsg('EMERGENCY SOS DISPATCHED: ITIS Command Centre and SAPS C3 units notified. Live GPS beacon broadcasting.');
-    setTimeout(() => {
+    if (sosTimeoutRef.current) clearTimeout(sosTimeoutRef.current);
+    sosTimeoutRef.current = setTimeout(() => {
       setSosSuccessMsg('');
     }, 6000);
   };

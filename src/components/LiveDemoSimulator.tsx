@@ -136,7 +136,6 @@ export function LiveDemoSimulator() {
       timerRef.current = setInterval(() => {
         setCurrentStepIndex((prev) => {
           if (prev >= SIMULATION_STEPS.length - 1) {
-            setIsPlaying(false);
             return prev;
           }
           return prev + 1;
@@ -144,12 +143,22 @@ export function LiveDemoSimulator() {
       }, autoSpeed);
     } else if (timerRef.current) {
       clearInterval(timerRef.current);
+      timerRef.current = null;
     }
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     };
   }, [isPlaying, autoSpeed]);
+
+  useEffect(() => {
+    if (currentStepIndex >= SIMULATION_STEPS.length - 1 && isPlaying) {
+      setIsPlaying(false);
+    }
+  }, [currentStepIndex, isPlaying]);
 
   const handleReset = () => {
     setIsPlaying(false);
@@ -243,7 +252,7 @@ export function LiveDemoSimulator() {
               style={{ left: `${currentStep.coordinates.x}%`, top: `${currentStep.coordinates.y}%` }}
             >
               <div className="relative">
-                <span className={`absolute -inset-2 rounded-full opacity-75 animate-ping ${
+                <span className={`absolute -inset-2 rounded-full opacity-75 animate-pulse ${
                   currentStep.category === 'emergency' ? 'bg-rose-500' : 'bg-cyan-400'
                 }`} />
                 <div className={`p-2.5 rounded-full border shadow-xl flex items-center justify-center ${

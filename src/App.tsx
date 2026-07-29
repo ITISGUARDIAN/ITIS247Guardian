@@ -218,12 +218,33 @@ export default function App() {
   const [loadTestRunning, setLoadTestRunning] = useState<string | null>(null);
   const [loadTestLogs, setLoadTestLogs] = useState<string[]>([]);
   const [lastActionStatus, setLastActionStatus] = useState<string | null>(null);
+  const actionTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const setStatusMessage = useCallback((msg: string | null, autoClearMs?: number) => {
+    if (actionTimeoutRef.current) {
+      clearTimeout(actionTimeoutRef.current);
+      actionTimeoutRef.current = null;
+    }
+    setLastActionStatus(msg);
+    if (msg && autoClearMs) {
+      actionTimeoutRef.current = setTimeout(() => {
+        setLastActionStatus(null);
+        actionTimeoutRef.current = null;
+      }, autoClearMs);
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (actionTimeoutRef.current) clearTimeout(actionTimeoutRef.current);
+    };
+  }, []);
 
   // Run SHA-256 Checksum Verification on Release Artifact
   const runArtifactIntegrityCheck = (artifactId: string, artifactName: string) => {
     setVerifyingArtifact(artifactId);
     setReleaseLogs(prev => [...prev, `[SHA-256 Check] Calculating hash for artifact '${artifactId}' (${artifactName})...`]);
-    setLastActionStatus(`Verifying artifact integrity: ${artifactName}`);
+    setStatusMessage(`Verifying artifact integrity: ${artifactName}`);
 
     setTimeout(() => {
       setReleaseLogs(prev => [...prev, `[SHA-256 Check] Target digest matching expected release manifest hash: PASSED.`]);
@@ -240,14 +261,13 @@ export default function App() {
       }));
 
       setVerifyingArtifact(null);
-      setLastActionStatus(`Artifact '${artifactName}' SHA-256 Verified (100% Match)`);
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage(`Artifact '${artifactName}' SHA-256 Verified (100% Match)`, 4000);
     }, 1000);
   };
 
   // Run Version Freeze Integrity Check
   const verifyVersionFreeze = () => {
-    setLastActionStatus('Verifying 1.0.0-GA Version Freeze Integrity...');
+    setStatusMessage('Verifying 1.0.0-GA Version Freeze Integrity...');
     setReleaseLogs([
       `[Version Freeze] Checking package.json version string: ${releaseMetadata.version}`,
       `[Git SHA] Verifying commit SHA: ${releaseMetadata.gitSha}`,
@@ -255,8 +275,7 @@ export default function App() {
       `[Result] Version Freeze Audit: 100% PASSED (All 11 release artifacts sealed).`
     ]);
     setTimeout(() => {
-      setLastActionStatus('Version 1.0.0-GA Freeze Audit: PASSED (100% Sealed)');
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage('Version 1.0.0-GA Freeze Audit: PASSED (100% Sealed)', 4000);
     }, 800);
   };
 
@@ -264,7 +283,7 @@ export default function App() {
   const executeCutoverStep = (stepId: string) => {
     setActiveCutoverStepRun(stepId);
     const targetStep = cutoverSteps.find(s => s.id === stepId);
-    setLastActionStatus(`Executing Cutover Step: ${targetStep?.name}...`);
+    setStatusMessage(`Executing Cutover Step: ${targetStep?.name}...`);
 
     setTimeout(() => {
       setCutoverSteps(prev => prev.map(step => {
@@ -279,8 +298,7 @@ export default function App() {
         return step;
       }));
       setActiveCutoverStepRun(null);
-      setLastActionStatus(`Cutover Step ${stepId} Executed & Verified`);
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage(`Cutover Step ${stepId} Executed & Verified`, 4000);
     }, 1000);
   };
 
@@ -289,8 +307,7 @@ export default function App() {
     setPilotActivations(prev => prev.map(target => {
       if (target.id === targetId) {
         const nextStatus = target.activationStatus === 'ACTIVE_PILOT' ? 'PAUSED' : 'ACTIVE_PILOT';
-        setLastActionStatus(`Pilot Target '${target.entityName}' status changed to ${nextStatus}`);
-        setTimeout(() => setLastActionStatus(null), 4000);
+        setStatusMessage(`Pilot Target '${target.entityName}' status changed to ${nextStatus}`, 4000);
         return {
           ...target,
           activationStatus: nextStatus,
@@ -305,8 +322,7 @@ export default function App() {
   const updateRolloutGateMode = (gateId: string, newMode: RolloutGateControl['gateMode']) => {
     setRolloutGates(prev => prev.map(gate => {
       if (gate.id === gateId) {
-        setLastActionStatus(`Rollout Gate '${gate.systemComponent}' set to ${newMode.toUpperCase()}`);
-        setTimeout(() => setLastActionStatus(null), 4000);
+        setStatusMessage(`Rollout Gate '${gate.systemComponent}' set to ${newMode.toUpperCase()}`, 4000);
         return {
           ...gate,
           gateMode: newMode,
@@ -321,8 +337,7 @@ export default function App() {
   const triggerRollbackAction = (rollbackId: string) => {
     setRollbackControls(prev => prev.map(item => {
       if (item.id === rollbackId) {
-        setLastActionStatus(`Rollback Control '${item.targetScope}' ARMED & EXECUTED`);
-        setTimeout(() => setLastActionStatus(null), 4000);
+        setStatusMessage(`Rollback Control '${item.targetScope}' ARMED & EXECUTED`, 4000);
         return {
           ...item,
           status: 'COMPLETED_ROLLBACK',
@@ -340,8 +355,7 @@ export default function App() {
   const publishCommunicationNotice = (noticeId: string) => {
     setCommunicationNotices(prev => prev.map(notice => {
       if (notice.id === noticeId) {
-        setLastActionStatus(`Communication '${notice.noticeType}' Broadcasted via ${notice.channel}`);
-        setTimeout(() => setLastActionStatus(null), 4000);
+        setStatusMessage(`Communication '${notice.noticeType}' Broadcasted via ${notice.channel}`, 4000);
         return {
           ...notice,
           publishedAt: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
@@ -353,15 +367,14 @@ export default function App() {
 
   // Re-run Full Acceptance Audit
   const runFullAcceptanceAudit = () => {
-    setLastActionStatus('Re-auditing all 13 Final Acceptance Checks...');
+    setStatusMessage('Re-auditing all 13 Final Acceptance Checks...');
     setTimeout(() => {
       setAcceptanceChecks(prev => prev.map(check => ({
         ...check,
         status: 'PASSED',
         verifiedAt: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
       })));
-      setLastActionStatus('Final Acceptance Audit Complete: 13/13 PASSED');
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage('Final Acceptance Audit Complete: 13/13 PASSED', 4000);
     }, 1200);
   };
 
@@ -369,7 +382,7 @@ export default function App() {
   const executeOatFlow = (flowId: string, flowName: string) => {
     setActiveOatRun(flowId);
     setOatLogs([`[OAT Engine] Executing Operational Acceptance Test: ${flowName}...`]);
-    setLastActionStatus(`Running OAT Flow: ${flowName}`);
+    setStatusMessage(`Running OAT Flow: ${flowName}`);
 
     setTimeout(() => {
       setOatLogs(prev => [...prev, `[OAT Step 1] Validating persona role permissions & biometric handshake...`]);
@@ -395,8 +408,7 @@ export default function App() {
       }));
 
       setActiveOatRun(null);
-      setLastActionStatus(`OAT Flow '${flowName}' PASSED (Recorded with audit signature)`);
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage(`OAT Flow '${flowName}' PASSED (Recorded with audit signature)`, 4000);
     }, 1800);
   };
 
@@ -406,8 +418,7 @@ export default function App() {
       ...prev,
       featureFlagGates: prev.featureFlagGates.map(f => f.flagKey === flagKey ? { ...f, enabled: !f.enabled } : f)
     }));
-    setLastActionStatus(`Feature Flag '${flagKey}' state updated`);
-    setTimeout(() => setLastActionStatus(null), 3000);
+    setStatusMessage(`Feature Flag '${flagKey}' state updated`, 3000);
   };
 
   // Toggle School Activation in Rollout Schedule
@@ -422,13 +433,12 @@ export default function App() {
       }
       return s;
     }));
-    setLastActionStatus(`School '${schoolId}' activation state updated`);
-    setTimeout(() => setLastActionStatus(null), 3000);
+    setStatusMessage(`School '${schoolId}' activation state updated`, 3000);
   };
 
   // Run Security Probe
   const runSecurityProbe = (probeType: string) => {
-    setLastActionStatus(`Running ${probeType} security probe...`);
+    setStatusMessage(`Running ${probeType} security probe...`);
 
     setTimeout(() => {
       const newEvent: ThreatEvent = {
@@ -445,8 +455,7 @@ export default function App() {
       };
 
       setThreatEvents(prev => [newEvent, ...prev]);
-      setLastActionStatus(`Probe completed successfully! All controls hold at 100%.`);
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage(`Probe completed successfully! All controls hold at 100%.`, 4000);
     }, 800);
   };
 
@@ -454,7 +463,7 @@ export default function App() {
   const runK6LoadTest = (scenarioId: string, scenarioName: string) => {
     setLoadTestRunning(scenarioId);
     setLoadTestLogs([`[k6] Initializing execution engine for ${scenarioName}...`]);
-    setLastActionStatus(`Launching k6 load test: ${scenarioName}`);
+    setStatusMessage(`Launching k6 load test: ${scenarioName}`);
 
     setTimeout(() => {
       setLoadTestLogs(prev => [...prev, `[k6] Spawning 10,000 Virtual Users (VUs) with ramping arrival rate...`]);
@@ -468,8 +477,7 @@ export default function App() {
       setLoadTestLogs(prev => [...prev, `[k6] Threshold Assertions: p(95)<50ms [PASS - 18.4ms], error_rate<0.1% [PASS - 0.02%]`]);
       setLoadTestLogs(prev => [...prev, `[k6] Test completed successfully. Report generated.`]);
       setLoadTestRunning(null);
-      setLastActionStatus(`Load test '${scenarioName}' PASSED (100% threshold compliance)`);
-      setTimeout(() => setLastActionStatus(null), 4000);
+      setStatusMessage(`Load test '${scenarioName}' PASSED (100% threshold compliance)`, 4000);
     }, 2200);
   };
 
@@ -578,7 +586,7 @@ export default function App() {
           )}
 
           <div className="flex items-center gap-2 text-xs bg-slate-800/90 border border-emerald-500/30 px-3 py-1.5 rounded-md font-mono">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="text-emerald-300 font-semibold">GA RELEASE: 1.0.0-GA READY</span>
           </div>
         </div>
@@ -1690,8 +1698,7 @@ export default function App() {
                                 <code>{cmd}</code>
                                 <button
                                   onClick={() => {
-                                    setLastActionStatus(`Copied command: ${cmd.substring(0, 25)}...`);
-                                    setTimeout(() => setLastActionStatus(null), 3000);
+                                    setStatusMessage(`Copied command: ${cmd.substring(0, 25)}...`, 3000);
                                   }}
                                   className="text-2xs px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700"
                                 >

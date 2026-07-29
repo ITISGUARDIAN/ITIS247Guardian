@@ -624,6 +624,14 @@ export function CommandCentreModule() {
 
   const activeIncident = incidents.find((i) => i.id === selectedIncidentId) || incidents[0];
 
+  const audioPromptTimeoutRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (audioPromptTimeoutRef.current) clearTimeout(audioPromptTimeoutRef.current);
+    };
+  }, []);
+
   // Replay Loop Effect
   useEffect(() => {
     let interval: any = null;
@@ -631,15 +639,22 @@ export function CommandCentreModule() {
       interval = setInterval(() => {
         setReplayProgress((prev) => {
           if (prev >= 100) {
-            setIsReplaying(false);
             return 100;
           }
           return prev + 1;
         });
       }, 300 / replaySpeed);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isReplaying, replaySpeed]);
+
+  useEffect(() => {
+    if (replayProgress >= 100 && isReplaying) {
+      setIsReplaying(false);
+    }
+  }, [replayProgress, isReplaying]);
 
   // Speech TTS handler
   const handlePlayVoicePrompt = (text: string) => {
@@ -654,7 +669,8 @@ export function CommandCentreModule() {
       window.speechSynthesis.speak(utterance);
     } else {
       setIsPlayingAudioPrompt(true);
-      setTimeout(() => setIsPlayingAudioPrompt(false), 3000);
+      if (audioPromptTimeoutRef.current) clearTimeout(audioPromptTimeoutRef.current);
+      audioPromptTimeoutRef.current = setTimeout(() => setIsPlayingAudioPrompt(false), 3000);
     }
   };
 

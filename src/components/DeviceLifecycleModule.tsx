@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Cpu,
   QrCode,
@@ -102,10 +102,21 @@ export function DeviceLifecycleModule({ onNavigateToTab }: DeviceLifecycleModule
     JSON.stringify({ status: 200, count: devices.length, data: devices.slice(0, 2) }, null, 2)
   );
 
+  const feedbackTimeoutRef = React.useRef<any>(null);
+  const diagTimeoutRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+      if (diagTimeoutRef.current) clearTimeout(diagTimeoutRef.current);
+    };
+  }, []);
+
   // Trigger feedback banner
   const triggerFeedback = (msg: string) => {
     setActionFeedback(msg);
-    setTimeout(() => setActionFeedback(null), 4000);
+    if (feedbackTimeoutRef.current) clearTimeout(feedbackTimeoutRef.current);
+    feedbackTimeoutRef.current = setTimeout(() => setActionFeedback(null), 4000);
   };
 
   // Filtered devices
@@ -181,7 +192,8 @@ export function DeviceLifecycleModule({ onNavigateToTab }: DeviceLifecycleModule
       eccCertCheck: 'RUNNING'
     });
 
-    setTimeout(() => {
+    if (diagTimeoutRef.current) clearTimeout(diagTimeoutRef.current);
+    diagTimeoutRef.current = setTimeout(() => {
       setTestResults({
         gpsFix: 'PASS',
         bleBeacon: 'PASS',

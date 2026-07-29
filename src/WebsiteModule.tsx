@@ -80,6 +80,11 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     'parents' | 'schools' | 'transport' | 'responders' | 'government' | 'communities'
   >('parents');
 
+  // Selected Ecosystem Tab State
+  const [activeEcosystemTab, setActiveEcosystemTab] = useState<
+    'tech' | 'partners'
+  >('tech');
+
   // Selected Public Showcase Tab State
   const [activeCommercialTab, setActiveCommercialTab] = useState<
     'government' | 'faq'
@@ -172,10 +177,19 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             <a href="#solutions" className="hover:text-amber-400 transition">Solutions</a>
             <a href="#how-it-works" className="hover:text-amber-400 transition">How It Works</a>
             <a href="#benefits" className="hover:text-amber-400 transition">Benefits</a>
-            <a href="#partners" className="hover:text-amber-400 transition">Partners</a>
+            <a 
+              href="#partners" 
+              onClick={() => setActiveEcosystemTab('partners')} 
+              className="hover:text-amber-400 transition"
+            >
+              Partners
+            </a>
             <a 
               href="#demo-suite" 
-              onClick={() => setActiveCommercialTab('government')} 
+              onClick={() => {
+                setActiveEcosystemTab('tech');
+                setActiveCommercialTab('government');
+              }} 
               className="text-amber-300 font-bold hover:text-amber-200 transition flex items-center gap-1"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
@@ -739,40 +753,158 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
         </div>
       </section>
 
-      {/* Section 5: Partners */}
-      <section id="partners" className="py-20 border-b border-slate-800 bg-slate-900/40">
+      {/* Section 5: ITIS Ecosystem & Strategic Network */}
+      <section id="ecosystem" className="py-20 border-b border-slate-800 bg-slate-900/40">
         <div className="max-w-7xl mx-auto px-6 space-y-12">
           
+          {/* Main Section Header */}
           <div className="text-center space-y-3 max-w-3xl mx-auto">
-            <span className="text-2xs font-mono font-bold text-cyan-400 uppercase tracking-widest px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
-              Partner Network
+            <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+              Enterprise Ecosystem
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Trusted Industry & Government Partners
+              ITIS Ecosystem & Strategic Network
             </h2>
             <p className="text-slate-400 text-sm">
-              ITIS works hand-in-hand with key public and private institutions across South Africa.
+              Explore our integrated technology resources, government readiness briefs, and trusted public-private sector partners.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
-            {[
-              { name: 'Soweto STEM Academy', cat: 'Pilot School' },
-              { name: 'Gauteng Dept of Education', cat: 'Government Dept' },
-              { name: 'City of Tshwane Municipality', cat: 'Local Government' },
-              { name: 'SAPS Command Centre', cat: 'Police Services' },
-              { name: 'Gauteng EMS Division', cat: 'Emergency Medical' },
-              { name: 'National Security Armed Response', cat: 'Private Security' },
-              { name: 'Soweto Bus Transport Co', cat: 'Fleet Operator' },
-              { name: 'Tier-1 Cellular IoT Telecommunications', cat: 'Telecommunications' },
-              { name: 'National Telecom Cloud Services', cat: 'Connectivity' },
-              { name: 'Public Sector Cloud Security', cat: 'Technology Partner' }
-            ].map((p, idx) => (
-              <div key={idx} className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1 hover:border-amber-500/30 transition">
-                <span className="text-xs font-bold text-white font-mono block">{p.name}</span>
-                <span className="text-3xs text-amber-400 font-mono block">{p.cat}</span>
+          {/* Primary Ecosystem Tab Switcher */}
+          <div className="flex justify-center" role="tablist" aria-label="ITIS Ecosystem & Strategic Network">
+            <div className="inline-flex flex-col sm:flex-row p-1.5 bg-slate-950 border border-slate-800 rounded-2xl gap-2 w-full sm:w-auto">
+              <button
+                id="tab-tech"
+                role="tab"
+                aria-selected={activeEcosystemTab === 'tech'}
+                aria-controls="panel-tech"
+                onClick={() => setActiveEcosystemTab('tech')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveEcosystemTab('tech');
+                  }
+                }}
+                className={`px-5 py-3 rounded-xl text-xs sm:text-sm font-mono font-bold transition flex items-center justify-center gap-2 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500/50 ${
+                  activeEcosystemTab === 'tech'
+                    ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 border border-amber-400'
+                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800/80'
+                }`}
+              >
+                <Cpu className="w-4 h-4 shrink-0" />
+                <span>ITIS Technology & Resources</span>
+              </button>
+
+              <button
+                id="tab-partners"
+                role="tab"
+                aria-selected={activeEcosystemTab === 'partners'}
+                aria-controls="panel-partners"
+                onClick={() => setActiveEcosystemTab('partners')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveEcosystemTab('partners');
+                  }
+                }}
+                className={`px-5 py-3 rounded-xl text-xs sm:text-sm font-mono font-bold transition flex items-center justify-center gap-2 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-amber-500/50 ${
+                  activeEcosystemTab === 'partners'
+                    ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20 border border-amber-400'
+                    : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800/80'
+                }`}
+              >
+                <Building2 className="w-4 h-4 shrink-0" />
+                <span>Trusted Industry & Government Partners</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Tab Panel 1: ITIS Technology & Resources */}
+          <div
+            id="panel-tech"
+            role="tabpanel"
+            aria-labelledby="tab-tech"
+            hidden={activeEcosystemTab !== 'tech'}
+            className={activeEcosystemTab === 'tech' ? 'block space-y-6' : 'hidden'}
+          >
+            <div id="demo-suite" className="space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/60">
+                <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
+                  Public Showcase & Documentation
+                </span>
+
+                {/* Showcase Tabs Switcher */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    { id: 'government', label: 'Government Brief', icon: Building2 },
+                    { id: 'faq', label: 'FAQ & Docs', icon: HelpCircle }
+                  ].map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeCommercialTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveCommercialTab(tab.id as any)}
+                        className={`px-3 py-1.5 rounded-xl text-2xs font-mono font-bold transition flex items-center gap-1.5 ${
+                          isActive
+                            ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                            : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                        }`}
+                      >
+                        <Icon className="w-3.5 h-3.5" />
+                        <span>{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            ))}
+
+              {/* Render Active Showcase Component */}
+              <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+                {activeCommercialTab === 'government' && <GovernmentReadinessSection />}
+                {activeCommercialTab === 'faq' && <PublicDocsFAQ />}
+              </div>
+            </div>
+          </div>
+
+          {/* Tab Panel 2: Trusted Industry & Government Partners */}
+          <div
+            id="panel-partners"
+            role="tabpanel"
+            aria-labelledby="tab-partners"
+            hidden={activeEcosystemTab !== 'partners'}
+            className={activeEcosystemTab === 'partners' ? 'block space-y-8' : 'hidden'}
+          >
+            <div id="partners" className="space-y-6">
+              <div className="text-center space-y-2 max-w-3xl mx-auto">
+                <span className="text-2xs font-mono font-bold text-cyan-400 uppercase tracking-widest px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 rounded-full inline-block">
+                  National Partner Network
+                </span>
+                <p className="text-slate-400 text-sm">
+                  ITIS works hand-in-hand with key public and private institutions across South Africa.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+                {[
+                  { name: 'Soweto STEM Academy', cat: 'Pilot School' },
+                  { name: 'Gauteng Dept of Education', cat: 'Government Dept' },
+                  { name: 'City of Tshwane Municipality', cat: 'Local Government' },
+                  { name: 'SAPS Command Centre', cat: 'Police Services' },
+                  { name: 'Gauteng EMS Division', cat: 'Emergency Medical' },
+                  { name: 'National Security Armed Response', cat: 'Private Security' },
+                  { name: 'Soweto Bus Transport Co', cat: 'Fleet Operator' },
+                  { name: 'Tier-1 Cellular IoT Telecommunications', cat: 'Telecommunications' },
+                  { name: 'National Telecom Cloud Services', cat: 'Connectivity' },
+                  { name: 'Public Sector Cloud Security', cat: 'Technology Partner' }
+                ].map((p, idx) => (
+                  <div key={idx} className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-1 hover:border-amber-500/30 transition">
+                    <span className="text-xs font-bold text-white font-mono block">{p.name}</span>
+                    <span className="text-3xs text-amber-400 font-mono block">{p.cat}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
         </div>
@@ -839,55 +971,6 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                 </div>
               </div>
             </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Section 7: Public Interactive Showcase */}
-      <section id="demo-suite" className="py-16 border-b border-slate-800 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto px-6 space-y-8">
-          
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div>
-              <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-widest px-3 py-1 bg-amber-500/10 border border-amber-500/30 rounded-full">
-                Public Showcase
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">
-                ITIS Technology & Resources
-              </h2>
-            </div>
-
-            {/* Showcase Tabs Switcher */}
-            <div className="flex flex-wrap items-center gap-2">
-              {[
-                { id: 'government', label: 'Government Brief', icon: Building2 },
-                { id: 'faq', label: 'FAQ & Docs', icon: HelpCircle }
-              ].map((tab) => {
-                const Icon = tab.icon;
-                const isActive = activeCommercialTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveCommercialTab(tab.id as any)}
-                    className={`px-3 py-1.5 rounded-xl text-2xs font-mono font-bold transition flex items-center gap-1.5 ${
-                      isActive
-                        ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                        : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Render Active Showcase Component */}
-          <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-            {activeCommercialTab === 'government' && <GovernmentReadinessSection />}
-            {activeCommercialTab === 'faq' && <PublicDocsFAQ />}
           </div>
 
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CreditCard,
   Receipt,
@@ -489,10 +489,21 @@ export function FinancialProcurementModule() {
   const vatAmount = rawSubtotal * 0.15;
   const quoteTotal = rawSubtotal + vatAmount;
 
+  const quoteTimeoutRef = React.useRef<any>(null);
+  const paymentTimeoutRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (quoteTimeoutRef.current) clearTimeout(quoteTimeoutRef.current);
+      if (paymentTimeoutRef.current) clearTimeout(paymentTimeoutRef.current);
+    };
+  }, []);
+
   const handleCreateQuote = (e: React.FormEvent) => {
     e.preventDefault();
     setQuoteSuccessMsg(`Quotation QT-2026-${Math.floor(100 + Math.random() * 900)} successfully issued for ${quoteClient} (Total: R ${quoteTotal.toLocaleString('en-ZA')})`);
-    setTimeout(() => {
+    if (quoteTimeoutRef.current) clearTimeout(quoteTimeoutRef.current);
+    quoteTimeoutRef.current = setTimeout(() => {
       setShowNewQuoteModal(false);
       setQuoteSuccessMsg('');
     }, 2500);
@@ -500,7 +511,8 @@ export function FinancialProcurementModule() {
 
   const handleSimulatePayment = () => {
     setPaymentStatus('processing');
-    setTimeout(() => {
+    if (paymentTimeoutRef.current) clearTimeout(paymentTimeoutRef.current);
+    paymentTimeoutRef.current = setTimeout(() => {
       setPaymentStatus('success');
     }, 1800);
   };

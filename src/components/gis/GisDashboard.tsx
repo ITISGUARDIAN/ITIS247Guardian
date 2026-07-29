@@ -411,7 +411,7 @@ export const GisDashboard: React.FC = () => {
                       onClick={() => setSelectedFleetEntity(f)}
                       className={`absolute -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer p-2 rounded-full border shadow-lg transition-transform hover:scale-125 ${
                         f.status === 'EMERGENCY_SOS'
-                          ? 'bg-rose-600 text-white border-rose-300 animate-bounce ring-4 ring-rose-500/50'
+                          ? 'bg-rose-600 text-white border-rose-300 animate-pulse ring-4 ring-rose-500/50'
                           : f.status === 'MOVING'
                           ? 'bg-blue-600 text-white border-blue-400'
                           : 'bg-slate-800 text-slate-300 border-slate-600'

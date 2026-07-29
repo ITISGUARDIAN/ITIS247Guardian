@@ -79,17 +79,29 @@ export function IdentityDashboard() {
     refreshData();
   };
 
+  const msgTimeoutRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (msgTimeoutRef.current) clearTimeout(msgTimeoutRef.current);
+    };
+  }, []);
+
+  const setStatus = (msg: string) => {
+    setThreatStatusMsg(msg);
+    if (msgTimeoutRef.current) clearTimeout(msgTimeoutRef.current);
+    msgTimeoutRef.current = setTimeout(() => setThreatStatusMsg(''), 4000);
+  };
+
   const handleSavePolicy = (e: React.FormEvent) => {
     e.preventDefault();
     identityService.updatePasswordPolicy(policy);
-    setThreatStatusMsg('Enterprise Password & Credential Policy updated successfully.');
-    setTimeout(() => setThreatStatusMsg(''), 4000);
+    setStatus('Enterprise Password & Credential Policy updated successfully.');
   };
 
   const handleTriggerSimulatedThreat = (type: SecurityEventLog['eventType']) => {
     const event = identityService.triggerSimulatedThreat(type);
-    setThreatStatusMsg(`Simulated Security Incident Triggered: ${event.eventType} (${event.severity})`);
-    setTimeout(() => setThreatStatusMsg(''), 4000);
+    setStatus(`Simulated Security Incident Triggered: ${event.eventType} (${event.severity})`);
     refreshData();
   };
 

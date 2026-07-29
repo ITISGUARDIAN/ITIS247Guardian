@@ -87,6 +87,14 @@ export function NotificationsDashboard() {
     setDlqList(notificationEngine.getDLQ());
   };
 
+  const pingTimeoutRef = React.useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      if (pingTimeoutRef.current) clearTimeout(pingTimeoutRef.current);
+    };
+  }, []);
+
   useEffect(() => {
     refreshData();
   }, [activeTab]);
@@ -95,7 +103,8 @@ export function NotificationsDashboard() {
     e.preventDefault();
     notificationEngine.updateProviderConfig(providerConfig);
     setPingStatus('Provider gateway configurations saved & tested successfully.');
-    setTimeout(() => setPingStatus(''), 4000);
+    if (pingTimeoutRef.current) clearTimeout(pingTimeoutRef.current);
+    pingTimeoutRef.current = setTimeout(() => setPingStatus(''), 4000);
     refreshData();
   };
 
