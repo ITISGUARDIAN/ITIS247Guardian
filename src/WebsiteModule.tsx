@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldCheck, 
   School, 
@@ -88,7 +88,33 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
   // Selected Public Showcase Tab State
   const [activeCommercialTab, setActiveCommercialTab] = useState<
     'government' | 'faq'
-  >('government');
+  >('faq');
+
+  // Government Readiness & Regulatory Governance Modal State
+  const [isGovModalOpen, setIsGovModalOpen] = useState(false);
+
+  // Lock body scroll & handle Escape key & restore scroll position for Government Readiness Modal
+  useEffect(() => {
+    if (!isGovModalOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    const scrollY = window.scrollY;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsGovModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.scrollTo(0, scrollY);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isGovModalOpen]);
 
   const handleDemoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,17 +210,13 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             >
               Partners
             </a>
-            <a 
-              href="#demo-suite" 
-              onClick={() => {
-                setActiveEcosystemTab('tech');
-                setActiveCommercialTab('government');
-              }} 
-              className="text-amber-300 font-bold hover:text-amber-200 transition flex items-center gap-1"
+            <button 
+              onClick={() => setIsGovModalOpen(true)} 
+              className="text-amber-300 font-bold hover:text-amber-200 transition flex items-center gap-1 text-xs font-sans"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Government Brief
-            </a>
+              <span>Government Readiness</span>
+            </button>
             <a href="#contact" className="hover:text-amber-400 transition">Contact</a>
           </nav>
 
@@ -221,11 +243,12 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
       {/* Hero Section */}
       <section id="about" className="relative pt-16 pb-24 border-b border-slate-800/80 overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-slate-950">
+        {/* Background Ambient Radial Lighting */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-amber-500/10 via-blue-950/20 to-transparent pointer-events-none" />
         <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-r from-amber-500/10 via-cyan-500/10 to-blue-600/10 blur-3xl pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             
             {/* Left Content Column */}
             <div className="lg:col-span-7 space-y-6">
@@ -281,47 +304,58 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
             </div>
 
-            {/* Right Column: Official Showcase Badge */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative group w-full max-w-sm">
-                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/30 via-yellow-500/20 to-blue-600/30 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500 opacity-80" />
+            {/* Right Column: Command Centre Presentation Card */}
+            <div className="lg:col-span-5 flex justify-center w-full">
+              <div className="relative group w-full max-w-lg lg:max-w-none">
+                {/* Subtle Gold Ambient Glow */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/25 via-amber-400/20 to-blue-600/25 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500 opacity-80 pointer-events-none" />
 
-                <div className="relative bg-slate-950 border-2 border-amber-500/40 rounded-3xl p-6 space-y-5 shadow-2xl text-center">
+                {/* Dark Navy Outer Frame with Thin Gold Border */}
+                <div className="relative bg-slate-900/95 border border-amber-500/40 rounded-3xl p-3 sm:p-4 space-y-3 shadow-2xl shadow-amber-500/10">
                   
-                  <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-                    <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                      <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-                      ITIS Safety
-                    </span>
-                    <span className="text-3xs font-mono px-2 py-0.5 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full font-bold">
+                  {/* Top Header Bar inside card */}
+                  <div className="flex items-center justify-between px-2 pt-1 pb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                        National Operations Command Centre
+                      </span>
+                    </div>
+                    <span className="text-3xs font-mono px-2.5 py-0.5 bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full font-bold">
                       REPUBLIC OF SOUTH AFRICA
                     </span>
                   </div>
 
-                  <div className="relative mx-auto w-52 h-52 sm:w-60 sm:h-60 p-2 bg-slate-900 rounded-full border-2 border-amber-500/50 shadow-inner flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                  {/* High Quality Building Image Container */}
+                  <div className="relative rounded-2xl overflow-hidden border border-slate-800/90 shadow-lg aspect-[4/3] sm:aspect-[16/11]">
                     <img 
-                      src="/branding/itis-logo.png" 
-                      alt="ITIS Logo" 
-                      className="w-full h-full object-cover rounded-full drop-shadow-[0_0_15px_rgba(245,158,11,0.35)]" 
+                      src="/images/command-centre.jpg" 
+                      alt="ITIS National Operations Command Centre" 
+                      className="w-full h-full object-cover object-center select-none"
+                      loading="eager"
                       referrerPolicy="no-referrer"
                     />
                   </div>
 
-                  <div className="space-y-1.5 pt-1">
-                    <div className="text-sm font-extrabold text-white tracking-wide font-mono">
-                      UNCOMPROMISED SAFETY.
-                    </div>
-                    <p className="text-2xs text-amber-300/90 font-mono">
-                      Protecting. Monitoring. Responding. Every Life. Every Second.
+                  {/* Premium Caption Card */}
+                  <div className="bg-slate-950/80 backdrop-blur-md border border-amber-500/30 rounded-xl p-3.5 sm:p-4 space-y-1 shadow-md">
+                    <h3 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2 font-sans">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      ITIS National Command Centre
+                    </h3>
+                    <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                      The future hub for real-time school safety, emergency coordination, intelligence, and nationwide operational monitoring.
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-900 flex items-center justify-around text-3xs font-mono text-slate-400">
+                  {/* Card Footer Bar */}
+                  <div className="flex items-center justify-between px-2 pt-1 text-3xs font-mono text-slate-300">
                     <span className="flex items-center gap-1">
-                      <Check className="w-3 h-3 text-emerald-400" /> POPIA Compliant
+                      <Check className="w-3 h-3 text-emerald-400" /> 24/7 Active Monitoring
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Check className="w-3 h-3 text-emerald-400" /> 24/7 Command Centre
+                    <span className="flex items-center gap-1 text-amber-300/90">
+                      <ShieldCheck className="w-3 h-3 text-amber-400" /> Integrated Safety Platform
                     </span>
                   </div>
 
@@ -682,10 +716,19 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
             {activeStakeholder === 'government' && (
               <div className="space-y-4">
-                <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
-                  <Building2 className="w-5 h-5 text-blue-400" />
-                  <span>Provincial & Municipal Safety Analytics</span>
-                </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <h3 className="text-xl font-bold text-white flex items-center gap-2 font-mono">
+                    <Building2 className="w-5 h-5 text-blue-400" />
+                    <span>Provincial & Municipal Safety Analytics</span>
+                  </h3>
+                  <button
+                    onClick={() => setIsGovModalOpen(true)}
+                    className="px-3.5 py-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-md shadow-amber-500/20 shrink-0 self-start sm:self-auto"
+                  >
+                    <Building2 className="w-4 h-4" />
+                    <span>Government Readiness & Regulatory Governance</span>
+                  </button>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
                   <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
                     <strong className="text-blue-300 font-mono block">Provincial Dashboards</strong>
@@ -833,36 +876,38 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
                   Public Showcase & Documentation
                 </span>
 
-                {/* Showcase Tabs Switcher */}
-                <div className="flex flex-wrap items-center gap-2">
-                  {[
-                    { id: 'government', label: 'Government Brief', icon: Building2 },
-                    { id: 'faq', label: 'FAQ & Docs', icon: HelpCircle }
-                  ].map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeCommercialTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveCommercialTab(tab.id as any)}
-                        className={`px-3 py-1.5 rounded-xl text-2xs font-mono font-bold transition flex items-center gap-1.5 ${
-                          isActive
-                            ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                            : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
-                        }`}
-                      >
-                        <Icon className="w-3.5 h-3.5" />
-                        <span>{tab.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
+                {/* Primary Button to launch Government Readiness Modal */}
+                <button
+                  onClick={() => setIsGovModalOpen(true)}
+                  className="px-4 py-2 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center gap-2 shadow-lg shadow-amber-500/20"
+                >
+                  <Building2 className="w-4 h-4" />
+                  <span>Government Readiness & Regulatory Governance</span>
+                </button>
               </div>
 
-              {/* Render Active Showcase Component */}
-              <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-                {activeCommercialTab === 'government' && <GovernmentReadinessSection />}
-                {activeCommercialTab === 'faq' && <PublicDocsFAQ />}
+              {/* Public Showcase Main Container */}
+              <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 bg-slate-900/90 border border-slate-800 rounded-2xl">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-amber-400" />
+                      <h4 className="text-sm font-bold text-white font-mono">Government & Regulatory Compliance Brief</h4>
+                    </div>
+                    <p className="text-xs text-slate-400">
+                      National deployment specs, POPIA data protection audits, SLAs, and inter-departmental integration frameworks.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setIsGovModalOpen(true)}
+                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-amber-300 font-mono font-bold border border-amber-500/40 hover:border-amber-400 rounded-xl text-xs transition flex items-center gap-2 shrink-0 shadow-md shadow-amber-500/10"
+                  >
+                    <Building2 className="w-4 h-4 text-amber-400" />
+                    <span>Government Readiness & Regulatory Governance</span>
+                  </button>
+                </div>
+
+                <PublicDocsFAQ />
               </div>
             </div>
           </div>
@@ -1449,6 +1494,62 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* DEDICATED GOVERNMENT READINESS & REGULATORY GOVERNANCE MODAL */}
+      {isGovModalOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-hidden"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsGovModalOpen(false);
+          }}
+        >
+          <div className="bg-slate-950 border border-slate-800 rounded-3xl max-w-6xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden relative">
+            {/* Modal Header Bar */}
+            <div className="p-4 sm:p-5 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between gap-4 shrink-0">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-xl">
+                  <Building2 className="w-5 h-5" />
+                </span>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-white font-mono">
+                    Government Readiness & Regulatory Governance
+                  </h3>
+                  <p className="text-2xs text-slate-400 hidden sm:block font-mono">
+                    ITIS Public Sector Compliance, Security & Data Sovereignty Blueprint
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setIsGovModalOpen(false)}
+                className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/80 rounded-xl transition flex items-center gap-1.5 border border-slate-800 text-xs font-mono font-semibold"
+                aria-label="Close modal"
+              >
+                <X className="w-4 h-4" />
+                <span className="hidden sm:inline">Close</span>
+              </button>
+            </div>
+
+            {/* Modal Scrollable Content Area */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
+              <GovernmentReadinessSection />
+            </div>
+
+            {/* Modal Footer Bar */}
+            <div className="p-4 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between shrink-0">
+              <span className="text-2xs font-mono text-slate-400">
+                ITIS Integrated Technology Intelligence & Safety &bull; Regulatory Governance
+              </span>
+              <button
+                onClick={() => setIsGovModalOpen(false)}
+                className="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-bold transition"
+              >
+                Close Section
+              </button>
+            </div>
           </div>
         </div>
       )}
