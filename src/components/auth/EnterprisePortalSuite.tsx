@@ -423,7 +423,7 @@ export function EnterprisePortalSuite({
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
       
       {/* Top Portal Navigation Header */}
-      <header className="sticky top-0 z-40 bg-slate-900/95 border-b border-slate-800 backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-slate-900/98 border-b border-slate-800 px-4 sm:px-8 py-3.5 flex items-center justify-between">
         
         <div className="flex items-center gap-3">
           <div className="p-1 bg-gradient-to-br from-amber-500/20 via-blue-950/40 to-slate-950 border border-amber-500/40 rounded-xl shrink-0">

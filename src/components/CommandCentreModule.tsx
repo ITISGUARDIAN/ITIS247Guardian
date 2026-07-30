@@ -639,6 +639,8 @@ export function CommandCentreModule() {
       interval = setInterval(() => {
         setReplayProgress((prev) => {
           if (prev >= 100) {
+            setIsReplaying(false);
+            if (interval) clearInterval(interval);
             return 100;
           }
           return prev + 1;
@@ -1729,7 +1731,7 @@ export function CommandCentreModule() {
       {/* COMMS MODAL */}
       {/* ========================================== */}
       {showCommsModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-950/92 z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 font-mono">
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-white">Send Emergency Communication</h3>
@@ -1776,7 +1778,7 @@ export function CommandCentreModule() {
       {/* EVIDENCE UPLOAD MODAL */}
       {/* ========================================== */}
       {showEvidenceModal && (
-        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-slate-950/92 z-50 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 font-mono">
             <div className="flex justify-between items-center border-b border-slate-800 pb-3">
               <h3 className="text-sm font-bold text-white">Attach Digital Evidence File</h3>
@@ -1826,7 +1828,7 @@ export function CommandCentreModule() {
       {/* PDF REPORT MODAL */}
       {/* ========================================== */}
       {showPdfReportModal && (
-        <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-slate-950/95 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-3xl w-full space-y-6 font-mono text-xs text-slate-100 shadow-2xl my-8">
             
             {/* Report Header */}

@@ -787,7 +787,7 @@ export function FinancialProcurementModule() {
 
           {/* New Quote Modal */}
           {showNewQuoteModal && (
-            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-50 bg-slate-950/92 flex items-center justify-center p-4">
               <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-xl w-full space-y-6 shadow-2xl">
                 <div className="flex justify-between items-center border-b border-slate-800 pb-4">
                   <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
@@ -955,7 +955,7 @@ export function FinancialProcurementModule() {
 
           {/* Digital Signature Verification Modal */}
           {signingContractId && (
-            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-50 bg-slate-950/92 flex items-center justify-center p-4">
               <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl font-mono text-xs">
                 <div className="flex justify-between items-center border-b border-slate-800 pb-3">
                   <span className="font-bold text-amber-400 flex items-center gap-2">

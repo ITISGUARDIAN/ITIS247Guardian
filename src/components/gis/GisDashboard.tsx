@@ -333,7 +333,7 @@ export const GisDashboard: React.FC = () => {
                 )}
 
                 {/* Centered Focus Coordinates Hud */}
-                <div className="absolute top-4 left-4 bg-slate-900/90 backdrop-blur border border-slate-800 p-3 rounded-lg z-20 text-xs space-y-1">
+                <div className="absolute top-4 left-4 bg-slate-900/98 border border-slate-800 p-3 rounded-lg z-20 text-xs space-y-1">
                   <div className="font-semibold text-emerald-400 flex items-center gap-1.5">
                     <Crosshair className="w-3.5 h-3.5 text-emerald-400 animate-spin-slow" />
                     {currentFocus.label}
@@ -433,14 +433,14 @@ export const GisDashboard: React.FC = () => {
                     className="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
                   >
                     <div 
-                      className="w-24 h-24 rounded-full blur-xl opacity-60 bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400" 
+                      className="w-24 h-24 rounded-full opacity-70 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-rose-500/80 via-amber-400/50 to-transparent" 
                       style={{ transform: `scale(${hm.weight * 1.5})` }}
                     />
                   </div>
                 ))}
 
                 {/* Map Control Floating Toolbar */}
-                <div className="absolute bottom-4 right-4 bg-slate-900/90 backdrop-blur border border-slate-800 rounded-lg p-1.5 flex flex-col gap-1 z-20">
+                <div className="absolute bottom-4 right-4 bg-slate-900/98 border border-slate-800 rounded-lg p-1.5 flex flex-col gap-1 z-20">
                   <button onClick={() => refreshData()} title="Recenter Map" className="p-2 text-slate-300 hover:text-emerald-400 hover:bg-slate-800 rounded transition-colors">
                     <RefreshCw className="w-4 h-4" />
                   </button>

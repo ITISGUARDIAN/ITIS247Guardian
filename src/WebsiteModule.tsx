@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   ShieldCheck, 
   School, 
@@ -93,12 +93,11 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
   // Government Readiness & Regulatory Governance Modal State
   const [isGovModalOpen, setIsGovModalOpen] = useState(false);
 
-  // Lock body scroll & handle Escape key & restore scroll position for Government Readiness Modal
+  // Lock body scroll & handle Escape key for Government Readiness Modal without forced scroll jumps
   useEffect(() => {
     if (!isGovModalOpen) return;
 
     const originalOverflow = document.body.style.overflow;
-    const scrollY = window.scrollY;
     document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -111,7 +110,6 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
     return () => {
       document.body.style.overflow = originalOverflow;
-      window.scrollTo(0, scrollY);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isGovModalOpen]);
@@ -139,6 +137,17 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     });
   };
 
+  const portalChildrenComponents = useMemo(() => ({
+    gisDashboard: <GisDashboard />,
+    deviceLifecycle: <DeviceLifecycleModule />,
+    commercialReport: <CommercialCertificationReport />,
+    notifications: <NotificationsDashboard />,
+    commercialCrm: <CommercialCRMModule />,
+    financialModule: <FinancialProcurementModule />,
+    aiIntelligenceModule: <AIDecisionIntelligenceModule />,
+    commandCentreModule: <CommandCentreModule />
+  }), []);
+
   // IF USER IS AUTHENTICATED: SHOW FULL ROLE PORTAL SUITE
   if (portalUser) {
     return (
@@ -151,16 +160,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
             onNavigateToDashboard('/certification');
           }
         }}
-        childrenComponents={{
-          gisDashboard: <GisDashboard />,
-          deviceLifecycle: <DeviceLifecycleModule />,
-          commercialReport: <CommercialCertificationReport />,
-          notifications: <NotificationsDashboard />,
-          commercialCrm: <CommercialCRMModule />,
-          financialModule: <FinancialProcurementModule />,
-          aiIntelligenceModule: <AIDecisionIntelligenceModule />,
-          commandCentreModule: <CommandCentreModule />
-        }}
+        childrenComponents={portalChildrenComponents}
       />
     );
   }
@@ -170,7 +170,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
       
       {/* Top Navigation Header */}
-      <header className="border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 sm:px-8 py-3.5 sticky top-0 z-50">
+      <header className="border-b border-slate-800/80 bg-slate-950/98 px-4 sm:px-8 py-3.5 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
           {/* Logo & Brand Title */}
@@ -245,7 +245,6 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
       <section id="about" className="relative pt-16 pb-24 border-b border-slate-800/80 overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-slate-950">
         {/* Background Ambient Radial Lighting */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,_var(--tw-gradient-stops))] from-amber-500/10 via-blue-950/20 to-transparent pointer-events-none" />
-        <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] bg-gradient-to-r from-amber-500/10 via-cyan-500/10 to-blue-600/10 blur-3xl pointer-events-none rounded-full" />
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
@@ -304,59 +303,58 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
             </div>
 
-            {/* Right Column: Command Centre Presentation Card */}
+            {/* Right Column: Official ITIS Emblem Showcase */}
             <div className="lg:col-span-5 flex justify-center w-full">
-              <div className="relative group w-full max-w-lg lg:max-w-none">
-                {/* Subtle Gold Ambient Glow */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/25 via-amber-400/20 to-blue-600/25 rounded-3xl blur-xl group-hover:blur-2xl transition duration-500 opacity-80 pointer-events-none" />
+              <div className="relative group w-full max-w-md">
+                {/* Gold Ambient Glow */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-amber-400/10 to-yellow-500/20 rounded-3xl transition duration-500 opacity-90 pointer-events-none" />
 
-                {/* Dark Navy Outer Frame with Thin Gold Border */}
-                <div className="relative bg-slate-900/95 border border-amber-500/40 rounded-3xl p-3 sm:p-4 space-y-3 shadow-2xl shadow-amber-500/10">
+                {/* Dark Navy Outer Frame with Gold Accent Border */}
+                <div className="relative bg-slate-900/95 border border-amber-500/40 rounded-3xl p-6 sm:p-8 space-y-4 text-center shadow-2xl shadow-amber-500/10">
                   
-                  {/* Top Header Bar inside card */}
-                  <div className="flex items-center justify-between px-2 pt-1 pb-1">
+                  {/* Header Tag */}
+                  <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-2xs font-mono font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 text-amber-400" />
-                        National Operations Command Centre
-                      </span>
+                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-950/80 border border-amber-500/30 rounded-lg shadow-inner">
+                        <svg className="w-5 h-3.5 rounded-[2px] border border-amber-500/40 shrink-0 shadow-sm" viewBox="0 0 900 600" aria-label="South Africa Flag">
+                          <rect width="900" height="600" fill="#007A4D" />
+                          <path d="M0,0 H900 V200 H375 L225,300 Z" fill="#FFFFFF" />
+                          <path d="M0,600 H900 V400 H375 L225,300 Z" fill="#FFFFFF" />
+                          <path d="M0,0 H900 V166.7 H400 L266.7,300 Z" fill="#E03C31" />
+                          <path d="M0,600 H900 V433.3 H400 L266.7,300 Z" fill="#002395" />
+                          <path d="M0,0 L300,300 L0,600 Z" fill="#FFB81C" />
+                          <path d="M0,50 L250,300 L0,550 Z" fill="#000000" />
+                        </svg>
+                        <span className="text-2xs font-mono font-bold text-amber-300 uppercase tracking-wider">
+                          South Africa
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-3xs font-mono px-2.5 py-0.5 bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full font-bold">
+                    <span className="text-3xs font-mono px-2.5 py-1 bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-full font-bold tracking-wide shrink-0">
                       REPUBLIC OF SOUTH AFRICA
                     </span>
                   </div>
 
-                  {/* High Quality Building Image Container */}
-                  <div className="relative rounded-2xl overflow-hidden border border-slate-800/90 shadow-lg aspect-[4/3] sm:aspect-[16/11]">
+                  {/* Official ITIS Logo Image Showcase */}
+                  <div className="relative flex justify-center py-2 min-h-[224px] sm:min-h-[256px] items-center">
                     <img 
-                      src="/assets/official/command-centre.jpg" 
-                      alt="ITIS National Operations Command Centre" 
-                      className="w-full h-full object-cover object-center select-none"
+                      src="/assets/official/itis-logo.png" 
+                      alt="Official ITIS Emblem - Uncompromised Safety" 
+                      className="w-56 h-56 sm:w-64 sm:h-64 object-contain drop-shadow-[0_0_25px_rgba(245,158,11,0.35)] transition duration-300 group-hover:scale-105"
                       loading="eager"
                       referrerPolicy="no-referrer"
                     />
                   </div>
 
-                  {/* Premium Caption Card */}
-                  <div className="bg-slate-950/80 backdrop-blur-md border border-amber-500/30 rounded-xl p-3.5 sm:p-4 space-y-1 shadow-md">
-                    <h3 className="text-sm sm:text-base font-bold text-white tracking-tight flex items-center gap-2 font-sans">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      ITIS National Command Centre
+                  {/* Caption Card */}
+                  <div className="bg-slate-950/80 border border-amber-500/30 rounded-xl p-3.5 space-y-1">
+                    <h3 className="text-sm font-bold text-white tracking-tight font-sans">
+                      Integrated Technology Intelligence & Safety
                     </h3>
-                    <p className="text-xs text-slate-300 font-sans leading-relaxed">
-                      The future hub for real-time school safety, emergency coordination, intelligence, and nationwide operational monitoring.
+                    <p className="text-2xs text-amber-400 font-mono font-semibold uppercase tracking-wider">
+                      Uncompromised Safety Platform
                     </p>
-                  </div>
-
-                  {/* Card Footer Bar */}
-                  <div className="flex items-center justify-between px-2 pt-1 text-3xs font-mono text-slate-300">
-                    <span className="flex items-center gap-1">
-                      <Check className="w-3 h-3 text-emerald-400" /> 24/7 Active Monitoring
-                    </span>
-                    <span className="flex items-center gap-1 text-amber-300/90">
-                      <ShieldCheck className="w-3 h-3 text-amber-400" /> Integrated Safety Platform
-                    </span>
                   </div>
 
                 </div>
@@ -1267,7 +1265,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
       {/* PORTAL LOGIN MODAL */}
       {isPortalModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-950/92 flex items-center justify-center p-4">
           <div className="w-full max-w-4xl relative">
             <button
               onClick={() => setIsPortalModalOpen(false)}
@@ -1295,7 +1293,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
       {/* DEMO REQUEST MODAL */}
       {isDemoModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-950/92 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 relative shadow-2xl">
             <button
               onClick={resetDemoModal}
@@ -1416,7 +1414,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
 
       {/* LEGAL & POLICY MODALS */}
       {activeLegalModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-950/92 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-xl w-full space-y-6 relative shadow-2xl">
             <button
               onClick={() => setActiveLegalModal(null)}
@@ -1501,7 +1499,7 @@ export function WebsiteModule({ onNavigateToDashboard }: WebsiteModuleProps) {
       {/* DEDICATED GOVERNMENT READINESS & REGULATORY GOVERNANCE MODAL */}
       {isGovModalOpen && (
         <div
-          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-hidden"
+          className="fixed inset-0 z-50 bg-slate-950/92 flex items-center justify-center p-3 sm:p-6 overflow-hidden"
           onClick={(e) => {
             if (e.target === e.currentTarget) setIsGovModalOpen(false);
           }}

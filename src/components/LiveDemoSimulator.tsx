@@ -136,6 +136,11 @@ export function LiveDemoSimulator() {
       timerRef.current = setInterval(() => {
         setCurrentStepIndex((prev) => {
           if (prev >= SIMULATION_STEPS.length - 1) {
+            setIsPlaying(false);
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+              timerRef.current = null;
+            }
             return prev;
           }
           return prev + 1;
@@ -229,7 +234,7 @@ export function LiveDemoSimulator() {
           <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
           
           {/* Map Status Bar */}
-          <div className="relative z-10 flex items-center justify-between text-xs font-mono bg-slate-900/90 backdrop-blur p-3 rounded-lg border border-slate-800">
+          <div className="relative z-10 flex items-center justify-between text-xs font-mono bg-slate-900/98 p-3 rounded-lg border border-slate-800">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-white font-bold">Gauteng Corridor #GP-01</span>
@@ -284,7 +289,7 @@ export function LiveDemoSimulator() {
           </div>
 
           {/* Map Footer Active Step Detail */}
-          <div className="relative z-10 bg-slate-900/90 backdrop-blur p-4 rounded-lg border border-slate-800 space-y-2">
+          <div className="relative z-10 bg-slate-900/98 p-4 rounded-lg border border-slate-800 space-y-2">
             <div className="flex items-center justify-between font-mono text-xs">
               <span className="text-cyan-400 font-bold uppercase tracking-wider">Step {currentStep.id} of {SIMULATION_STEPS.length}</span>
               <span className="px-2 py-0.5 bg-slate-950 text-slate-300 border border-slate-800 rounded text-2xs">

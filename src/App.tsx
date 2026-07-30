@@ -514,7 +514,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
       {/* Top Banner & Header */}
-      <header className="border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sticky top-0 z-50">
+      <header className="border-b border-slate-800 bg-slate-900/98 px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sticky top-0 z-50">
         <div className="flex items-center gap-3">
           <div className="relative p-1 bg-gradient-to-br from-amber-500/20 via-blue-900/40 to-slate-950 border border-amber-500/40 rounded-xl shadow-lg shadow-amber-500/10 shrink-0">
             <img 

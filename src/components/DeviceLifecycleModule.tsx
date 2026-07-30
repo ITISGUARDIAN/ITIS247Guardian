@@ -316,7 +316,7 @@ export function DeviceLifecycleModule({ onNavigateToTab }: DeviceLifecycleModule
       
       {/* Action Feedback Banner */}
       {actionFeedback && (
-        <div className="fixed top-20 right-6 z-50 bg-emerald-950/95 border-2 border-emerald-500/80 text-emerald-200 px-5 py-3 rounded-2xl shadow-2xl backdrop-blur-md flex items-center gap-3 font-mono text-xs animate-bounce">
+        <div className="fixed top-20 right-6 z-50 bg-emerald-950/98 border-2 border-emerald-500/80 text-emerald-200 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 font-mono text-xs">
           <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <span>{actionFeedback}</span>
         </div>
@@ -324,7 +324,7 @@ export function DeviceLifecycleModule({ onNavigateToTab }: DeviceLifecycleModule
 
       {/* Header Banner */}
       <div className="relative p-6 sm:p-8 bg-gradient-to-br from-slate-900 via-blue-950/50 to-slate-950 border border-amber-500/30 rounded-3xl overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent pointer-events-none -mr-20 -mt-20" />
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
@@ -1245,7 +1245,7 @@ export function DeviceLifecycleModule({ onNavigateToTab }: DeviceLifecycleModule
 
       {/* Device Inspection Modal */}
       {selectedDevice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/92">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-2xl relative max-h-[85vh] overflow-y-auto">
             
             <button
